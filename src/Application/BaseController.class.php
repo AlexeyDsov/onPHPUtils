@@ -31,14 +31,16 @@
 		 */
 		protected $serviceLocator = null;
 
-		public function __construct()
-		{
+		public function __construct() {
 			$this->model = Model::create();
 			$this->setupMeta();
 		}
 
-		public function setServiceLocator(IServiceLocator $serviceLocator)
-		{
+		public function getModel() {
+			return $this->model;
+		}
+
+		public function setServiceLocator(IServiceLocator $serviceLocator) {
 			$this->serviceLocator = $serviceLocator;
 			return $this;
 		}
@@ -46,41 +48,35 @@
 		/**
 		 * @return ServiceLocator
 		 */
-		public function getServiceLocator()
-		{
+		public function getServiceLocator() {
 			return $this->serviceLocator;
 		}
 
-		protected function getMav($tpl = 'index', $path = null)
-		{
+		protected function getMav($tpl = 'index', $path = null) {
 			return ModelAndView::create()->
 				setModel($this->model)->
 				setView($this->getViewTemplate($tpl, $path));
 		}
 
-		protected function getViewPath()
-		{
+		protected function getViewPath() {
 			$className = get_class($this);
 			return substr($className, 0, stripos($className, 'controller'));
 		}
 
-		protected function getViewTemplate($tpl, $path = null)
-		{
-			$path = $path === null ? $this->getViewPath() : $path;
+		protected function getViewTemplate($tpl, $path = null) {
+			$path = ($path === null ? $this->getViewPath() : $path);
 			return "{$path}/{$tpl}";
 		}
 
-		protected function getMavRedirectByUrl($url)
-		{
+		protected function getMavRedirectByUrl($url) {
 			return ModelAndView::create()->setView(
 				RedirectView::create($url)
 			);
 		}
 
-		protected function resolveAction(HttpRequest $request, Form $form = null)
-		{
+		protected function resolveAction(HttpRequest $request, Form $form = null) {
 			if (empty($this->methodMap)) {
-				throw new WrongStateException();
+				throw new WrongStateException('You must specify $methodMap array');
 			}
 
 			if (!$form) {
@@ -98,7 +94,9 @@
 				importMore($request->getAttached());
 
 			if ($form->getErrors()) {
-				return $this->getMav404();
+				return ModelAndView::create()->
+					setModel($this->model)->
+					setView(View::ERROR_VIEW);
 			}
 
 			if (!$action = $form->getSafeValue($this->actionName)) {
@@ -118,20 +116,30 @@
 			return $mav;
 		}
 
+		protected function getControllerVar(HttpRequest $request) {
+			$form = Form::create()->
+				add(
+					Primitive::string($this->ajaxVar)->
+						setDefault('')
+				)->
+				importOne($this->ajaxVar, $request->getGet())->
+				importOneMore($this->ajaxVar, $request->getAttached());
+			$controller = $form->getSafeValue($this->ajaxVar);
+			return $controller;
+		}
+
 		/**
 		 * Дает возможность в наследниках модифицировать model в ModelAndView перед возвращением ее пользователю
 		 * @param HttpRequest $request
 		 * @param ModelAndView $mav
 		 * @return ModelAndView 
 		 */
-		protected function prepairData(HttpRequest $request, ModelAndView $mav)
-		{
+		protected function prepairData(HttpRequest $request, ModelAndView $mav) {
 			return $mav;
 		}
 
-		protected function setupMeta()
-		{
-			$this->meta = new HeadHelper();
+		protected function setupMeta() {
+			$this->meta = HeadHelper::create();
 			$this->meta->setTitle('');
 			$this->model->set('meta', $this->meta);
 

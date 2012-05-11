@@ -39,8 +39,7 @@
 		/**
 		 * @return ModelAndView
 		 */
-		protected function handleRequest(InterceptingChain $chain, Controller $controller)
-		{
+		protected function handleRequest(InterceptingChain $chain, Controller $controller) {
 			$modelAndView = $controller->handleRequest($chain->getRequest());
 
 			if (!$modelAndView instanceof ModelAndView) {
@@ -57,8 +56,7 @@
 		 * @param InterceptingChain $chain
 		 * @return Controller
 		 */
-		protected function getController(InterceptingChain $chain)
-		{
+		protected function getController(InterceptingChain $chain) {
 			$controllerName = $chain->getControllerName();
 			return $chain->getServiceLocator()->spawn($controllerName);
 		}
@@ -66,8 +64,7 @@
 		/**
 		 * @return WebAppControllerHandler
 		 */
-		protected function prepairModelAndView(InterceptingChain $chain, ModelAndView $modelAndView)
-		{
+		protected function prepairModelAndView(InterceptingChain $chain, ModelAndView $modelAndView) {
 			$controllerName = $chain->getControllerName();
 
 			if (!$modelAndView->getView()) {

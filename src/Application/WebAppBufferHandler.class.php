@@ -36,7 +36,5 @@
 
 			return $this;
 		}
-
 	}
-
 ?>

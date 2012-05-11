@@ -68,8 +68,7 @@
 		 * @param string $value значение заголовка
 		 * @return WebAppViewHandler
 		 */
-		public function addHeader($name, $value)
-		{
+		public function addHeader($name, $value) {
 			$this->headers[$name] = $value;
 			return $this;
 		}
@@ -80,9 +79,8 @@
 		 * @param Model $model
 		 * @return ViewResolver
 		 */
-		protected function getViewResolver(InterceptingChain $chain, Model $model)
-		{
-			return PhpViewResolver::create($chain->getPathTemplate(), EXT_TPL);
+		protected function getViewResolver(InterceptingChain $chain, Model $model) {
+			return PhpViewResolver::create($chain->getPathTemplateDefault(), EXT_TPL);
 		}
 
 		/**
@@ -90,8 +88,7 @@
 		 * @param Model $model
 		 * @return WebAppViewHandler
 		 */
-		protected function updateNonRedirectModel(InterceptingChain $chain, Model $model)
-		{
+		protected function updateNonRedirectModel(InterceptingChain $chain, Model $model) {
 			return $this;
 		}
 
@@ -99,8 +96,7 @@
 		 * Getting class' name for template
 		 * @return WebAppViewHandler
 		 */
-		protected function getViewClassName()
-		{
+		protected function getViewClassName() {
 			return self::VIEW_CLASS_NAME_DEFAULT;
 		}
 	}

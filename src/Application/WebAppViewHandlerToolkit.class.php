@@ -17,8 +17,7 @@
 		/**
 		 * @return WebAppViewHandlerToolkit
 		 */
-		public static function create()
-		{
+		public static function create() {
 			return new self();
 		}
 		
@@ -36,18 +35,15 @@
 		 * @param Model $model
 		 * @return ViewResolver
 		 */
-		protected function getViewResolver(InterceptingChain $chain, Model $model)
-		{
+		protected function getViewResolver(InterceptingChain $chain, Model $model) {
 			$isPjax = $chain->hasVar('isPjax') ? $chain->getVar('isPjax') : false;
 			$isAjax = $chain->hasVar('isAjax') ? $chain->getVar('isAjax') : false;
-			$isIAT = $chain->hasVar('isIAT') ? $chain->getVar('isIAT') : false;
 			
 			$resolver = MultiPrefixPhpViewResolverParametrized::create()->
-				addFirstPrefix($chain->getPathTemplate())->
-				setViewClassName('SimplePhpViewParametrizedToolkit')->
+				setViewClassName($this->getViewClassName())->
+				addFirstPrefix($chain->getPathTemplateDefault())->
 				set('isPjax', $isPjax)->
 				set('isAjax', $isAjax)->
-				set('isIAT', $isIAT)->
 				set('serviceLocator', $chain->getServiceLocator())->
 				set('linker', $chain->getServiceLocator()->get('linker'))->
 				set('translator', $chain->getServiceLocator()->get('translator'))->

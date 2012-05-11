@@ -146,8 +146,11 @@
 				$lightMeta = $prototype->proto()->getPropertyByName($path);
 				if ($lightMeta->getClassName() === null || $path == 'id') {
 					$prototype->{$lightMeta->getSetter()}(null);
-				} elseif ($lightMeta->getRelationId() == MetaRelation::ONE_TO_ONE) {
-					$prototype->{$lightMeta->getDropper()}();
+				} else {
+					$relationId = $lightMeta->getRelationId();
+					if ($relationId === null || $relationId == 1) {
+						$prototype->{$lightMeta->getDropper()}();
+					}
 				}
 			} elseif (($dpos = mb_strpos($path, ':')) !== false) {
 				//удаление свойств и объектов в ValueObject'е
@@ -177,3 +180,4 @@
 			return true;
 		}
 	}
+?>

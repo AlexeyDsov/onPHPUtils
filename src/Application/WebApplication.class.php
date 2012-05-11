@@ -18,6 +18,7 @@
 		const OBJ_PATH_WEB = 'pathWeb';
 		const OBJ_PATH_CONTROLLER = 'pathController';
 		const OBJ_PATH_TEMPLATE = 'pathTemplate';
+		const OBJ_PATH_TEMPLATE_DEFAULT = 'pathTemplateDefault';
 
 		protected $vars = array();
 
@@ -61,7 +62,7 @@
 		public function setVar($name, $var)
 		{
 			if ($this->hasVar($name)) {
-				throw new WrongStateException("var '$name' already stted");
+				throw new WrongStateException("var '$name' already setted");
 			}
 			$this->vars[$name] = $var;
 
@@ -184,6 +185,19 @@
 		public function setPathTemplate($pathTemplate)
 		{
 			return $this->setVar(self::OBJ_PATH_TEMPLATE, $pathTemplate);
+		}
+
+		public function getPathTemplateDefault()
+		{
+			return $this->getVar(self::OBJ_PATH_TEMPLATE_DEFAULT);
+		}
+
+		/**
+		 * @return WebApplication
+		 */
+		public function setPathTemplateDefault($pathTemplateDefault)
+		{
+			return $this->setVar(self::OBJ_PATH_TEMPLATE_DEFAULT, $pathTemplateDefault);
 		}
 	}
 ?>

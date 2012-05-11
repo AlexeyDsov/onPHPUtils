@@ -18,8 +18,7 @@
 		/**
 		 * @return WebAppControllerHandlerToolkit
 		 */
-		public static function create()
-		{
+		public static function create() {
 			return new self();
 		}
 
@@ -45,14 +44,13 @@
 		 * @param InterceptingChain $chain
 		 * @return string
 		 */
-		protected function getController(InterceptingChain $chain)
-		{
+		protected function getController(InterceptingChain $chain) {
 			/* @var $chain WebApplication */
 			if (
 				$chain->getRequest()->hasGetVar('_window')
 				&& $chain->getRequest()->hasGetVar('_dialogId')
-				&& !$chain->getVar('isAjax')
 				&& !$chain->getVar('isPjax')
+				&& !$chain->getVar('isAjax')
 			) {
 				$urlParts = $chain->getRequest()->getGet();
 				$dialogId = $urlParts['_dialogId'];
@@ -84,13 +82,13 @@
 			return $chain->getServiceLocator()->spawn($controllerName);
 		}
 
-		protected function handleRequest(InterceptingChain $chain, Controller $controller)
-		{
+		protected function handleRequest(InterceptingChain $chain, Controller $controller) {
 			/* @var $chain WebApplication */
 			try {
 				return parent::handleRequest($chain, $controller);
 			} catch (PermissionException $e) {
-				$controller = $chain->getServiceLocator()->spawn('AccessDeniedController');
+				$controller = $chain->getServiceLocator()
+					->spawn($this->getAccessDeniedController());
 				return parent::handleRequest($chain, $controller);
 			}
 		}

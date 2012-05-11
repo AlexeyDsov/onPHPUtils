@@ -27,8 +27,7 @@
 		 * @param string $subPath
 		 * @return WebAppControllerMultiResolverHandler
 		 */
-		public function addSubPath($subPath)
-		{
+		public function addSubPath($subPath) {
 			$this->subPathList[] = $subPath;
 			return $this;
 		}
@@ -53,8 +52,7 @@
 		 * @param string $path
 		 * @return boolean
 		 */
-		protected function isReadable($controllerName, $path)
-		{
+		protected function isReadable($controllerName, $path) {
 			$subPathList = $this->subPathList;
 			array_unshift($subPathList, '');
 

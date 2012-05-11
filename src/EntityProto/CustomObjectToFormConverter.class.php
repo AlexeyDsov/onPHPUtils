@@ -61,7 +61,7 @@
 		{
 			return parent::cloneInnerBuilder($property)->
 				setGetterName($this->getGetterName())->
-				setGetterName($this->getGetterName());
+				setSetterName($this->getSetterName());
 		}
 
 		/**

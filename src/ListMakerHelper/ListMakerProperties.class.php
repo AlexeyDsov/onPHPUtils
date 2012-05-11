@@ -29,6 +29,10 @@
 		const OPTION_FILTERABLE_IS_FALSE = 'isFalse';
 		const OPTION_FILTERABLE_IS_NOT_FALSE = 'isNotFalse';
 		const OPTION_FILTERABLE_ILIKE = 'ilike';
+		const OPTION_FILTERABLE_IS_CONTAINED_WITHIN = 'isContainedWithin';
+		const OPTION_FILTERABLE_CONTAINS = 'contains';
+		const OPTION_FILTERABLE_IS_CONTAINED_WITHIN_EQ = 'isContainedWithinOrEq';
+		const OPTION_FILTERABLE_CONTAINS_EQ = 'containsOrEq';
 		const OPTION_DESCRIPTION = 'description';
 		const OPTION_OBJECT_LINK = 'objectLink';
 		const OPTION_SQL_FUNCTION = 'sqlFunction';
@@ -52,6 +56,10 @@
 			self::OPTION_FILTERABLE_IS_FALSE => 'False',
 			self::OPTION_FILTERABLE_IS_NOT_FALSE => 'Not False',
 			self::OPTION_FILTERABLE_ILIKE => 'ILIKE',
+			self::OPTION_FILTERABLE_IS_CONTAINED_WITHIN => '<<',
+			self::OPTION_FILTERABLE_CONTAINS => '>>',
+			self::OPTION_FILTERABLE_IS_CONTAINED_WITHIN_EQ => '<<=',
+			self::OPTION_FILTERABLE_CONTAINS_EQ => '>>=',
 		);
 		
 		/**

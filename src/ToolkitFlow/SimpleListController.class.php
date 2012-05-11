@@ -25,8 +25,7 @@
 		/**
 		 * @return ModelAndView
 		**/
-		public function handleRequest(HttpRequest $request)
-		{
+		public function handleRequest(HttpRequest $request) {
 			$className = $this->getObjectName();
 			if (!$this->serviceLocator->get('linker')->isObjectSupported($className, 'info')) {
 				throw new PermissionException('No permission for info '.$className);
@@ -54,8 +53,7 @@
 		 * @param $request HttpRequest
 		 * @return ModelAndView
 		**/
-		protected function showProcess(HttpRequest $request)
-		{
+		protected function showProcess(HttpRequest $request) {
 			$propertyList = $this->getPropertyList();
 			$proto = $this->getProto();
 
@@ -76,8 +74,7 @@
 		 * @param $request HttpRequest
 		 * @return ModelAndView
 		**/
-		protected function listProcess(HttpRequest $request)
-		{
+		protected function listProcess(HttpRequest $request) {
 			$this->searchProcess($request);
 			return $this->getMav('list');
 		}
@@ -88,8 +85,7 @@
 		 * @param HttpRequest $request
 		 * @return Model
 		 */
-		protected function searchProcess(HttpRequest $request)
-		{
+		protected function searchProcess(HttpRequest $request) {
 			$propertyList = $this->getPropertyList();
 			$proto = $this->getProto();
 
@@ -130,8 +126,7 @@
 		 * @param array $propertyList
 		 * @return Model
 		 */
-		protected function makeListHeaderModel(Form $form, array $propertyList)
-		{
+		protected function makeListHeaderModel(Form $form, array $propertyList) {
 			return Model::create()->
 				set('form', $form)->
 				set('propertyList', $propertyList)->
@@ -147,8 +142,7 @@
 		 * @param Form $form
 		 * @return Model
 		 */
-		protected function makePagerModel(QueryResult $queryResult, Form $form)
-		{
+		protected function makePagerModel(QueryResult $queryResult, Form $form) {
 			return Model::create()->
 				set('totalCount', $queryResult->getCount())->
 				set('offset', $form->getSafeValue('offset'))->
@@ -163,8 +157,7 @@
 		 * @param array $propertyList
 		 * @return Model
 		 */
-		protected function makeColumnModel(Form $form, array $propertyList)
-		{
+		protected function makeColumnModel(Form $form, array $propertyList) {
 			$columnParams = $form->export();
 			foreach (array_keys($columnParams) as $propertyName) {
 				unset($columnParams[$propertyName]['order']);
@@ -183,8 +176,7 @@
 		 * Возвращает базовые параметры url'а для отображения текущего контроллера
 		 * @return array
 		 */
-		protected function getUrlParams()
-		{
+		protected function getUrlParams() {
 			Assert::isTrue((bool)preg_match('~^(.*)Controller$~', get_class($this), $matches));
 			return array(
 				'area' => $matches[1],
@@ -196,8 +188,7 @@
 		 * Возвращает название класса со списком элементов которого будет работать контроллер
 		 * @return string
 		 */
-		protected function getObjectName()
-		{
+		protected function getObjectName() {
 			$className = get_class($this);
 			return substr($className, 0, stripos($className, 'listcontroller'));
 		}
@@ -206,8 +197,7 @@
 		 * Возвращает Proto объекта по которому создается список
 		 * @return AbstractProtoClass
 		 */
-		protected function getProto()
-		{
+		protected function getProto() {
 			return ClassUtils::callStaticMethod("{$this->getObjectName()}::proto");
 		}
 
@@ -215,48 +205,42 @@
 		 * Переопределенный метод возвращает путь до базовой директории шаблона
 		 * @return string
 		 */
-		protected function getViewPath()
-		{
+		protected function getViewPath() {
 			return 'Objects/'.($this->isStandartView() ? 'SimpleObject' : $this->getObjectName());
 		}
 		
 		/**
 		 * @return null|Criteria
 		 */
-		protected function getPreparedCriteria()
-		{
+		protected function getPreparedCriteria() {
 			return null;
 		}
 		
 		/**
 		 * @param Form $form 
 		 */
-		protected function applySearchRules(Form $form)
-		{
+		protected function applySearchRules(Form $form) {
 			/* implement in child if needed */
 		}
 		
 		/**
 		 * @return boolean 
 		 */
-		protected function isStandartView()
-		{
+		protected function isStandartView() {
 			return true;
 		}
 		
 		/**
 		 * @return boolean 
 		 */
-		protected function showInfo()
-		{
+		protected function showInfo() {
 			return true;
 		}
 		
 		/**
 		 * @return int 
 		 */
-		protected function getPageLimit()
-		{
+		protected function getPageLimit() {
 			return 20;
 		}
 
@@ -272,3 +256,4 @@
 			return '';
 		}
 	}
+?>

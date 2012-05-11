@@ -152,7 +152,6 @@
 		}
 		
 		/**
-		 *
 		 * @param mixed $object string|object
 		 */
 		private function getObjectName($object) {

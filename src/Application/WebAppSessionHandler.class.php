@@ -55,13 +55,7 @@
 			}
 
 			$session = SessionWrapper::me();
-			if (!empty($_COOKIE[session_name()])) {
-				$session->start();
-			} else {
-				/**
-				 * Not start session if user disable cookies or if it's a bot
-				**/
-			}
+			$this->startSessionIfNeed($session, $chain);
 
 			$chain->getServiceLocator()->set('session', $session);
 
@@ -108,6 +102,16 @@
 		{
 			$this->cookieTime = $cookieTime;
 			return $this;
+		}
+		
+		protected function startSessionIfNeed(SessionWrapper $session, WebApplication $chain) {
+			if (!empty($_COOKIE[session_name()])) {
+				$session->start();
+			} else {
+				/**
+				 * Not start session if user disable cookies or if it's a bot
+				**/
+			}
 		}
 	}
 ?>

@@ -1,6 +1,6 @@
 <?php
 /***************************************************************************
- *   Copyright (C) 2011 by Alexey Denisov                                  *
+ *   Copyright (C) 2011 by Alexey S. Denisov                               *
  *   alexeydsov@gmail.com                                                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -22,6 +22,15 @@
 		public function setForm(Form $form)
 		{
 			$this->value = $form;
+			return $this;
+		}
+		
+		/**
+		 * @throws WrongArgumentException
+		 * @return PrimitiveForm
+		**/
+		public function dropForm(Form $form) {
+			$this->value = null;
 			return $this;
 		}
 
@@ -53,18 +62,16 @@
 
 		public function exportValue()
 		{
-			if (!$this->value) {
+			if (!$this->value)
 				return null;
-			}
 
 			return $this->value->export();
 		}
 
 		public function getInnerErrors()
 		{
-			if ($this->value) {
+			if ($this->value)
 				return $this->value->getInnerErrors();
-			}
 
 			return array();
 		}
@@ -77,6 +84,14 @@
 		public function unfilteredImport($scope)
 		{
 			return $this->actualImport($scope, false);
+		}
+		
+		public function clean() {
+			$this->raw = null;
+			$this->value->clean();
+			$this->imported = false;
+			
+			return $this;
 		}
 
 		private function actualImport($scope, $importFiltering)
@@ -101,6 +116,7 @@
 			}
 
 			$this->imported = true;
+			$this->value->checkRules();
 
 			if ($this->value->getErrors())
 				return false;

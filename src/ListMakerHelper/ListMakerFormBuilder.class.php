@@ -10,8 +10,7 @@
  *                                                                         *
  ***************************************************************************/
 
-	class ListMakerFormBuilder
-	{
+	class ListMakerFormBuilder {
 		/**
 		 * @var AbstractProtoClass
 		 */
@@ -23,8 +22,7 @@
 
 		private $defaultLimit = 20;
 
-		public function __construct(AbstractProtoClass $proto, array $propertyList)
-		{
+		public function __construct(AbstractProtoClass $proto, array $propertyList) {
 			$this->proto = $proto;
 			$this->propertyList = $propertyList;
 		}
@@ -32,24 +30,21 @@
 		/**
 		 * @return ListMakerFormBuilder
 		 */
-		public static function create(AbstractProtoClass $proto, array $propertyList)
-		{
+		public static function create(AbstractProtoClass $proto, array $propertyList) {
 			return new self($proto, $propertyList);
 		}
 
 		/**
 		 * @return string
 		 */
-		public function getOffsetName()
-		{
+		public function getOffsetName() {
 			return $this->offsetName;
 		}
 
 		/**
 		 * @var ListMakerFormBuilder
 		 */
-		public function setOffsetName($offsetName)
-		{
+		public function setOffsetName($offsetName) {
 			Assert::isString($offsetName);
 			$this->offsetName = $offsetName;
 			return $this;
@@ -58,8 +53,7 @@
 		/**
 		 * @var ListMakerConstructor
 		 */
-		public function setLimitName($limitName)
-		{
+		public function setLimitName($limitName) {
 			Assert::isString($limitName);
 			$this->limitName = $limitName;
 			return $this;
@@ -68,16 +62,14 @@
 		/**
 		 * @return string
 		 */
-		public function getLimitName()
-		{
+		public function getLimitName() {
 			return $this->limitName;
 		}
 
 		/**
 		 * @return ListMakerFormBuilder
 		 */
-		public function setDefaultLimit($limit)
-		{
+		public function setDefaultLimit($limit) {
 			Assert::isPositiveInteger($limit);
 			$this->defaultLimit = $limit;
 			return $this;
@@ -86,16 +78,14 @@
 		/**
 		 * @return int
 		 */
-		public function getDefaultLimit()
-		{
+		public function getDefaultLimit() {
 			return $rhis->defaultLimit;
 		}
 
 		/**
 		 * @return ListMakerFormBuilder
 		 */
-		public function buildForm(Form $form = null)
-		{
+		public function buildForm(Form $form = null) {
 			if ($form === null) {
 				$form = Form::create();
 			}
@@ -110,8 +100,7 @@
 		 * @param Form $form
 		 * @return ListMakerFormBuilder
 		 */
-		protected function initForm(Form $form)
-		{
+		protected function initForm(Form $form) {
 			if ($form->getErrors() || $form->export()) {
 				throw new WrongStateException('Form Already Imported');
 			}
@@ -123,8 +112,7 @@
 		 * @param Form $form
 		 * @return ListMakerFormBuilder
 		 */
-		protected function fillForm(Form $form)
-		{
+		protected function fillForm(Form $form) {
 			$form->
 				add(Primitive::integer($this->offsetName)->setMin(0)->setDefault(0))->
 				add(Primitive::integer($this->limitName)->setMin(0)->setDefault($this->defaultLimit));
@@ -144,8 +132,7 @@
 		 * @param string $propertyName
 		 * @return Form
 		 */
-		protected function makePropertyForm($propertyName)
-		{
+		protected function makePropertyForm($propertyName) {
 			$options = $this->propertyList[$propertyName];
 			$objectLink = isset($options[ListMakerProperties::OPTION_OBJECT_LINK])
 				? $options[ListMakerProperties::OPTION_OBJECT_LINK]
@@ -168,6 +155,10 @@
 						case ListMakerProperties::OPTION_FILTERABLE_LT:
 						case ListMakerProperties::OPTION_FILTERABLE_LTEQ:
 						case ListMakerProperties::OPTION_FILTERABLE_ILIKE:
+						case ListMakerProperties::OPTION_FILTERABLE_CONTAINS:
+						case ListMakerProperties::OPTION_FILTERABLE_CONTAINS_EQ:
+						case ListMakerProperties::OPTION_FILTERABLE_IS_CONTAINED_WITHIN:
+						case ListMakerProperties::OPTION_FILTERABLE_IS_CONTAINED_WITHIN_EQ:
 							$prmitiveList[] = $this->makePrimitiveComparison($filterName, $propertyType);
 							break;
 						case ListMakerProperties::OPTION_FILTERABLE_IS_NULL:
@@ -206,8 +197,7 @@
 			return $form;
 		}
 
-		protected function makePrimitiveComparison($filterName, $propertyType)
-		{
+		protected function makePrimitiveComparison($filterName, $propertyType) {
 			switch ($propertyType) {
 				case 'identifier':
 				case 'identifierList':
@@ -219,10 +209,13 @@
 					return Primitive::float($filterName);
 				case 'timestamp':
 					return Primitive::timestamp($filterName)->setSingle();
+				case 'timestampTZ':
+					return Primitive::timestampTZ($filterName);
 				case 'date':
 					return Primitive::date($filterName)->setSingle();
 				case 'string':
 				case 'scalarIdentifier':
+				case 'inet':
 					return Primitive::string($filterName);
 				case 'boolean':
 					$errorMsg = "Для propertyType 'boolean' операции сравнения невозможны";
@@ -234,13 +227,11 @@
 			Assert::isUnreachable();
 		}
 
-		protected function makePrimitiveTernaryLogic($filterName)
-		{
+		protected function makePrimitiveTernaryLogic($filterName) {
 			return Primitive::boolean($filterName);
 		}
 
-		protected function makePrimitiveIn($filterName, $propertyType)
-		{
+		protected function makePrimitiveIn($filterName, $propertyType) {
 			switch ($propertyType) {
 				case 'identifier':
 				case 'identifierList':
@@ -265,3 +256,4 @@
 			Assert::isUnreachable();
 		}
 	}
+?>

@@ -29,8 +29,7 @@
 		 * @param IServiceLocator $serviceLocator
 		 * @return TakeEditToolkitCommand
 		 */
-		public function setServiceLocator(IServiceLocator $serviceLocator)
-		{
+		public function setServiceLocator(IServiceLocator $serviceLocator) {
 			$this->serviceLocator = $serviceLocator;
 			return $this;
 		}
@@ -38,8 +37,7 @@
 		/**
 		 * @return ServiceLocator
 		 */
-		public function getServiceLocator()
-		{
+		public function getServiceLocator() {
 			return $this->serviceLocator;
 		}
 		
@@ -47,20 +45,8 @@
 		 * @param Closure $logCallback
 		 * @return TakeEditToolkitCommand 
 		 */
-		public function setLogCallback(Closure $logCallback)
-		{
+		public function setLogCallback(Closure $logCallback) {
 			$this->logCallback = $logCallback;
-			return $this;
-		}
-
-		/**
-		 * Перед сохранением объекта выполняется дополнительная валидация объекта через метод Proto
-		 * @return TakeEditTemplateCommand
-		 */
-		protected function prepairFormTakeImport(IdentifiableObject $subject, Form $form, HttpRequest $request)
-		{
-			parent::prepairFormTakeImport($subject, $form, $request);
-
 			return $this;
 		}
 
@@ -70,8 +56,7 @@
 		 * @param IdentifiableObject $subject
 		 * @return IdentifiableObject
 		 */
-		protected function takeObject(Form $form, IdentifiableObject $subject)
-		{
+		final protected function takeObject(Form $form, IdentifiableObject $subject) {
 			$logData = array('command' => get_class($this), 'formData' => $form->export());
 			if ($oldObject = $form->getValue('id')) {
 				$oldObjectDump = $this->getLogOldData($form, $oldObject);
@@ -102,8 +87,7 @@
 		 * @param IdentifiableObject $oldObject
 		 * @return array
 		 */
-		protected function getLogOldData(Form $form, IdentifiableObject $oldObject)
-		{
+		protected function getLogOldData(Form $form, IdentifiableObject $oldObject) {
 			return $this->getLogObjectData($form, $oldObject);
 		}
 
@@ -113,8 +97,7 @@
 		 * @param IdentifiableObject $subject
 		 * @return array
 		 */
-		protected function getLogNewData(Form $form, IdentifiableObject $subject)
-		{
+		protected function getLogNewData(Form $form, IdentifiableObject $subject) {
 			return $this->getLogObjectData($form, $subject);
 		}
 
@@ -124,8 +107,7 @@
 		 * @param IdentifiableObject $subject
 		 * @return type
 		 */
-		protected function getLogObjectData(Form $form, IdentifiableObject $subject)
-		{
+		protected function getLogObjectData(Form $form, IdentifiableObject $subject) {
 			$newSubjectForm = $subject->proto()->makeForm();
 			FormUtils::object2form($subject, $newSubjectForm);
 			return $newSubjectForm->export();
@@ -136,16 +118,14 @@
 		 * @param IdentifiableObject $subject
 		 * @return TakeEditToolkitCommand
 		 */
-		protected function logData($data, IdentifiableObject $subject)
-		{
+		protected function logData($data, IdentifiableObject $subject) {
 			if ($this->logCallback) {
 				$this->logCallback->__invoke($data, $subject);
 			}
 			return $this;
 		}
 
-		protected function getDiffData($newData, $oldData)
-		{
+		final protected function getDiffData($newData, $oldData) {
 			$diff = array();
 			foreach ($newData as $newKey => $newValue) {
 				if (isset($oldData[$newKey])) {
@@ -181,8 +161,7 @@
 			return $diff;
 		}
 
-		private function isIndexizeArray($array)
-		{
+		private function isIndexizeArray($array) {
 			$i = 0;
 			foreach ($array as $key => $value) {
 				if ($key != $i++) {
@@ -194,8 +173,7 @@
 			return true;
 		}
 
-		private function isStringable($value)
-		{
+		private function isStringable($value) {
 			return is_scalar($value)
 				|| ($value instanceof Stringable)
 				|| ($value === null)

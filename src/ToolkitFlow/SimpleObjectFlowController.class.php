@@ -32,8 +32,7 @@
 		 * @param $request HttpRequest
 		 * @return ModelAndView
 		**/
-		public function handleRequest(HttpRequest $request)
-		{
+		public function handleRequest(HttpRequest $request) {
 			return $this->resolveAction($request);
 		}
 
@@ -42,8 +41,7 @@
 		 * @param $request HttpRequest
 		 * @return ModelAndView
 		**/
-		protected function infoProcess(HttpRequest $request)
-		{
+		protected function infoProcess(HttpRequest $request) {
 			$proto = $this->getObjectProto();
 
 			$form = Form::create();
@@ -56,7 +54,7 @@
 				return $this->getMav('index', 'NotFound');
 			}
 			
-			if (!$this->serviceLocator->get('linker')->isObjectSupported($form->getValue('id'), $this->getInfoAction())) {
+			if (!$this->getLinker()->isObjectSupported($form->getValue('id'), $this->getInfoAction())) {
 				throw new PermissionException('No permission for info '.$this->getObjectName());
 			}
 
@@ -74,8 +72,7 @@
 		 * @param $request HttpRequest
 		 * @return ModelAndView
 		**/
-		protected function editProcess(HttpRequest $request)
-		{
+		protected function editProcess(HttpRequest $request) {
 			$proto = $this->getObjectProto();
 
 			$form = $proto->makeForm();
@@ -86,7 +83,7 @@
 			$mav = $command->run($subject, $form, $request);
 			
 			$accessObject = $form->getValue('id') ?: $this->getObjectName();
-			if (!$this->serviceLocator->get('linker')->isObjectSupported($accessObject, $this->getEditAction($accessObject))) {
+			if (!$this->getLinker()->isObjectSupported($accessObject, $this->getEditAction($accessObject))) {
 				throw new PermissionException('No permission for edit '.$this->getObjectName());
 			}
 
@@ -101,8 +98,7 @@
 		 * @param $request HttpRequest
 		 * @return ModelAndView
 		**/
-		protected function takeProcess(HttpRequest $request)
-		{
+		protected function takeProcess(HttpRequest $request) {
 			$proto = $this->getObjectProto();
 			$form = $proto->makeForm();
 			$subject = ClassUtils::callStaticMethod("{$this->getObjectName()}::create");
@@ -111,7 +107,7 @@
 			}
 			
 			$editObject = $form->getValue('id') ?: $this->getObjectName();
-			if (!$this->serviceLocator->get('linker')->isObjectSupported($editObject, $this->getEditAction($editObject))) {
+			if (!$this->getLinker()->isObjectSupported($editObject, $this->getEditAction($editObject))) {
 				throw new PermissionException('No permission for edit '.$this->getObjectName());
 			}
 
@@ -148,8 +144,7 @@
 			return $this->getMavRedirectByUrl($this->getUrlInfo($subject));
 		}
 
-		protected function dropProcess(HttpRequest $request)
-		{
+		protected function dropProcess(HttpRequest $request) {
 			$proto = $this->getObjectProto();
 
 			$form = Form::create();
@@ -161,7 +156,7 @@
 				return $this->getMav('drop.success');
 			}
 			
-			if (!$this->serviceLocator->get('linker')->isObjectSupported($subject, $this->getDropAction())) {
+			if (!$this->getLinker()->isObjectSupported($subject, $this->getDropAction())) {
 				throw new PermissionException('No permission for drop '.$className);
 			}
 
@@ -213,8 +208,7 @@
 			return $this->getMavRedirectByUrl($this->getUrlInfo($subject));
 		}
 
-		protected function getEditMav(Form $form, IdentifiableObject $subject, Model $commandModel)
-		{
+		protected function getEditMav(Form $form, IdentifiableObject $subject, Model $commandModel) {
 			$infoObject = $form->getValue('id') ?: $subject;
 			$this->model->
 				set('form', $form)->
@@ -227,7 +221,7 @@
 				set('takeUrl', $this->getUrlTake($infoObject))->
 				set('closeDialog', $this->toCloseDialog($infoObject))
 				;
-			$linker = $this->serviceLocator->get('linker');
+			$linker = $this->getLinker();
 			if ($linker->isObjectSupported($infoObject, $this->getDropAction())) {
 				$this->model->set('dropUrl', $this->getUrlDrop($infoObject));
 			}
@@ -240,8 +234,7 @@
 		 * @param IdentifiableObject $infoObject
 		 * @return array
 		 */
-		protected function getCustomInfoFieldsData(IdentifiableObject $infoObject)
-		{
+		protected function getCustomInfoFieldsData(IdentifiableObject $infoObject) {
 			return array();
 		}
 
@@ -251,8 +244,7 @@
 		 * @param IdentifiableObject $subject
 		 * @return array
 		 */
-		protected function getCustomEditFieldsData(Form $form, IdentifiableObject $subject)
-		{
+		protected function getCustomEditFieldsData(Form $form, IdentifiableObject $subject) {
 			return array();
 		}
 
@@ -261,8 +253,7 @@
 		 * Все не перечисленные параметры будут оказываться после перечисленных в порядке по умолчнию
 		 * @return array
 		 */
-		protected function getOrderFieldList()
-		{
+		protected function getOrderFieldList() {
 			return array();
 		}
 
@@ -271,8 +262,7 @@
 		 * По умолчанию для удобства это обрезанное название текущего контроллера (убрана часть controller)
 		 * @return string
 		 */
-		protected function getObjectName()
-		{
+		protected function getObjectName() {
 			$className = get_class($this);
 			return substr($className, 0, stripos($className, 'controller'));
 		}
@@ -281,8 +271,7 @@
 		 * Возвращает прото объекта, с которым происходит работа в текущем контроллере
 		 * @return AbstractProtoClass
 		 */
-		protected function getObjectProto()
-		{
+		protected function getObjectProto() {
 			return ClassUtils::callStaticMethod("{$this->getObjectName()}::proto");
 		}
 
@@ -290,8 +279,7 @@
 		 * Возвращает название комманды, реализующей редактирование объекта
 		 * @return string
 		 */
-		protected function getCommandName()
-		{
+		protected function getCommandName() {
 			return 'TakeEditToolkitCommand';
 		}
 
@@ -299,8 +287,7 @@
 		 * Возвращает название комманды, реализующей удаление объекта
 		 * @return string
 		 */
-		protected function getDropCommandName()
-		{
+		protected function getDropCommandName() {
 			return 'DropCommand';
 		}
 		
@@ -309,8 +296,7 @@
 		 * Создает и возвращает комманду для редактирования объекта
 		 * @return EditorCommand
 		 */
-		protected function getCommand()
-		{
+		protected function getCommand() {
 			$command = $this->serviceLocator->spawn($this->getCommandName());
 			
 			if ($command instanceof TakeEditToolkitCommand) {
@@ -326,8 +312,7 @@
 		 * Создает и возвращает комманду для редактирования объекта
 		 * @return DropCommand
 		 */
-		protected function getDropCommand()
-		{
+		protected function getDropCommand() {
 			return $this->serviceLocator->spawn($this->getDropCommandName());
 		}
 
@@ -335,8 +320,7 @@
 		 * Признак необходимости выполнять комманду в транзакции
 		 * @return boolean
 		 */
-		protected function isTakeInTransaction()
-		{
+		protected function isTakeInTransaction() {
 			return false;
 		}
 
@@ -344,8 +328,7 @@
 		 * Возвращает дефолтный путь к директории с шаблонами
 		 * @return string
 		 */
-		protected function getViewPath()
-		{
+		protected function getViewPath() {
 			return 'Objects/SimpleObject';
 		}
 
@@ -354,9 +337,8 @@
 		 * - url'ов действий которые можно делать пользователю с объектом
 		 * @param type $infoObject
 		 */
-		protected function getButtonUrlList(IdentifiableObject $infoObject)
-		{
-			$linker = $this->serviceLocator->get('linker');
+		protected function getButtonUrlList(IdentifiableObject $infoObject) {
+			$linker = $this->getLinker();
 			/* @var $linker ToolkitLinkUtils */
 			$buttonList = array();
 			if ($linker->isObjectSupported($infoObject, $this->getEditAction($infoObject))) {
@@ -393,9 +375,8 @@
 		 * @param IdentifiableObject $infoObject
 		 * @return string
 		 */
-		protected function getUrlInfo(IdentifiableObject $infoObject)
-		{
-			return $this->serviceLocator->get('linker')->getUrl($infoObject, array(), $this->getInfoAction());
+		protected function getUrlInfo(IdentifiableObject $infoObject) {
+			return $this->getLinker()->getUrl($infoObject, array(), $this->getInfoAction());
 		}
 
 		/**
@@ -403,9 +384,8 @@
 		 * @param IdentifiableObject $infoObject
 		 * @return string
 		 */
-		protected function getUrlEdit(IdentifiableObject $infoObject)
-		{
-			return $this->serviceLocator->get('linker')->getUrl($infoObject, array('action' => 'edit'), $this->getEditAction($infoObject));
+		protected function getUrlEdit(IdentifiableObject $infoObject) {
+			return $this->getLinker()->getUrl($infoObject, array('action' => 'edit'), $this->getEditAction($infoObject));
 		}
 
 		/**
@@ -413,27 +393,30 @@
 		 * @param IdentifiableObject $infoObject
 		 * @return string
 		 */
-		protected function getUrlTake(IdentifiableObject $infoObject)
-		{
-			return $this->serviceLocator->get('linker')->getUrl($infoObject, array('action' => 'take'), $this->getEditAction($infoObject));
+		protected function getUrlTake(IdentifiableObject $infoObject) {
+			return $this->getLinker()->getUrl($infoObject, array('action' => 'take'), $this->getEditAction($infoObject));
 		}
 		
-		protected function getUrlDrop(IdentifiableObject $infoObject, $confirm = false)
-		{
-			$url = $this->serviceLocator->get('linker')->getUrl($infoObject, array('action' => 'drop'), $this->getDropAction());
+		protected function getUrlDrop(IdentifiableObject $infoObject, $confirm = false) {
+			$url = $this->getLinker()->getUrl($infoObject, array('action' => 'drop'), $this->getDropAction());
 			if ($confirm) {
 				$url .= '&confirm=1';
 			}
 			return $url;
 		}
+		
+		/**
+		 * @return ToolkitLinkUtils
+		 */
+		protected function getLinker() {
+			return $this->serviceLocator->get('linker');
+		}
 
-		final protected function getEmptyFieldData()
-		{
+		final protected function getEmptyFieldData() {
 			return array('tpl' => 'Objects/SimpleObject/empty');
 		}
 		
-		protected function toCloseDialog(IdentifiableObject $subject)
-		{
+		protected function toCloseDialog(IdentifiableObject $subject) {
 			return false;
 		}
 		
@@ -469,8 +452,7 @@
 		 * Возвращает анонимную функцию для сортировки ассоциативной массива в необходимом порядке
 		 * @return
 		 */
-		private function getFunctionListOrder()
-		{
+		private function getFunctionListOrder() {
 			$indexList = $this->getOrderFieldList();
 
 			return function(array $dataList) use ($indexList) {

@@ -10,13 +10,11 @@
 			);
 		}
 		
-		protected function objectLink($object)
-		{
+		protected function objectLink($object) {
 			$this->view('Objects/SimpleObject/objectLink', array('object' => $object));
 		}
 		
-		protected function getEnumerationNameList(AbstractProtoClass $proto, $options, $propertyName)
-		{
+		protected function getEnumerationNameList(AbstractProtoClass $proto, $options, $propertyName) {
 			$objectLink = isset($options[ListMakerProperties::OPTION_OBJECT_LINK])
 				? $options[ListMakerProperties::OPTION_OBJECT_LINK]
 				: $propertyName;
@@ -31,8 +29,7 @@
 			return $exemplar->getNameList();
 		}
 		
-		protected function isPrimitiveEnumeration(AbstractProtoClass $proto, $options, $propertyName)
-		{
+		protected function isPrimitiveEnumeration(AbstractProtoClass $proto, $options, $propertyName) {
 			$objectLink = isset($options[ListMakerProperties::OPTION_OBJECT_LINK])
 				? $options[ListMakerProperties::OPTION_OBJECT_LINK]
 				: $propertyName;
@@ -43,22 +40,19 @@
 			return $propertyType == 'enumeration';
 		}
 
-		protected function isTimePrimitive(Form $form, $propertyName, $filterName)
-		{
-			$timePrimitiveList = array('PrimitiveTimestamp');
+		protected function isTimePrimitive(Form $form, $propertyName, $filterName) {
+			$timePrimitiveList = array('PrimitiveTimestamp', 'PrimitiveTimestampTZ');
 
 			return in_array(get_class($form->getValue($propertyName)->get($filterName)), $timePrimitiveList);
 		}
 
-		protected function isDatePrimitive(Form $form, $propertyName, $filterName)
-		{
+		protected function isDatePrimitive(Form $form, $propertyName, $filterName) {
 			$datePrimitiveList = array('PrimitiveDate');
 
 			return in_array(get_class($form->getValue($propertyName)->get($filterName)), $datePrimitiveList);
 		}
 
-		protected function getFilteredValue(Form $form, $propertyName, $filterName, $propertyData)
-		{
+		protected function getFilteredValue(Form $form, $propertyName, $filterName, $propertyData) {
 			if (!isset($propertyData[$filterName])) {
 				return '';
 			}

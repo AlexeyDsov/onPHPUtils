@@ -1,6 +1,6 @@
 <?php
 /***************************************************************************
- *   Copyright (C) 2006-2008 by Anton E. Lebedevich                        *
+ *   Copyright (C) 2011-2012 by Aleksey S. Denisov                         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Lesser General Public License as        *

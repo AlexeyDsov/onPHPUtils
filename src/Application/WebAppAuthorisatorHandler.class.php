@@ -17,16 +17,14 @@
 		/**
 		 * @return WebAppAuthorisatorHandler
 		 */
-		public static function create()
-		{
+		public static function create() {
 			return new self();
 		}
 
 		/**
 		 * @return WebAppAuthorisatorHandler
 		 */
-		public function run(InterceptingChain $chain)
-		{
+		public function run(InterceptingChain $chain) {
 			$serviceLocator = $chain->getServiceLocator();
 			foreach ($this->authorisatorList as $authrisatorName => $authorisator) {
 				$this->setupAuthorisator($chain, $authorisator);
@@ -41,8 +39,7 @@
 		/**
 		 * @return WebAppAuthorisatorHandler
 		 */
-		public function addAuthorisator($nameInLocator, Authorisator $authorisator)
-		{
+		public function addAuthorisator($nameInLocator, Authorisator $authorisator) {
 			$this->authorisatorList[$nameInLocator] = $authorisator;
 			return $this;
 		}
@@ -51,8 +48,7 @@
 		 * @param Authorisator $authorisator
 		 * @return $this;
 		 */
-		protected function setupAuthorisator(InterceptingChain $chain, Authorisator $authorisator)
-		{
+		protected function setupAuthorisator(InterceptingChain $chain, Authorisator $authorisator) {
 			$authorisator->setSession($chain->getServiceLocator()->get('session'));
 			if ($userData = $this->getUniqUserData($chain)) {
 				$authorisator->setUniqData($userData);
@@ -65,8 +61,7 @@
 		 * @param InterceptingChain $chain
 		 * @return string
 		 */
-		protected function getUniqUserData(InterceptingChain $chain)
-		{
+		protected function getUniqUserData(InterceptingChain $chain) {
 			$request = $chain->getRequest();
 			/* @var $request HttpRequest */
 			$remoteIp = $request->getServerVar('REMOTE_ADDR');

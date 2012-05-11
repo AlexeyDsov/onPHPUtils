@@ -18,8 +18,7 @@
 		protected $model = null;
 		protected $params = array();
 
-		public function render($model = null)
-		{
+		public function render($model = null) {
 			$this->model = $model;
 			return parent::render($model);
 		}
@@ -28,8 +27,7 @@
 		 * @param string $name
 		 * @return any
 		 */
-		public function get($name)
-		{
+		public function get($name) {
 			if (!$this->has($name)) {
 				throw new MissingElementException("not setted value with name '$name'");
 			}
@@ -41,8 +39,7 @@
 		 * @param any $value
 		 * @return SimplePhpViewParametrized
 		 */
-		public function set($name, $value)
-		{
+		public function set($name, $value) {
 			if ($this->has($name)) {
 				throw new WrongStateException("value with name '$name' already setted ");
 			}
@@ -54,8 +51,7 @@
 		 * @param string $name
 		 * @return SimplePhpViewParametrized
 		 */
-		public function drop($name)
-		{
+		public function drop($name) {
 			if (!$this->has($name)) {
 				throw new MissingElementException("not setted value with name '$name'");
 			}
@@ -67,18 +63,17 @@
 		 * @param type $name
 		 * @return boolean
 		 */
-		public function has($name)
-		{
+		public function has($name) {
 			Assert::isScalar($name);
 			return array_key_exists($name, $this->params);
 		}
 
 		/**
-		 * Отрисовывает подшаблон $templateName с добавлением дополнительных параметров из второго аргумента
+		 * Отрисовывает подшаблон $templateName со всеми параметрами модели текущего шаблона
+		 *    + добавлением списка дополнительных параметров из второго аргумента
 		 * @return null
 		 */
-		protected function template($templateName, array $params = array())
-		{
+		protected function template($templateName, array $params = array()) {
 			if (!empty($params)) {
 				$model = Model::create()->merge($this->model);
 				foreach ($params as $paramName => $paramValue) {
@@ -91,12 +86,12 @@
 		}
 
 		/**
-		 * Сокращенный вызов подшаблона из шаблона
-		 * @param type $templateName
-		 * @param type $model
+		 * Сокращенный вызов подшаблона из шаблона, для сокращенного создания модели
+		 *    можно передовать не объект Model, а ассоциативный массив
+		 * @param string $templateName
+		 * @param Model|array $model
 		 */
-		protected function view($templateName, /* Model */ $model = null)
-		{
+		protected function view($templateName, /* Model */ $model = null) {
 			if ($model && is_array($model)) {
 				$model = $this->array2Model($model);
 			} elseif ($model) {
@@ -106,12 +101,11 @@
 		}
 
 		/**
-		 * Короткий вызов для htmlspecialchars в шаблоне
+		 * Короткий вызов для htmlspecialchars в шаблоне + использование sprintf при передаче больше одного аргумента
 		 * @param string $value
 		 * @return string
 		 */
-		protected function escape($value/*,  sprintf params */)
-		{
+		protected function escape($value/*,  sprintf params */) {
 			if (func_num_args() > 1) {
 				$value = call_user_func_array('sprintf', func_get_args());
 			}

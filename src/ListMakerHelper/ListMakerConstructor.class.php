@@ -20,6 +20,11 @@
 			ListMakerProperties::OPTION_FILTERABLE_LTEQ => BinaryExpression::LOWER_OR_EQUALS,
 
 			ListMakerProperties::OPTION_FILTERABLE_ILIKE => BinaryExpression::ILIKE,
+
+			ListMakerProperties::OPTION_FILTERABLE_IS_CONTAINED_WITHIN => '<<',
+			ListMakerProperties::OPTION_FILTERABLE_CONTAINS => '>>',
+			ListMakerProperties::OPTION_FILTERABLE_IS_CONTAINED_WITHIN_EQ => '<<=',
+			ListMakerProperties::OPTION_FILTERABLE_CONTAINS_EQ => '>>=',
 		);
 
 		protected $postfixExpressionMapping = array(
@@ -40,8 +45,7 @@
 		protected $offsetName = 'offset';
 		protected $limitName = 'limit';
 
-		public function __construct(AbstractProtoClass $proto, array $propertyList)
-		{
+		public function __construct(AbstractProtoClass $proto, array $propertyList) {
 			$this->proto = $proto;
 			$this->propertyList = $propertyList;
 		}
@@ -49,24 +53,21 @@
 		/**
 		 * @return ListMakerConstructor
 		 */
-		public static function create(AbstractProtoClass $proto, array $propertyList)
-		{
+		public static function create(AbstractProtoClass $proto, array $propertyList) {
 			return new self($proto, $propertyList);
 		}
 
 		/**
 		 * @return string
 		 */
-		public function getOffsetName()
-		{
+		public function getOffsetName() {
 			return $this->offsetName;
 		}
 
 		/**
 		 * @var ListMakerConstructor
 		 */
-		public function setOffsetName($offsetName)
-		{
+		public function setOffsetName($offsetName) {
 			Assert::isString($offsetName);
 			$this->offsetName = $offsetName;
 			return $this;
@@ -75,16 +76,14 @@
 		/**
 		 * @return string
 		 */
-		public function getLimitName()
-		{
+		public function getLimitName() {
 			return $this->limitName;
 		}
 
 		/**
 		 * @var ListMakerConstructor
 		 */
-		public function setLimitName($limitName)
-		{
+		public function setLimitName($limitName) {
 			Assert::isString($limitName);
 			$this->limitName = $limitName;
 			return $this;
@@ -93,8 +92,7 @@
 		/**
 		 * @return QueryResult
 		 */
-		public function getResult(Form $form, Criteria $criteria = null)
-		{
+		public function getResult(Form $form, Criteria $criteria = null) {
 			Assert::isEmpty($form->getErrors(), 'Form must not has errors');
 			if (!$criteria) {
 				$criteria = $this->makeCriteria();
@@ -107,7 +105,7 @@
 
 			$this->fillCriteria($criteria, $form);
 
-//only uniques varianty
+			//only uniques variants
 			$idCriteria = clone $criteria;
 			$idCriteria
 				->addProjection(Projection::property('id', 'id'))
@@ -146,8 +144,7 @@
 		/**
 		 * @return ListMakerConstructor
 		 */
-		protected function fillCriteria(Criteria $criteria, Form $form)
-		{
+		protected function fillCriteria(Criteria $criteria, Form $form) {
 			$criteria->
 				setOffset($form->getSafeValue($this->offsetName))->
 				setLimit($form->getSafeValue($this->limitName));
@@ -164,8 +161,7 @@
 		/**
 		 * @return Criteria
 		 */
-		protected function makeCriteria()
-		{
+		protected function makeCriteria() {
 			$className = mb_substr(get_class($this->proto), 5);
 			$dao = ClassUtils::callStaticMethod("$className::dao");
 
@@ -175,8 +171,7 @@
 		/**
 		 * @return ListMakerConstructor
 		 */
-		protected function makeOrdersToCriteria(Criteria $criteria, array $formData)
-		{
+		protected function makeOrdersToCriteria(Criteria $criteria, array $formData) {
 			$orderList = array();
 
 			$hasIdSort = false;
@@ -221,8 +216,7 @@
 		/**
 		 * @return ListMakerConstructor
 		 */
-		protected function makeFiltersToCriteria(Criteria $criteria, array $formData)
-		{
+		protected function makeFiltersToCriteria(Criteria $criteria, array $formData) {
 			foreach ($this->propertyList as $propertyName => $options) {
 				if (isset($formData[$propertyName]) && is_array($formData[$propertyName])) {
 					$this->makeFilterToCriteria($criteria, $propertyName, $formData[$propertyName]);
@@ -232,8 +226,7 @@
 			return $this;
 		}
 
-		protected function makeFilterToCriteria(Criteria $criteria, $propertyName, $propertyData)
-		{
+		protected function makeFilterToCriteria(Criteria $criteria, $propertyName, $propertyData) {
 			$options = $this->propertyList[$propertyName];
 			$objectLink = isset($options[ListMakerProperties::OPTION_OBJECT_LINK])
 				? $options[ListMakerProperties::OPTION_OBJECT_LINK]
@@ -291,8 +284,7 @@
 		 * @param string $value
 		 * @return BinaryExpression
 		 */
-		protected function makeExpressionBinary($objectLink, $filterName, $value)
-		{
+		protected function makeExpressionBinary($objectLink, $filterName, $value) {
 			if (!isset($this->binaryExpressionMapping[$filterName])) {
 				throw new UnimplementedFeatureException('Unkown binary filter: '.$filterName);
 			}
@@ -309,8 +301,7 @@
 		 * @param string $filterName
 		 * @return PostfixUnaryExpression
 		 */
-		protected function makeExpressionTernary($objectLink, $filterName)
-		{
+		protected function makeExpressionTernary($objectLink, $filterName) {
 			if (!isset($this->postfixExpressionMapping[$filterName])) {
 				throw new UnimplementedFeatureException('Unknown ternary filter: '.$filterName);
 			}
@@ -324,8 +315,7 @@
 		 * @param string $value
 		 * @return LogicalObject
 		 */
-		protected function makeExpressionIn($objectLink, $value)
-		{
+		protected function makeExpressionIn($objectLink, $value) {
 			Assert::isArray($value);
 			$inArray = array();
 			foreach ($value as $element) {
@@ -340,3 +330,4 @@
 			return null;
 		}
 	}
+?>

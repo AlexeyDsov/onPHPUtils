@@ -10,8 +10,8 @@
  *                                                                         *
  ***************************************************************************/
 
-	class WebAppAjaxHandler implements InterceptingChainHandler
-	{
+	class WebAppAjaxHandler implements InterceptingChainHandler {
+		
 		private static $ajaxRequestVar = 'HTTP_X_REQUESTED_WITH';
 		private static $ajaxRequestValueList = array('XMLHttpRequest');
 		private static $pjaxRequestVar = 'HTTP_X_PJAX';
@@ -19,28 +19,23 @@
 		/**
 		 * @return WebAppAjaxHandler
 		 */
-		public static function create()
-		{
+		public static function create() {
 			return new self();
 		}
 
 		/**
 		 * @return WebAppAjaxHandler
 		 */
-		public function run(InterceptingChain $chain)
-		{
+		public function run(InterceptingChain $chain) {
 			/* @var $chain WebApplication */
 			$isPjaxRequest = $this->isPjaxRequest($chain->getRequest());
 			$isAjaxRequest = !$isPjaxRequest && $this->isAjaxRequest($chain->getRequest());
-			$isIATRequest = $this->isIATRequest($chain->getRequest());
 
 			$chain->setVar('isPjax', $isPjaxRequest);
 			$chain->setVar('isAjax', $isAjaxRequest);
-			$chain->setVar('isIAT', $isIATRequest);
 			$chain->getServiceLocator()->
 				set('isPjax', $isPjaxRequest)->
-				set('isAjax', $isAjaxRequest)->
-				set('isIAT', $isIATRequest);
+				set('isAjax', $isAjaxRequest);
 
 			$chain->next();
 
@@ -50,8 +45,7 @@
 		/**
 		 * @return boolean
 		 */
-		private function isAjaxRequest(HttpRequest $request)
-		{
+		private function isAjaxRequest(HttpRequest $request) {
 			$form = Form::create()->
 				add(
 					Primitive::plainChoice(self::$ajaxRequestVar)->
@@ -78,8 +72,7 @@
 		/**
 		 * @return boolean
 		 */
-		private function isPjaxRequest(HttpRequest $request)
-		{
+		private function isPjaxRequest(HttpRequest $request) {
 			$form = Form::create()->
 				add(
 					Primitive::boolean(self::$pjaxRequestVar)
@@ -94,23 +87,6 @@
 				return false;
 			}
 			return $form->getValue(self::$pjaxRequestVar) || $form->getValue('_isPjax');
-		}
-
-		/**
-		 * @return boolean
-		 */
-		private function isIATRequest(HttpRequest $request)
-		{
-			$form = Form::create()->
-				add(
-					Primitive::boolean('_isIAT')
-				)->
-				import($request->getGet());
-
-			if ($form->getErrors()) {
-				return false;
-			}
-			return $form->getValue('_isIAT');
 		}
 	}
 ?>

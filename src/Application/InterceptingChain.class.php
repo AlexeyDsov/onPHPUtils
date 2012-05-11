@@ -43,7 +43,10 @@
 			$this->pos++;
 
 			if (isset($this->chain[$this->pos])) {
-				$this->chain[$this->pos]->run($this);
+				$handler = $this->chain[$this->pos];
+				/* @var $handler InterceptingChainHandler */
+				$handler->run($this);
+				$this->checkHandlerResult($handler);
 			}
 
 			return $this;
@@ -60,7 +63,10 @@
 
 			return $this;
 		}
-
+		
+		protected function checkHandlerResult(InterceptingChainHandler $handler)
+		{
+			return $this;
+		}
 	}
-
 ?>

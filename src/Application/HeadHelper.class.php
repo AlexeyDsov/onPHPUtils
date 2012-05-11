@@ -159,7 +159,7 @@
 			foreach ($this->metaList as $metaData) {
 				$metaParams = '';
 				foreach ($metaData as $metaParam => $metaValue) {
-					$metaParams .= $metaParam.'="'.Filter::htmlSpecialChars()->apply($metaValue).'"';
+					$metaParams .= $metaParam.'="'.Filter::htmlSpecialChars()->apply($metaValue).'" ';
 				}
 				$string .= "$this->prefix<meta {$metaParams} />\n";
 			}
