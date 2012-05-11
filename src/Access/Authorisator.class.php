@@ -108,6 +108,9 @@
 			return $this->hash;
 		}
 
+		/**
+		* @return Identifiable
+		*/
 		public function getUser()
 		{
 			Assert::isNotNull($this->session, 'session must be setted');
@@ -150,6 +153,7 @@
 		}
 
 		/**
+		 * @param Identifiable $user
 		 * @return Authorisator
 		 */
 		public function setUser(Identifiable $user)
