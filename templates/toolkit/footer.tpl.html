@@ -1,0 +1,23 @@
+<?php
+if (!$this->get('isAjax')) {
+?>
+			</div>
+<?php
+if (!$this->get('isPjax')) {
+?>
+		</div>
+		<script type="text/javascript" src="<?=PATH_WEB_JS?>jquery-ui-1.8.17.custom.min.js"></script>
+		<script type="text/javascript" src="<?=PATH_WEB_JS?>DialogController.js"></script>
+		<script type="text/javascript" src="<?=PATH_WEB_JS?>jquery.sendPostForm.js"></script>
+		<script type="text/javascript" src="<?=PATH_WEB_JS?>jquery.pjax.js"></script>
+		<script type="text/javascript">
+			$(function(){
+				Application.init();
+			});
+		</script>
+	</body>
+</html>
+	<?php
+	}
+}
+?>

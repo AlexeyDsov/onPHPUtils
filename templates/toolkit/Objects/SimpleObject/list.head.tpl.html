@@ -1,0 +1,9 @@
+<tr>
+	<th><?=$this->trans('list.Num')?>:</th>
+	<? foreach ($propertyList as $propertyName => $propertyData) {
+		if (isset($propertyData[ListMakerProperties::OPTION_COLUMN])) { ?>
+			<th><? $partViewer->view('helpers/ListMaker/column', $columnModel->set('propertyName', $propertyName))?></th>
+		<? }
+	} ?>
+	<th><?=$this->trans('list.Actions')?></th>
+</tr>

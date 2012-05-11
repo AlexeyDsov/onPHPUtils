@@ -1,0 +1,15 @@
+<? $partViewer->view('header'); ?>
+<?=$this->trans('Object dropped')?>
+<? $dialogName = get_class($infoObject) . $id; ?>	
+<? if ($this->get('isAjax') && $infoObject) { ?>
+	<script type="text/javascript">
+		var dlg = $('#<?=$dialogName?>').dialog('option', {
+			title: "<?=$this->trans('Dropping object')?>",
+			buttons: {
+				"<?=$this->trans('Close')?>": function() {$(this).dialog('close');}
+			}
+		});
+		setTimeout(function() {$('#<?=$dialogName?>').dialog('close');}, 1000);
+	</script>
+<? } ?>
+<? $partViewer->view('footer'); ?>

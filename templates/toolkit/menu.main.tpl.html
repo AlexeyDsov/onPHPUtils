@@ -1,0 +1,9 @@
+<div id="adminMenu" class="adminMenu">
+	<? if ($this->has('menuList')) {
+		$menuData = array(
+			'menuList' => $this->get('menuList'),
+			'currentMenu' => isset($currentMenu) ? $currentMenu : '',
+		);
+		$this->view('menu.part', $menuData);
+	} ?>
+</div>

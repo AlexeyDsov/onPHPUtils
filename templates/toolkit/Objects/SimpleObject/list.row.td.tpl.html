@@ -1,0 +1,50 @@
+<?
+/* @var $infoObject IdentifiableObject */
+/* @var $propertyName string */
+/* @var $propertyData string */
+/* @var $objectLink string */
+$proto = $infoObject->proto();
+$property = $proto->getPropertyByName($objectLink);
+/* @var $property LightMetaProperty */
+$getter = $property->getGetter();
+$object = $infoObject->{$getter}();
+$propertyType = $property->getType();
+?>
+<td>
+	<?
+	if ($propertyName == 'id') {
+		print $this->escape($infoObject->getId());
+	} elseif (in_array($propertyType, array('identifier', 'scalarIdentifier', 'integerIdentifier'))) {
+		$this->objectLink($object);
+	} elseif ($propertyType == 'enumeration') {
+		print $object
+			? $this->escape("{$object->getId()} ({$object->getName()})")
+			: $this->trans('Not exists');
+	} elseif ($propertyType == 'identifierList') {
+		print "&nbsp;";
+	} elseif ($propertyType == 'boolean') {
+		if ($object === null) {
+			print $this->trans('Not setted');
+		} elseif ($object === false) {
+			print $this->trans('No');
+		} else {
+			print $this->trans('Yes');
+		}
+	} else {
+		$object = $infoObject->{$getter}();
+		if ($object === null) {
+			print $this->trans('Not setted');
+		} elseif ($object instanceof Date) {
+			print $object->toString();
+		} elseif ($object instanceof TimestampTZ) {
+			print $object->format(TimestampTZ::ATOM);
+		} elseif ($object instanceof Stringable) {
+			print $this->escape($object->toString());
+		} elseif (is_scalar($object)) {
+			print $this->escape($object);
+		} else {
+			print $this->trans('not readable format of object');
+		}
+	}
+	?>
+</td>

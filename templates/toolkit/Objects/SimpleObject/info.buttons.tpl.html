@@ -1,0 +1,82 @@
+<? if ($this->get('isAjax')) {
+	$dialogName = $this->get('linker')->getDialogName($infoObject);
+	$title = $this->trans(get_class($infoObject)).': ';
+	$title .= $this->escape($this->get('nameConverter')->get($infoObject)); ?>
+	<script type="text/javascript">
+		$(function() {
+			var windowHeight = (window.innerHeight - 200);
+			$('#<?=$dialogName?>').dialog('option', {
+				title: "<?=$this->trans('Info of')?> <?=$title?>",
+				width: 600,
+				height: windowHeight,
+				buttons: {
+					<?
+					/**
+					* @todo убрать здесь эти извращения и передавать в js "json данные", которые будут генерить кнопки
+					* сам это сделаю, но несколько позже
+					*/
+					$count = count($buttonUrlList); $i = 0;
+					foreach ($buttonUrlList as $buttonName => $buttonOptions) {
+						$isLast = ($i++ >= $count - 1);
+						if ($buttonOptions['window']) { ?>
+							"<?=$this->trans($buttonName)?>": function() {
+								DialogController.spawnByUrl('<?=$buttonOptions['url']?>', '<?=isset($buttonOptions['dialogName']) ? $buttonOptions['dialogName'] : $dialogName?>');
+							}<?=!$isLast ? ',' : ''?>
+						<? } else { ?>
+							"<?=$this->trans($buttonName)?>": function() {
+								Application.goUrl('<?=$buttonOptions['url']?>')
+							}<?=!$isLast ? ',' : ''?>
+						<? }
+					} ?>
+				}
+			});
+			var widget = $('#<?=$dialogName?>').dialog('widget');
+			var widgetHeader = widget.find('.ui-widget-header');
+			if (!widgetHeader.find('.ui-dialog-titlebar-refresh').length) {
+				var refreshHtml = '<a href="#" class="ui-dialog-titlebar-refresh ui-corner-all" role="button">'
+					+ '<span class="ui-icon ui-icon-refresh">refresh</span>'
+					+ '</a>';
+				widgetHeader.find('.ui-dialog-titlebar-close').before(refreshHtml);
+				widgetHeader.find('.ui-dialog-titlebar-refresh').click(function() {
+					DialogController.refresh('<?=$dialogName?>');
+					return false;
+				});
+			}
+			if (!widgetHeader.find('.ui-dialog-titlebar-share').length) {
+				var shareHtml = '<a href="#" class="ui-dialog-titlebar-share ui-corner-all" role="button">'
+					+ '<span class="ui-icon ui-icon-signal-diag">share</span>'
+					+ '</a>';
+				widgetHeader.find('.ui-dialog-titlebar-close').before(shareHtml);
+				widgetHeader.find('.ui-dialog-titlebar-share').click(function() {
+					DialogController.shareUrl('<?=$dialogName?>');
+					return false;
+				});
+			}
+			if (!widgetHeader.find('.ui-dialog-titlebar-minimize').length) {
+				var minimizeHtml = '<a href="#" class="ui-dialog-titlebar-minimize ui-corner-all" role="button">'
+					+ '<span class="ui-icon ui-icon-minus">minimize</span>'
+					+ '</a>';
+				widgetHeader.find('.ui-dialog-titlebar-close').before(minimizeHtml);
+				var hidden = false;
+				var widgetHeight = 0;
+				widgetHeader.find('.ui-dialog-titlebar-minimize').click(function() {
+					if (hidden) {
+						$(widget).height(widgetHeight);
+						$($(this).parents('.ui-widget-header').get(0)).nextAll().show();
+						hidden = false;
+					} else {
+						widgetHeight = $(widget).height();
+						$($(this).parents('.ui-widget-header').get(0)).nextAll().hide();
+						$(widget).height(50);
+						hidden = true;
+					}
+					return false;
+				});
+			}
+		});
+	</script>
+<? } else { ?>
+	<? foreach ($buttonUrlList as $buttonName => $buttonOptions) { ?>
+		<a href="<?=$buttonOptions['url']?>" class="js-pjax"><?=$this->trans($buttonName)?></a>
+	<? } ?>
+<? } ?>

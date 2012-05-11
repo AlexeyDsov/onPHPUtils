@@ -1,0 +1,42 @@
+<?
+/* @var $proto AbstractProtoClass */
+/* @var $propertyList array */
+/* @var $urlParams array */
+/* @var $form Form */
+/* @var $objectName string */
+if (!isset($postfix)) {
+	$postfix = time().md5(microtime());
+}
+?>
+
+<form
+	class="js-pjax"
+	id="listForm<?=$postfix?>"
+	method="GET"
+	action="<?=PATH_WEB_URL?>"
+>
+	<? foreach ($urlParams as $param => $value) { ?>
+		<input type="hidden" name="<?=$param?>" value="<?=$this->escape($value)?>" />
+	<? }
+	$propertyData = array('postfix' => $postfix);
+	foreach ($propertyList as $propertyName => $options) {
+		if (
+			isset($options[ListMakerProperties::OPTION_FILTERABLE])
+			&& !empty($options[ListMakerProperties::OPTION_FILTERABLE])
+		) {
+			$this->template('helpers/ListMaker/property', $propertyData + array('propertyName' => $propertyName));
+		}
+	}
+	?>
+	<input type="button" class="_hider" value="<?=$this->trans('list.filter.Hide')?>" onclick="return Application.hideFilters(this, $('#listForm<?=$postfix?>')); return false;" />
+	<input type="button" class="_shower" value="<?=$this->trans('list.filter.Show')?>" onclick="return Application.showFilters(this, $('#listForm<?=$postfix?>')); return false;" style="display: none;" />
+	
+	<? if ($hideFilters) { ?>
+		<script>
+			$(document).ready(function(){
+				$('#listForm<?=$postfix?>').find('._hider').click();
+			});
+		</script>
+	<? } ?>
+	<input type="submit" value="<?=$this->trans('list.filter.Search')?>"/>
+</form>

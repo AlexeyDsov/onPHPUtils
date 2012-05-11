@@ -1,0 +1,27 @@
+<?php
+/* @var $form Form */
+/* @var $hideFilters bool */
+/* @var $objectName string */
+$options = $propertyList[$propertyName];
+$propertyData = $form->exportValue($propertyName);
+
+$description = isset($options[ListMakerProperties::OPTION_DESCRIPTION])
+	? $options[ListMakerProperties::OPTION_DESCRIPTION]
+	: $this->trans($objectName.'.property.'.$propertyName);
+?>
+<div class="_propertyBlock <?=$form->hasError($propertyName) ? 'error' : ''?>">
+	<label style="float: left;"><?=$description?>:</label>
+	<?php
+	$filterList = $options[ListMakerProperties::OPTION_FILTERABLE];
+	
+	$filterModelData = array(
+		'options' => $options,
+		'propertyData' => $propertyData,
+		'description' => $description,
+	);
+	foreach ($filterList as $filterName) {
+		$this->template('helpers/ListMaker/filter.value', $filterModelData + array('filterName' => $filterName));
+	}
+	?>
+	<div class="clear"><!-- --></div>
+</div>

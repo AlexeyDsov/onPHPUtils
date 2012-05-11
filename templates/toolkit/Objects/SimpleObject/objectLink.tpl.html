@@ -1,0 +1,14 @@
+<? if ($object) {
+	$objectName = $this->get('nameConverter')->get($object);
+	if ($this->get('linker')->isObjectSupported($object, 'info')) {
+		$dialogName = $this->get('linker')->getDialogName($object);
+		$infoUrl = $this->get('linker')->getUrl($object); ?>
+		<a href="<?=$infoUrl?>" onclick="return DialogController.spawnByLink(event, this, '<?=$dialogName?>');">
+			<?=$this->escape($objectName)?>
+		</a>
+	<? } else {
+		print $this->escape($objectName);
+	}
+} else {
+	print $this->trans('Not exists');
+}

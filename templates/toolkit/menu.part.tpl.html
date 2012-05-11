@@ -1,0 +1,29 @@
+<?php
+if (!empty($menuList)) {
+	$menuList;
+	$currentMenuParts = explode('.', $currentMenu);
+	$currentPart = array_shift($currentMenuParts);
+
+	$subMenuList = null;
+	foreach ($menuList as $menu) {
+		if (isset($menu->name) && isset($menu->url)) {
+			$isCurrent = ($currentPart == $menu->name);
+			if ($isCurrent && isset($menu->submenu)) {
+				$subMenuList = $menu->submenu;
+			}
+			$title = $this->trans(isset($menu->title) ? $menu->title : $menu->name);
+			?>
+			<div class="adminMenuPart <?=$isCurrent ? 'active' : ''?>">
+				<a href="<?=$menu->url?>" title="<?=$title?>" class="js-pjax"><?=$title?></a>
+			</div>
+			<?php
+		}
+	}
+	?>
+	<div class="clear"></div>
+	<?php
+	if (!empty($subMenuList)) {
+		$this->view('menu.part', array('menuList' => $subMenuList, 'currentMenu' => join('.', $currentMenuParts)));
+	}
+}
+?>

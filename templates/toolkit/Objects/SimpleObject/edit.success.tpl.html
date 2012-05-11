@@ -1,0 +1,27 @@
+<?php
+$partViewer->view('header');
+
+if ($this->get('isAjax') && $infoObject) {
+	$currentDialog = $this->get('linker')->getDialogName(get_class($infoObject));
+	$dialogName = $this->get('linker')->getDialogName($infoObject);
+	?>
+	<div>
+		<script type="text/javascript">
+			$(function() {
+				$('#<?=$currentDialog?>').dialog('close');
+				<? if (!isset($closeDialog) || !$closeDialog) { ?>
+				DialogController.spawnByUrl('<?=$infoUrl?>', '<?=$dialogName?>');
+				<? } else { ?>
+				$('#<?=$dialogName?>').dialog('close');
+				<? } ?>
+			});
+		</script>
+	</div>
+	<?php
+} else {
+	?>
+	<h1><?=$this->trans('Wrong page')?></h1>
+	<?php
+}
+$partViewer->view('footer');
+?>

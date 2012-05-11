@@ -1,0 +1,33 @@
+<?
+$partViewer->view('header');
+
+$partViewer->view('helpers/ListMaker/form', $listHeaderModel);
+if ($showAddButton) {?>
+	<a href="<?=$addButtonUrl?>" onclick="return DialogController.spawnByLink(event, this, '<?=$addButtonDialogId?>');">
+		<?=$this->trans('Create new object')?>
+	</a>
+<? }
+/* @var $queryResult QueryResult */
+if (isset($queryResult)) {
+	Assert::isTrue(isset($pagerModel), 'pager model not setted');
+	Assert::isTrue(isset($columnModel), 'pager model not setted');
+	if ($queryResult->getList()) {
+		$partViewer->view('helpers/Pager/offset', $pagerModel);
+		?>
+		<table class="evenTable w95">
+			<?
+			$this->view('Objects/SimpleObject/list.head');
+			
+			$num = $form->getSafeValue('offset') + 1;
+			foreach ($queryResult->getList() as $infoObject) {
+				/* @var $object IdentifiableObject */
+				$this->template('Objects/SimpleObject/list.row', array('infoObject' => $infoObject, 'num' => $num++));
+			} ?>
+		</table>
+		<?
+		$partViewer->view('helpers/Pager/offset', $pagerModel);
+	} else { ?>
+		<div><?=$this->trans('No elements was found')?></div>
+	<? }
+}
+$partViewer->view('footer');
