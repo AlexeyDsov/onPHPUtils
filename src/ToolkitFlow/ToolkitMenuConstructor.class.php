@@ -170,7 +170,7 @@
 
 			$class = new stdClass();
 			$class->name = $name;
-			$class->title = $text[0];
+			$class->title = "Menu of $text[0]";
 			$class->url = PATH_WEB_URL . "area={$name}List";
 
 			$listSubclass = new stdClass();

@@ -16,6 +16,10 @@
 			case ListMakerProperties::OPTION_FILTERABLE_GTEQ:
 			case ListMakerProperties::OPTION_FILTERABLE_LT:
 			case ListMakerProperties::OPTION_FILTERABLE_LTEQ:
+			case ListMakerProperties::OPTION_FILTERABLE_CONTAINS:
+			case ListMakerProperties::OPTION_FILTERABLE_CONTAINS_EQ:
+			case ListMakerProperties::OPTION_FILTERABLE_IS_CONTAINED_WITHIN:
+			case ListMakerProperties::OPTION_FILTERABLE_IS_CONTAINED_WITHIN_EQ:
 				if ($this->isPrimitiveEnumeration($proto, $options, $propertyName)) {
 					$filteredValue = $this->getFilteredValue($form, $propertyName, $filterName, $propertyData);
 					?>
