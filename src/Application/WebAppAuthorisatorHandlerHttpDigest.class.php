@@ -58,7 +58,6 @@
 			$session = $chain->getServiceLocator()->get('session');
 			$loginHelper = $chain->getServiceLocator()->spawn('LoginHelperDigest');
 			/* @var $loginHelper LoginHelperDigest */
-			
 			$loginHelper->setAuthorisator($authorisator);
 			$loginHelper->setSession($session);
 			

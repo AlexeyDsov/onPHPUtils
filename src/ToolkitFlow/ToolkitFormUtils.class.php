@@ -10,7 +10,7 @@
  *                                                                         *
  ***************************************************************************/
 
-	final class ToolkitFormUtils extends StaticFactory {
+	class ToolkitFormUtils extends StaticFactory {
 
 		/**
 		 * Копирует из $old объекта в $prototype все параметры кроме перечисленных в списке $workParams

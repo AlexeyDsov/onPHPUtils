@@ -10,6 +10,7 @@
 		protected $serviceLocator = null;
 		protected $logClassName = null;
 		protected $baseUrl = null;
+		protected $authorisatorName = 'admin';
 
 		/**
 		 * @return ToolkitLinkUtils
@@ -55,6 +56,15 @@
 			$this->baseUrl = $baseUrl;
 			return $this;
 		}
+		
+		/**
+		 * @param string $authorisatorName
+		 * @return ToolkitLinkUtils 
+		 */
+		public function setAuthorisatorName($authorisatorName) {
+			$this->authorisatorName = $authorisatorName;
+			return $this;
+		}
 
 		/**
 		 * Проверяет поддерживает ли эта утилита тип переданного объекта
@@ -64,7 +74,7 @@
 		 */
 		public function isObjectSupported($object, $method)
 		{
-			if ($user = $this->serviceLocator->get('admin')->getUser()) {
+			if ($user = $this->serviceLocator->get($this->authorisatorName)->getUser()) {
 				return $this->getPermissionManager()->hasPermission($user, $method, $object);
 			}
 			return false;

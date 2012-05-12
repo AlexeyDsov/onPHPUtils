@@ -11,7 +11,7 @@
  *                                                                         *
  ***************************************************************************/
 
-	abstract class BaseController implements Controller, IServiceLocatorSupport
+	abstract class BaseController implements Controller
 	{
 		/**
 		 * @var Model
@@ -38,18 +38,6 @@
 
 		public function getModel() {
 			return $this->model;
-		}
-
-		public function setServiceLocator(IServiceLocator $serviceLocator) {
-			$this->serviceLocator = $serviceLocator;
-			return $this;
-		}
-
-		/**
-		 * @return ServiceLocator
-		 */
-		public function getServiceLocator() {
-			return $this->serviceLocator;
 		}
 
 		protected function getMav($tpl = 'index', $path = null) {

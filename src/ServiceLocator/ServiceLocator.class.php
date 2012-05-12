@@ -12,7 +12,7 @@
 
 	class ServiceLocator implements IServiceLocator
 	{
-		protected $store = array();
+		private $store = array();
 
 		/**
 		 * @return ServiceLocator
@@ -93,13 +93,21 @@
 		protected function implementSelf($object)
 		{
 			if ($object instanceof IServiceLocatorSupport) {
-				$subLocator = new $this();
-				foreach ($this->store as $key => $value) {
-					$subLocator->set($key, $value);
-				}
-				$object->setServiceLocator($subLocator);
+				$object->setServiceLocator($this->getSelf());
 			}
 			return $object;
+		}
+		
+		/**
+		 * @return ServiceLocator
+		 */
+		protected function getSelf()
+		{
+			$subLocator = new $this();
+			foreach ($this->store as $key => $value) {
+				$subLocator->set($key, $value);
+			}
+			return $subLocator;
 		}
 	}
 ?>

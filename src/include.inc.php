@@ -10,7 +10,7 @@
  *                                                                         *
  ***************************************************************************/
 
-define('PATH_ONPHP_UTILS_SRC', dirname(__FILE__).DS);
+define('PATH_ONPHP_UTILS_SRC', dirname(__FILE__).DIRECTORY_SEPARATOR);
 
 ini_set(
 	'include_path',
