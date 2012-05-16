@@ -26,6 +26,7 @@ if (!$this->get('isAjax')) {
 						<a href="<?=PATH_WEB_URL?>area=Login"><?=$this->trans('Login')?></a>
 					<? } ?>
 					</div>
+					<div class="ajaxLoader" style="display: none;"><!-- --></div>
 					<center><h1><?=$this->trans('ToolkitName')?></h1></center>
 					<div style="clear: both;"><!-- --></div>
 					<? if ($admin = $adminAuth->getUser()) {

@@ -7,6 +7,13 @@ hr {margin: 3px auto;}
 p {margin: 1px;}
 
 /* head part */
+.ajaxLoader {
+	float: right;
+	background-image: url('ajax-loader.gif');
+	width: 24px;
+	height: 24px;
+}
+
 .loginWindow {
 	float: right;
 	width: 200px;

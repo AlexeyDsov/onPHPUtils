@@ -19,7 +19,7 @@ $formId = 'editForm'.time().rand(10000, 99999); ?>
 				"<?=$this->trans('Save')?>": function() {$.sendPostForm($('#<?=$formId?>'), $('#<?=$dialogName?>'));},
 				<? if ($form->getValue('id') && !$closeDialog) { ?>
 					"<?=$this->trans('Cancel')?>": function() {DialogController.spawnByUrl('<?=$infoUrl?>', '<?=$dialogName?>');}
-					<? } else { ?>
+				<? } else { ?>
 					"<?=$this->trans('Cancel')?>": function() {$(this).dialog('close');}
 				<? } ?>
 			}

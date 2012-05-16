@@ -369,6 +369,10 @@
 		protected function getLogClassName() {
 			return null;
 		}
+		
+		protected function getUrlParams() {
+			return array();
+		}
 
 		/**
 		 * Возвращает url для просмотра свойств объекта
@@ -376,7 +380,7 @@
 		 * @return string
 		 */
 		protected function getUrlInfo(IdentifiableObject $infoObject) {
-			return $this->getLinker()->getUrl($infoObject, array(), $this->getInfoAction());
+			return $this->getLinker()->getUrl($infoObject, array('action' => 'info') + $this->getUrlParams(), $this->getInfoAction());
 		}
 
 		/**
@@ -385,7 +389,7 @@
 		 * @return string
 		 */
 		protected function getUrlEdit(IdentifiableObject $infoObject) {
-			return $this->getLinker()->getUrl($infoObject, array('action' => 'edit'), $this->getEditAction($infoObject));
+			return $this->getLinker()->getUrl($infoObject, array('action' => 'edit') + $this->getUrlParams(), $this->getEditAction($infoObject));
 		}
 
 		/**
@@ -394,15 +398,15 @@
 		 * @return string
 		 */
 		protected function getUrlTake(IdentifiableObject $infoObject) {
-			return $this->getLinker()->getUrl($infoObject, array('action' => 'take'), $this->getEditAction($infoObject));
+			return $this->getLinker()->getUrl($infoObject, array('action' => 'take') + $this->getUrlParams(), $this->getEditAction($infoObject));
 		}
 		
 		protected function getUrlDrop(IdentifiableObject $infoObject, $confirm = false) {
-			$url = $this->getLinker()->getUrl($infoObject, array('action' => 'drop'), $this->getDropAction());
-			if ($confirm) {
-				$url .= '&confirm=1';
-			}
-			return $url;
+			$urlParams = array('action' => 'drop') + $this->getUrlParams();
+			if ($confirm)
+				$urlParams['confirm'] = '1';
+				
+			return $this->getLinker()->getUrl($infoObject, $urlParams, $this->getDropAction());
 		}
 		
 		/**

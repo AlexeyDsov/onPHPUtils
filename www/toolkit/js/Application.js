@@ -104,3 +104,8 @@ TernaryRadio.switched = function (input) {
 		input.parent().next().next().children('input').attr('checked', false);
 	}
 }
+
+$(function(){
+	$('body').ajaxStart(function(){$('.ajaxLoader').show();});
+	$('body').ajaxStop(function(){$('.ajaxLoader').hide();});
+});
