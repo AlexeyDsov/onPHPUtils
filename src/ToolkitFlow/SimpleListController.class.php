@@ -113,6 +113,7 @@
 				set('queryResult', $queryResult)->
 				set('pagerModel', $this->makePagerModel($queryResult, $form))->
 				set('columnModel', $this->makeColumnModel($form, $propertyList))->
+				set('rowParams', $this->getRowsParams($queryResult, $propertyList))->
 				set('showInfo', $this->showInfo());
 
 			$this->model->get('listHeaderModel')->set('hideFilters', true);
@@ -170,6 +171,10 @@
 				set('urlParams', $this->getUrlParams() + $columnParams)->
 				set('formData', $form->export())->
 				set('objectName', $this->getObjectName());
+		}
+		
+		protected function getRowParams(QueryResult $queryResult, array $propertyList, $propertyName) {
+			return array();
 		}
 
 		/**
@@ -254,6 +259,14 @@
 		
 		protected function getCurrentMenu(HttpRequest $request, ModelAndView $mav) {
 			return '';
+		}
+		
+		private function getRowsParams(QueryResult $queryResult, array $propertyList) {
+			$rowsParams = array();
+			foreach (array_keys($propertyList) as $propertyName) {
+				$rowsParams[$propertyName] = $this->getRowParams($queryResult, $propertyList, $propertyName);
+			}
+			return $rowsParams;
 		}
 	}
 ?>

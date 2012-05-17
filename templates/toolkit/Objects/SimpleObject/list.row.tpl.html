@@ -6,7 +6,8 @@
 	<td><?=$num?></td>
 	<? foreach ($propertyList as $propertyName => $propertyData) {
 		$objectLink = isset($propertyData[ListMakerProperties::OPTION_OBJECT_LINK]) ? $propertyData[ListMakerProperties::OPTION_OBJECT_LINK] : $propertyName;
-		$tplData = array('propertyName' => $propertyName, 'propertyData' => $propertyData, 'objectLink' => $objectLink);
+		$tplData = array('propertyName' => $propertyName, 'propertyData' => $propertyData, 'objectLink' => $objectLink)
+			+ $rowParams[$propertyName];
 		if (isset($propertyData[ListMakerProperties::OPTION_COLUMN])) {
 			if ($propertyData[ListMakerProperties::OPTION_COLUMN] === true) {
 				//default row
@@ -20,8 +21,7 @@
 	<td>
 		<? if (isset($showInfo) && $showInfo && $this->get('linker')->isObjectSupported($infoObject, 'info')) {
 			$objectDialogUrl = $this->get('linker')->getUrl($infoObject);
-			$objectDialogName = $this->get('linker')->getDialogName($infoObject);
-			?>
+			$objectDialogName = $this->get('linker')->getDialogName($infoObject); ?>
 			<a
 				href="<?=$objectDialogUrl?>"
 				onclick="return DialogController.spawnByLink(event, this, '<?=$objectDialogName?>');"

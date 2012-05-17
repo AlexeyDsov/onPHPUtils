@@ -15,8 +15,7 @@ if (isset($queryResult)) {
 		$partViewer->view('helpers/Pager/offset', $pagerModel);
 		?>
 		<table class="evenTable w95">
-			<?
-			$this->view('Objects/SimpleObject/list.head');
+			<? $this->view('Objects/SimpleObject/list.head');
 			
 			$num = $form->getSafeValue('offset') + 1;
 			foreach ($queryResult->getList() as $infoObject) {
