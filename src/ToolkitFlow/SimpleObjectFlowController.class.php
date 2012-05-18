@@ -172,30 +172,11 @@
 			
 			$command = $this->getDropCommand();
 			/* @var $command DropCommand */
-			$transaction = null;
-			if ($this->isTakeInTransaction()) {
-//				$transaction = InnerTransaction::begin($subject->dao());
-				$db = DBPool::getByDao($subject->dao())->begin();
-			}
-
 			$mav = $command->run($subject, $form, $request);
 
 			if ($mav->getView() != EditorController::COMMAND_SUCCEEDED) {
-				if (isset($db)) {
-					$db->rollback();
-				}
-//				if ($transaction) {
-//					$transaction->rollback();
-//				}
 				return $this->getEditMav($form, $subject, $mav->getModel());
 			}
-			
-			if (isset($db)) {
-				$db->commit();
-			}
-//			if ($transaction) {
-//				$transaction->commit();
-//			}
 
 			if ($this->serviceLocator->get('isAjax')) {
 				$this->model->
