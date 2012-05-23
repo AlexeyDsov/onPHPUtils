@@ -91,6 +91,11 @@ Application.init = function () {
 	});
 }
 
+Application.onmouseoverWrap = function (object, func) {
+	$(object).removeAttr('onmouseover');
+	func(object);
+}
+
 var TernaryRadio = TernaryRadio || {};
 
 TernaryRadio.switched = function (input) {
@@ -109,3 +114,56 @@ $(function(){
 	$('body').ajaxStart(function(){$('.ajaxLoader').show();});
 	$('body').ajaxStop(function(){$('.ajaxLoader').hide();});
 });
+
+/* Autocomplete shorter */
+var AppAutocomplete = AppAutocomplete || {};
+
+AppAutocomplete.url = '';
+
+AppAutocomplete.autocomplete = function (options) {
+	var options = this._autocompleteMakeOptions(options);
+	
+	var objectName = $(options.inputText);
+	var objectId = $(options.inputId);
+	
+	objectName.autocomplete({
+		source: function( request, response ) {
+			$.ajax({
+				url: AppAutocomplete.url,
+				dataType: 'json',
+				data: {object: options.object, property: options.property, search: request.term},
+				success: function( data ) {
+					response(data.array);
+				}
+			});
+		},
+		minLength: options.minLength,
+		select: function( event, ui ) {
+			objectId.val(ui.item.id);
+			return true;
+		},
+		change: function(event, ui) {
+			if (!ui.item) {
+				objectId.val('');
+			}
+		}
+	});
+}
+
+AppAutocomplete._autocompleteMakeOptions = function (options) {
+	var defaults = {
+		object: '',
+		property: '',
+		inputId: null,
+		inputText: null,
+		minLength: 1
+	};
+	var options = $.extend(true, {}, defaults, options);
+	
+	if (!options.object) { throw "Empty option 'object'"; }
+	if (!options.property) { throw "Empty option 'property'"; }
+	if (!options.inputId || options.inputId.length != 1) { throw "Empty option 'inputId'"; }
+	if (!options.inputText || options.inputText.length != 1) { throw "Empty option 'inputText'"; }
+	
+	return options;
+}
