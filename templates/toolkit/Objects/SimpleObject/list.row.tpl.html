@@ -29,5 +29,17 @@
 				<?=$this->trans('list.Info')?>
 			</a>
 		<? } ?>
+		<? if ($this->get('linker')->isObjectSupported($infoObject, 'drop')) {
+			$objectDialogUrl = $this->get('linker')->getUrl($infoObject, array('action' => 'drop'));
+			$objectDialogName = $this->get('linker')->getDialogName($infoObject);
+			?>
+			&nbsp;
+			<a
+				href="<?=$objectDialogUrl?>"
+				onclick="return DialogController.spawnByLink(event, this, '<?=$objectDialogName?>');"
+			>
+				<?=$this->trans('Drop')?>
+			</a>
+		<? } ?>
 	</td>
 </tr>

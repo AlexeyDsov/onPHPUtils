@@ -64,7 +64,9 @@
 			$this->model->
 				set('form', $form)->
 				set('propertyList', $propertyList)->
-				set('listHeaderModel', $this->makeListHeaderModel($form, $propertyList));
+				set('listHeaderModel', $this->makeListHeaderModel($form, $propertyList))->
+				set('preListTemplate', $this->getPreListTemplate())->
+				set('postListTemplate', $this->getPostListTemplate());
 
 			return $this->getMav('list');
 		}
@@ -98,7 +100,9 @@
 			$this->model->
 				set('form', $form)->
 				set('propertyList', $propertyList)->
-				set('listHeaderModel', $this->makeListHeaderModel($form, $propertyList));
+				set('listHeaderModel', $this->makeListHeaderModel($form, $propertyList))->
+				set('preListTemplate', $this->getPreListTemplate())->
+				set('postListTemplate', $this->getPostListTemplate());
 
 			if ($form->getErrors()) {
 				return $this->model;
@@ -247,6 +251,14 @@
 		 */
 		protected function getPageLimit() {
 			return 20;
+		}
+		
+		protected function getPreListTemplate() {
+			return null;
+		}
+		
+		protected function getPostListTemplate() {
+			return null;
 		}
 
 		protected function prepairData(HttpRequest $request, ModelAndView $mav) {
