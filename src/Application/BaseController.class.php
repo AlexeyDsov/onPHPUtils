@@ -26,11 +26,6 @@
 		**/
 		protected $meta	= null;
 
-		/**
-		 * @var ServiceLocator
-		 */
-		protected $serviceLocator = null;
-
 		public function __construct() {
 			$this->model = Model::create();
 			$this->setupMeta();
