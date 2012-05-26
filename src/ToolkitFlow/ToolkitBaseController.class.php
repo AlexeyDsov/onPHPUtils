@@ -18,6 +18,16 @@
 	 * Сделано по дурацки, в будуйщем надо SimpleListController и SimpleObjectFlowController
 	 *  подключать к контроллерам проекта иначе, а не через прямое наследование от них
 	 */
-	abstract class ToolkitBaseController extends BaseController {
+	abstract class ToolkitBaseController extends BaseController implements IServiceLocatorSupport {
 		
+		protected $serviceLocator = null;
+		
+		public function setServiceLocator(IServiceLocator $serviceLocator) {
+			$this->serviceLocator = $serviceLocator;
+			return $this;
+		}
+		
+		public function getServiceLocator() {
+			return $this->serviceLocator;
+		}
 	}
