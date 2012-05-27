@@ -65,8 +65,12 @@
 
 			$this->dropAllTables();
 			$this->createAllTables();
-
-			return $this;
+		}
+		
+		public function generateSqlFile($file)
+		{
+			$sql = $this->schema->toDialectString($this->db->getDialect());
+			file_put_contents($file, $sql);
 		}
 
 		/**
