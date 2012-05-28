@@ -53,7 +53,7 @@
 
 		protected function getMavRedirectByUrl($url) {
 			return ModelAndView::create()->setView(
-				RedirectView::create($url)
+				CleanRedirectView::create($url)
 			);
 		}
 
