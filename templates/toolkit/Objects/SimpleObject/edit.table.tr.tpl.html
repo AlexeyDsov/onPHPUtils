@@ -29,16 +29,16 @@ $primitiveValue = $primitive->getValue(); ?>
 				type="text"
 				name="<?=$propertyName?>"
 				value="<?=$primitiveValue ? $this->escape($primitiveValue->getId()) : ''?>" />
-		<? } elseif ($primitiveType == 'PrimitiveEnumeration') {
-			$enumerationList = $primitive->getList(); ?>
+		<? } elseif ($primitiveType == 'PrimitiveEnumeration' || $primitiveType == 'PrimitiveEnum') {
+			$enumList = $primitive->getList(); ?>
 			<select name="<?=$propertyName?>">
 				<? if (!$primitive->isRequired() || !$primitiveValue) { ?>
 					<option value=""></option>
 				<? }
-				foreach ($enumerationList as $enumerationObject) {
-					$isSelected = $primitiveValue && ($enumerationObject->getId() == $primitiveValue->getId()); ?>
-					<option value="<?=$this->escape($enumerationObject->getId())?>" <?=$isSelected ? 'selected' : ''?> >
-						<?=$this->escape("{$enumerationObject->getId()} ({$enumerationObject->getName()})")?>
+				foreach ($enumList as $enumObject) {
+					$isSelected = $primitiveValue && ($enumObject->getId() == $primitiveValue->getId()); ?>
+					<option value="<?=$this->escape($enumObject->getId())?>" <?=$isSelected ? 'selected' : ''?> >
+						<?=$this->escape("{$enumObject->getId()} ({$enumObject->getName()})")?>
 					</option>
 				<? } ?>
 			</select>
@@ -71,7 +71,7 @@ $primitiveValue = $primitive->getValue(); ?>
 			<input type="text" class="_hasDatepickerTime" name="<?=$propertyName?>" value="<?=$primitiveValue ? $primitiveValue->format(TimestampTZ::ATOM) : ''?>" />
 		<? } elseif (in_array($primitiveType, array('PrimitiveString', 'PrimitiveFloat', 'PrimitiveInteger'))) { ?>
 			<input type="text" name="<?=$propertyName?>" value="<?=$this->escape($primitiveValue)?>" />
-		<? } elseif (in_array($primitiveType, array('PrimitiveIdentifierList', 'PrimitiveEnumerationList'))) { ?>
+		<? } elseif (in_array($primitiveType, array('PrimitiveIdentifierList', 'PrimitiveEnumerationList', 'PrimitiveEnumList'))) { ?>
 			<?=$this->trans('Unsupported type')?>: <?=$primitiveType?>
 		<? } elseif ($primitiveType == 'PrimitiveInet') { ?>
 			<input type="text" name="<?=$propertyName?>" value="<?=$this->escape($primitive->exportValue())?>" />

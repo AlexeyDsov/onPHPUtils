@@ -203,6 +203,7 @@
 				case 'identifierList':
 				case 'integerIdentifier':
 				case 'enumeration':
+				case 'enum':
 				case 'integer':
 					return Primitive::integer($filterName);
 				case 'float':
@@ -237,6 +238,7 @@
 				case 'identifierList':
 				case 'integerIdentifier':
 				case 'enumeration':
+				case 'enum':
 				case 'integer':
 					$primitive = new PrimitiveArray($filterName);
 					$filter = Filter::pcre()->setExpression('~[^\d]~iu', '');

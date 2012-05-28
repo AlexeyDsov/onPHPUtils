@@ -14,7 +14,7 @@ $object = $infoObject->{$getter}();
 			print $this->escape($infoObject->getId());
 		} elseif (in_array($propertyType, array('identifier', 'scalarIdentifier', 'integerIdentifier'))) {
 			$this->objectLink($object);
-		} elseif ($propertyType == 'enumeration') {
+		} elseif ($propertyType == 'enumeration' || $propertyType == 'enum') {
 			print $object
 				? $this->escape("{$object->getId()} ({$object->getName()})")
 				: $this->trans('Not exists');

@@ -7,7 +7,6 @@
 	/* @var $propertyData mixed */
 	/* @var $description string */
 	/* @var $filterName string */
-	
 
 	$inputId = $propertyName.$filterName.$postfix;
 	switch ($filterName) {
@@ -21,22 +20,16 @@
 			case ListMakerProperties::OPTION_FILTERABLE_IS_CONTAINED_WITHIN:
 			case ListMakerProperties::OPTION_FILTERABLE_IS_CONTAINED_WITHIN_EQ:
 				if ($this->isPrimitiveEnumeration($proto, $options, $propertyName)) {
-					$filteredValue = $this->getFilteredValue($form, $propertyName, $filterName, $propertyData);
-					?>
+					$filteredValue = $this->getFilteredValue($form, $propertyName, $filterName, $propertyData); ?>
 					<label for="<?=$inputId?>"><?=ListMakerProperties::getFilterLabel($filterName)?></label>
 					<select id="<?=$inputId?>" name="<?=$propertyName?>[<?=$filterName?>]">
 						<option></option>
-						<?php
-						foreach ($this->getEnumerationNameList($proto, $options, $propertyName) as $enumerationId => $enumerationName) {
-							$selected = ($enumerationId == $filteredValue && $filteredValue != '') ? 'selected' : '';
-							?>
-							<option value="<?=$this->escape($enumerationId)?>" <?=$selected?> ><?=$this->escape($enumerationName)?></option>
-							<?php
-						}
-						?>
+						<? foreach ($this->getEnumerationNameList($proto, $options, $propertyName) as $enumId => $enumName) {
+							$selected = ($enumId == $filteredValue && $filteredValue != '') ? 'selected' : ''; ?>
+							<option value="<?=$this->escape($enumId)?>" <?=$selected?> ><?=$this->escape($enumName)?></option>
+						<? } ?>
 					</select>
-					<?php
-					break;
+					<? break;
 				}
 			case ListMakerProperties::OPTION_FILTERABLE_ILIKE: {
 				$filteredValue = $this->getFilteredValue($form, $propertyName, $filterName, $propertyData);
@@ -46,22 +39,19 @@
 					$class = '_hasDatepickerTime';
 				} elseif ($this->isDatePrimitive($form, $propertyName, $filterName)) {
 					$class = '_hasDatepicker';
-				}
-				?>
+				} ?>
 				<label for="<?=$inputId?>"><?=ListMakerProperties::getFilterLabel($filterName)?></label>
 				<input type="text" class="<?=$class?>"
 						id="<?=$inputId?>" name="<?=$propertyName?>[<?=$filterName?>]"
 						value="<?=$filteredValue?>"/>
-				<?php
-				break;
+				<? break;
 			}
 			case ListMakerProperties::OPTION_FILTERABLE_IS_NULL:
 			case ListMakerProperties::OPTION_FILTERABLE_IS_NOT_NULL:
 			case ListMakerProperties::OPTION_FILTERABLE_IS_TRUE:
 			case ListMakerProperties::OPTION_FILTERABLE_IS_NOT_TRUE:
 			case ListMakerProperties::OPTION_FILTERABLE_IS_FALSE:
-			case ListMakerProperties::OPTION_FILTERABLE_IS_NOT_FALSE: {
-				?>
+			case ListMakerProperties::OPTION_FILTERABLE_IS_NOT_FALSE: { ?>
 				<label for="<?=$inputId?>"><?=ListMakerProperties::getFilterLabel($filterName)?></label>
 				<input
 					type="checkbox"
@@ -70,29 +60,22 @@
 					value="1"
 					<?=isset($propertyData[$filterName]) ? 'checked' : ''?>
 					/>
-				<?php
-				break;
+				<? break;
 			}
 			case ListMakerProperties::OPTION_FILTERABLE_IN: {
 				$valueList = isset($propertyData[$filterName]) && is_array($propertyData[$filterName])
 					? $propertyData[$filterName]
 					: array();
-				$i = 0;
-				?>
+				$i = 0; ?>
 				<label for="<?=$inputId.$i?>"><?=ListMakerProperties::getFilterLabel($filterName)?></label>
-				<?php
-				$i = 0;
+				<? $i = 0;
 				foreach ($valueList as $value) {
 					$i++;
-					$filteredValue = $this->escape($value);
-					?>
+					$filteredValue = $this->escape($value); ?>
 					<input type="text" id="<?=$inputId.$i?>" name="<?=$propertyName?>[<?=$filterName?>][]" value="<?=$filteredValue?>"/>
-					<?php
-				}
-				?>
+				<? } ?>
 				<input type="text" id="<?=$inputId.$i?>" name="<?=$propertyName?>[<?=$filterName?>][]" value="" />
-				<?php
-				break;
+				<? break;
 			}
 			default:
 				throw new WrongStateException('Unkown filterName :'.$filterName);

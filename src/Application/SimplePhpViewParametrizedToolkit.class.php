@@ -21,12 +21,16 @@
 			$property = ListMakerUtils::getPropertyByName($objectLink, $proto);
 			
 			$class = $property->getClassName();
-			Assert::isInstance($class, 'Enumeration', 'Must be enumeration');
-			$anyId = ClassUtils::callStaticMethod("{$class}::getAnyId");
-			$exemplar = new $class($anyId);
-			/* @var $exemplar Enumeration */
-			
-			return $exemplar->getNameList();
+			if (ClassUtils::isInstanceOf($class, 'Enumeration')) {
+				$anyId = ClassUtils::callStaticMethod("{$class}::getAnyId");
+				$exemplar = new $class($anyId);
+				/* @var $exemplar Enumeration */
+				return $exemplar->getNameList();
+			} elseif (ClassUtils::isInstanceOf($class, 'Enum')) {
+				return ClassUtils::callStaticMethod("$class::getNameList");
+			} else {
+				throw new WrongStateException($class . ' Must be instance of Enumeration or Enum');
+			}
 		}
 		
 		protected function isPrimitiveEnumeration(AbstractProtoClass $proto, $options, $propertyName) {
@@ -37,7 +41,7 @@
 			$propertyType = isset($options[ListMakerProperties::OPTION_PROPERTY_TYPE])
 				? $options[ListMakerProperties::OPTION_PROPERTY_TYPE]
 				: ($property ? $property->getType() : null);
-			return $propertyType == 'enumeration';
+			return $propertyType == 'enumeration' || $propertyType == 'enum';
 		}
 
 		protected function isTimePrimitive(Form $form, $propertyName, $filterName) {
