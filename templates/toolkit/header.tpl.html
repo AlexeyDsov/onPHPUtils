@@ -20,7 +20,7 @@ if (!$this->get('isAjax')) {
 	?>
 					<div class="loginWindow">
 					<? if ($user = $adminAuth->getUser()) { ?>
-						<?=$this->trans('You logged as')?>: <?=$user->getName()?> /
+						<?=$this->trans('You logged as')?>: <? $this->objectLink($user) ?> /
 						<a href="<?=PATH_WEB_URL?>area=Login&action=unlogin"><?=$this->trans('Unlogin')?></a>
 					<? } else { ?>
 						<a href="<?=PATH_WEB_URL?>area=Login"><?=$this->trans('Login')?></a>
