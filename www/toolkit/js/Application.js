@@ -128,10 +128,14 @@ AppAutocomplete.autocomplete = function (options) {
 	
 	objectName.autocomplete({
 		source: function( request, response ) {
+			var getData = $.extend(
+				{object: options.object, property: options.property, search: request.term},
+				options.params
+			);
 			$.ajax({
 				url: AppAutocomplete.url,
 				dataType: 'json',
-				data: {object: options.object, property: options.property, search: request.term},
+				data: getData,
 				success: function( data ) {
 					response(data.array);
 				}
@@ -156,7 +160,8 @@ AppAutocomplete._autocompleteMakeOptions = function (options) {
 		property: '',
 		inputId: null,
 		inputText: null,
-		minLength: 1
+		minLength: 1,
+		params: {}
 	};
 	var options = $.extend(true, {}, defaults, options);
 	

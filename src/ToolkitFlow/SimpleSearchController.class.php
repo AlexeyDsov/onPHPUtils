@@ -58,6 +58,7 @@
 			$searchResult = array_map(
 				$this->getArrayConvertFunc(),
 				$this->getListByParam(
+					$request,
 					$form->getValue('object'),
 					$propertyForm->getValue('property'), 
 					$form->getValue('search')
@@ -90,9 +91,9 @@
 		 * @param string $search
 		 * @return array 
 		 */
-		protected function getListByParam($class, $property, $search) {
+		protected function getListByParam(HttpRequest $request, $class, $property, $search) {
 			$criteria = $this->getListCriteria($class);
-			foreach ($this->getExprForSearchCriteria($class, $property, $search) as $expr) {
+			foreach ($this->getExprForSearchCriteria($request, $class, $property, $search) as $expr) {
 				$criteria->add($expr);
 			}
 			
@@ -104,7 +105,7 @@
 			return $criteria->getList();
 		}
 		
-		protected function getExprForSearchCriteria($class, $property, $search) {
+		protected function getExprForSearchCriteria(HttpRequest $request, $class, $property, $search) {
 			$expr = Expression::ilike(
 				SQLFunction::create('lower', $property),
 				DBValue::create(mb_strtolower($search).'%')
