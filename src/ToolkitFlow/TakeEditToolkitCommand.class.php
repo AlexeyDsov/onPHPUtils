@@ -143,8 +143,8 @@
 						$diff[$newKey.'+/-'] = $newValue.'/'.$oldValue;
 					} elseif (is_array($oldValue) && is_array($newValue)) {
 						if ($this->isIndexizeArray($oldValue) && $this->isIndexizeArray($newValue)) {
-							$oldValue = array_combine($oldValue, $oldValue);
-							$newValue = array_combine($newValue, $newValue);
+							$oldValue = !empty($oldValue) ? array_combine($oldValue, $oldValue) : array();
+							$newValue = !empty($newValue) ? array_combine($newValue, $newValue) : array();
 						}
 						$diff[$newKey.'+/-'] = $this->getDiffData($newValue, $oldValue);
 					} else {
