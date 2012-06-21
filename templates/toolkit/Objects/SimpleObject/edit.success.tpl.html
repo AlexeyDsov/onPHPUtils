@@ -2,17 +2,21 @@
 $partViewer->view('header');
 
 if ($this->get('isAjax') && $infoObject) {
-	$currentDialog = $this->get('linker')->getDialogName(get_class($infoObject));
 	$dialogName = $this->get('linker')->getDialogName($infoObject);
+	try {
+		$currentDialog = $this->get('linker')->getDialogName(get_class($infoObject));
+	} catch (PermissionException $e) {
+		$currentDialog = $dialogName;
+	}
 	?>
 	<div>
 		<script type="text/javascript">
 			$(function() {
 				$('#<?=$currentDialog?>').dialog('close');
 				<? if (!isset($closeDialog) || !$closeDialog) { ?>
-				DialogController.spawnByUrl('<?=$infoUrl?>', '<?=$dialogName?>');
+					DialogController.spawnByUrl('<?=$infoUrl?>', '<?=$dialogName?>');
 				<? } else { ?>
-				$('#<?=$dialogName?>').dialog('close');
+					$('#<?=$dialogName?>').dialog('close');
 				<? } ?>
 			});
 		</script>

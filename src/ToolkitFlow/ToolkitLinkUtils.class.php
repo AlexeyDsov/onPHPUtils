@@ -148,7 +148,8 @@
 		 */
 		public function getDialogName($object, $method = null)
 		{
-			Assert::isTrue($this->isObjectSupported($object, $method ?: 'info'), 'not supported object');
+			if (!$this->isObjectSupported($object, $method ?: 'info'))
+				throw new PermissionException('not supported object');
 
 			$objectClassName = $this->getObjectName($object);
 			return $objectClassName.(is_object($object) ? $object->getId() : '');
