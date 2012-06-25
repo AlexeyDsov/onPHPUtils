@@ -116,7 +116,7 @@
 			$form->
 				add(Primitive::integer($this->offsetName)->setMin(0)->setDefault(0))->
 				add(Primitive::integer($this->limitName)->setMin(0)->setDefault($this->defaultLimit));
-
+			
 			foreach ($this->propertyList as $propertyName => $options) {
 				if ($propertyForm = $this->makePropertyForm($propertyName)) {
 					$propertyPrimitive = new PrimitiveFormCustom($propertyName);
@@ -124,7 +124,9 @@
 					$form->add($propertyPrimitive);
 				}
 			}
-
+			
+			$this->addRuleDefaultOrder($form);
+			
 			return $this;
 		}
 
@@ -182,7 +184,11 @@
 				$prmitiveList[] = Primitive::integer('order')->setMin(1);
 				$prmitiveList[] = Primitive::plainChoice('sort')->
 					setList(array(ListMakerProperties::ORDER_ASC, ListMakerProperties::ORDER_DESC))->
-					setDefault(ListMakerProperties::ORDER_ASC);
+					setDefault(
+						$options[ListMakerProperties::OPTION_ORDERING] == ListMakerProperties::ORDER_DESC
+							? ListMakerProperties::ORDER_DESC
+							: ListMakerProperties::ORDER_ASC
+					);
 			}
 
 			if (empty($prmitiveList)) {
@@ -256,6 +262,41 @@
 					throw new UnimplementedFeatureException($errorMsg);
 			}
 			Assert::isUnreachable();
+		}
+		
+		private function addRuleDefaultOrder(Form $form) {
+			$properties = array();
+			$default = null;
+			foreach ($this->propertyList as $propertyName => $options) {
+				if (isset($options[ListMakerProperties::OPTION_ORDERING]))
+					$properties[] = $propertyName;
+				if (!$default && isset($options[ListMakerProperties::OPTION_DEFAULT_ORDER]))
+					$default = $propertyName;
+			}
+			
+			if (empty($properties))
+				return;
+			
+			if (!$default) {
+				$default = reset($properties);
+			}
+				
+			$callback = CallbackLogicalObjectSuccess::create(function (Form $form) use ($properties, $default) {
+				foreach ($properties as $property) {
+					if ($form->getValue($property)->getValue('order'))
+						return;
+				}
+				
+				$defaultSort = $form->getValue($default)->get('sort')->getDefault();
+				if (!$form->get($default)->isImported()) 
+					$form->importOne($default, array($default => array('order' => 1, 'sort' => $defaultSort)));
+				else
+					$form->getValue($default)
+						->importValue('order', $default)
+						->importValue('sort', $defaultSort);
+			});
+			
+			$form->addRule('_ruleDefaultOrder', $callback);
 		}
 	}
 ?>
