@@ -88,7 +88,7 @@ DialogController.spawn = function(dialogId, parentId) {
 		DialogController.setParent(dialogId, parentId);
 	}
 	return dialog;
-}
+};
 
 DialogController.setParent = function(dialogId, parentId) {
 	DialogController.setParam(dialogId, 'parent_id', parentId);
@@ -97,25 +97,17 @@ DialogController.setParent = function(dialogId, parentId) {
 			DialogController.refresh(parentId);
 		}
 	})
-} 
+};
 
 DialogController.setParam = function(dialogId, name, value) {
-	var paramTag = $('#' + dialogId + '_params > span[name="' + name + '"]');
-	if (paramTag.length == 0) {
-		$('#' + dialogId + '_params').append('<span name=' + name + '></span>');
-		paramTag = $('#' + dialogId + '_params > span[name="' + name + '"]');
-	}
-	paramTag.text(value);
-}
+	$('#' + dialogId).dialog('option', 'DC_' + name, value);
+};
 
 DialogController.getParam = function(dialogId, name) {
-	var paramTag = $('#' + dialogId + '_params > span[name="' + name + '"]');
-	if (paramTag.length == 1) {
-		return paramTag.text();
-	} else {
-		return null;
-	}
-}
+	var dialog = $('#' + dialogId);
+	var result = dialog.dialog('option', 'DC_' + name);
+	return result == dialog ? null : result;
+};
 
 DialogController.generateId = function () {
 	var min = 10000;
@@ -123,12 +115,13 @@ DialogController.generateId = function () {
 	var time = Math.floor(new Date().getTime() / 1000);
 	var rand = Math.floor(Math.random() * (max - min + 1)) + min;
 	return "" + time + rand;
-}
+};
 
 DialogController.refresh = function(dialogId) {
-	var url = DialogController.getParam(dialogId, 'url');
-	DialogController.spawnByUrl(url, dialogId);
-}
+	if ((url = DialogController.getParam(dialogId, 'url')) !== null) {
+		DialogController.spawnByUrl(url, dialogId);
+	}
+};
 
 DialogController.shareUrl = function(dialogId) {
 	var url = DialogController.getParam(dialogId, 'url')
@@ -137,11 +130,59 @@ DialogController.shareUrl = function(dialogId) {
 		urlDialog.html('<input type="text" value="' + url + '&_window&_dialogId=' + dialogId + '" readonly disabled style="width: 100%"/>');
 		urlDialog.dialog('open');
 	}
-}
+};
 
 DialogController.refreshParent = function(dialogId) {
 	var parentId = DialogController.getParam(dialogId, 'parent_id');
 	if(parentId) {
 		DialogController.refresh(parentId);
 	}
-}
+};
+
+
+//costmization dialog
+(function($){
+	var _init = $.ui.dialog.prototype._init;
+	
+	//Custom Dialog Init
+	$.ui.dialog.prototype._init = function() {
+        _init.apply(this, arguments);
+		
+		// { Minimize button part
+		var minimizeHtml = '<a href="#" class="ui-dialog-titlebar-minimize ui-corner-all" role="button">'
+			+ '<span class="ui-icon ui-icon-minus">minimize</span>'
+			+ '</a>';
+		
+		var uiDialogTitlebar = this.uiDialogTitlebar;
+
+		uiDialogTitlebar.append(minimizeHtml);
+		var minimized = false;
+		var widget = this.uiDialog;
+		var widgetHideParts = $('.ui-widget-header', widget).nextAll();
+		var widgetHeight = 0;
+		
+		//Minimize Button
+		this.uiDialogTitlebarMin = $('.ui-dialog-titlebar-minimize', uiDialogTitlebar)
+			.click(function(){
+				if (minimized) {
+					$(widget).height(widgetHeight);
+					widgetHideParts.show();
+					minimized = false;
+				} else {
+					widgetHeight = $(widget).height();
+					widgetHideParts.hide();
+					$(widget).height(uiDialogTitlebar.height() + 20);
+					minimized = true;
+				}
+				return false;
+			});
+		// } Minimize button part end
+		
+	};
+	//Custom Dialog Functions
+	$.extend($.ui.dialog.prototype, {
+		buttons: function(value) {
+			debugger;
+		}
+	});
+})(jQuery);
