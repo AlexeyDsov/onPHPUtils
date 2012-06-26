@@ -32,7 +32,7 @@ $primitiveValue = $primitive->getValue(); ?>
 				value="<?=$primitiveValue ? $this->escape($primitiveValue->getId()) : ''?>" />
 		<? } elseif ($primitiveType == 'PrimitiveEnumeration' || $primitiveType == 'PrimitiveEnum') {
 			$enumList = $primitive->getList(); ?>
-			<select name="<?=$propertyName?>">
+			<select name="<?=$propertyName?>" class="w95">
 				<? if (!$primitive->isRequired() || !$primitiveValue) { ?>
 					<option value=""></option>
 				<? }

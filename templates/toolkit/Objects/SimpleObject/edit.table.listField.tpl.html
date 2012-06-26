@@ -15,7 +15,7 @@ $exportValue = $primitive->exportValue(); ?>
 		<?=$primitive->isRequired() ? '*' : ''?>:
 	</td>
 	<td>
-		<select name="<?=$propertyName?>">
+		<select name="<?=$propertyName?>" class="w95">
 			<? if (!$primitive->isRequired() || !$exportValue) { ?>
 				<option value=""></option>
 			<? }
