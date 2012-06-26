@@ -1,0 +1,30 @@
+<?php
+/* @var $form Form */
+/* @var $formId string */
+/* @var $propertyList array */
+
+/* @var $propertyName string */
+/* @var $primitive BasePrimitive */
+/* @var $hasError boolean */
+/* @var $nameList array */
+$primitiveType = get_class($primitive);
+$exportValue = $primitive->exportValue(); ?>
+<tr class="<?=$hasError ? 'errorField' : ''?>">
+	<td>
+		<?=$this->trans($objectName.'.property.'.$propertyName)?>
+		<?=$primitive->isRequired() ? '*' : ''?>:
+	</td>
+	<td>
+		<select name="<?=$propertyName?>">
+			<? if (!$primitive->isRequired() || !$exportValue) { ?>
+				<option value=""></option>
+			<? }
+			foreach ($nameList as $id => $name) {
+				$isSelected = is_null($exportValue) && ($id == $exportValue); ?>
+				<option value="<?=$this->escape($id)?>" <?=$isSelected ? 'selected' : ''?> >
+					<?=$this->escape($name)?>
+				</option>
+			<? } ?>
+		</select>
+	</td>
+</tr>

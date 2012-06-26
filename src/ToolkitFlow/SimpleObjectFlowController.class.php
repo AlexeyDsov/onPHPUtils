@@ -400,6 +400,13 @@
 		final protected function getEmptyFieldData() {
 			return array('tpl' => 'Objects/SimpleObject/empty');
 		}
+
+		final protected function getListFieldData($nameList) {
+			return array(
+				'tpl' => 'Objects/SimpleObject/edit.table.listField',
+				'nameList' => $nameList,
+			);
+		}
 		
 		protected function toCloseDialog(IdentifiableObject $subject) {
 			return false;
