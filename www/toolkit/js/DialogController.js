@@ -176,47 +176,47 @@ DialogController.buttons = function(dialogId, buttonsOptions) {
 
 //costmization dialog
 (function($){
-	var _init = $.ui.dialog.prototype._init;
-	
-	//Custom Dialog Init
-	$.ui.dialog.prototype._init = function() {
-        _init.apply(this, arguments);
-		
-		// { Minimize button part
-		var minimizeHtml = '<a href="#" class="ui-dialog-titlebar-minimize ui-corner-all" role="button">'
-			+ '<span class="ui-icon ui-icon-minus">minimize</span>'
-			+ '</a>';
-		
-		var uiDialogTitlebar = this.uiDialogTitlebar;
 
-		uiDialogTitlebar.append(minimizeHtml);
-		var minimized = false;
-		var widget = this.uiDialog;
-		var widgetHideParts = $('.ui-widget-header', widget).nextAll();
-		var widgetHeight = 0;
-		
-		//Minimize Button
-		this.uiDialogTitlebarMin = $('.ui-dialog-titlebar-minimize', uiDialogTitlebar)
-			.click(function(){
-				if (minimized) {
-					$(widget).height(widgetHeight);
-					widgetHideParts.show();
-					minimized = false;
-				} else {
-					widgetHeight = $(widget).height();
-					widgetHideParts.hide();
-					$(widget).height(uiDialogTitlebar.height() + 20);
-					minimized = true;
-				}
-				return false;
-			});
-		// } Minimize button part end
-		
-	};
-	//Custom Dialog Functions
-	$.extend($.ui.dialog.prototype, {
-		example: function(value) {
-			debugger;
+	$.widget('tk.dialog', $.ui.dialog, {
+		_init: function () {
+			$.ui.dialog.prototype._init.apply(this, arguments);
+			
+			// { Minimize button part
+			var minimizeHtml = '<a href="#" class="ui-dialog-titlebar-minimize ui-corner-all" role="button">'
+				+ '<span class="ui-icon ui-icon-minus">minimize</span>'
+				+ '</a>';
+
+			var uiDialogTitlebar = this.uiDialogTitlebar;
+
+			uiDialogTitlebar.append(minimizeHtml);
+			var minimized = false;
+			var widget = this.uiDialog;
+			var widgetHideParts = $('.ui-widget-header', widget).nextAll();
+			var widgetHeight = 0;
+
+			//Minimize Button
+			this.uiDialogTitlebarMin = $('.ui-dialog-titlebar-minimize', uiDialogTitlebar)
+				.click(function(){
+					if (minimized) {
+						$(widget).height(widgetHeight);
+						widgetHideParts.show();
+						minimized = false;
+					} else {
+						widgetHeight = $(widget).height();
+						widgetHideParts.hide();
+						$(widget).height(uiDialogTitlebar.height() + 20);
+						minimized = true;
+					}
+					return false;
+				});
+			// } Minimize button part end
 		}
 	});
+	
+	//Custom Dialog Functions
+//	$.extend($.ui.dialog.prototype, {
+//		example: function(value) {
+//			debugger;
+//		}
+//	});
 })(jQuery);
