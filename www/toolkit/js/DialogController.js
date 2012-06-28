@@ -176,6 +176,22 @@ DialogController.buttons = function(dialogId, buttonsOptions) {
 
 //costmization dialog
 (function($){
+	var man = {
+		name: 'man',
+		say: function() {console.log("My name is " + this.name);}
+	};
+	
+//	var john = new ban.constructor();
+//	var tt = john.prototype;
+//	debugger;
+//	
+//	john.say();
+//	ban.say();
+//	
+//	debugger;
+	
+	
+	
 	var _init = $.ui.dialog.prototype._init;
 	
 	//Custom Dialog Init

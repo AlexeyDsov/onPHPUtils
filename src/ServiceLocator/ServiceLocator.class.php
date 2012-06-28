@@ -31,7 +31,10 @@
 			$reflectionClass = new ReflectionClass($className);
 			$constructorArgs = func_get_args();
 			array_shift($constructorArgs);
-			$object = $reflectionClass->newInstanceArgs($constructorArgs);
+			
+			$object = !empty($constructorArgs)
+				? $reflectionClass->newInstanceArgs($constructorArgs)
+				: $reflectionClass->newInstance();
 			
 			return $this->implementSelf($object);
 		}
