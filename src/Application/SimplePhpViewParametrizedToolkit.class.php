@@ -10,6 +10,14 @@
 			);
 		}
 		
+		protected function getButtonsJson($buttonsOptions) {
+			$buttons = array();
+			foreach ($buttonsOptions as $name => $options) {
+				$buttons[$this->trans($name)] = $options;
+			}
+			return json_encode($buttons);
+		}
+		
 		protected function objectLink($object) {
 			$this->view('Objects/SimpleObject/objectLink', array('object' => $object));
 		}

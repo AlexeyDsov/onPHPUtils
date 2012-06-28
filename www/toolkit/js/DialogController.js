@@ -139,6 +139,40 @@ DialogController.refreshParent = function(dialogId) {
 	}
 };
 
+DialogController.buttons = function(dialogId, buttonsOptions) {
+	var dialog = $('#' + dialogId);
+	if (dialog.length == 0)
+		return;
+	
+	var buttons = {};
+	$.each(buttonsOptions, function(buttonName, buttonParams){
+		var button = null;
+		if (typeof buttonParams == 'function') {
+			button = buttonParams;
+		} else {
+			if (!buttonParams.url)
+				return;
+
+			if (buttonParams.window) {
+				var buttonDialog = buttonParams.dialogName;
+				button = function() {
+					DialogController.spawnByUrl(
+						buttonParams.url,
+						typeof(buttonDialog) !== 'undefined' ? buttonDialog : dialogId
+					);
+				};
+			} else {
+				button = function() {
+					Application.goUrl(buttonParams.url);
+				};
+			}
+		}
+		if (button) {
+			buttons[buttonName] = button;
+		}
+	});
+	dialog.dialog('option', 'buttons', buttons);
+};
 
 //costmization dialog
 (function($){
@@ -181,7 +215,7 @@ DialogController.refreshParent = function(dialogId) {
 	};
 	//Custom Dialog Functions
 	$.extend($.ui.dialog.prototype, {
-		buttons: function(value) {
+		example: function(value) {
 			debugger;
 		}
 	});

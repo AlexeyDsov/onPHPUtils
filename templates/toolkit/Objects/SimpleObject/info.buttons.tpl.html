@@ -8,31 +8,9 @@
 			$('#<?=$dialogName?>').dialog('option', {
 				title: "<?=$this->trans('Info of')?> <?=$title?>",
 				width: 600,
-				height: windowHeight,
-				buttons: {
-					<?
-					/**
-					* @todo убрать здесь эти извращения и передавать в js "json данные", которые будут генерить кнопки
-					* сам это сделаю, но несколько позже
-					*/
-					$count = count($buttonUrlList); $i = 0;
-					foreach ($buttonUrlList as $buttonName => $buttonOptions) {
-						$isLast = ($i++ >= $count - 1);
-						if ($buttonOptions['window']) { ?>
-							"<?=$this->trans($buttonName)?>": function() {
-								DialogController.spawnByUrl(
-									'<?=$buttonOptions['url']?>',
-									'<?=isset($buttonOptions['dialogName']) ? $buttonOptions['dialogName'] : $dialogName?>'
-								);
-							}<?=!$isLast ? ',' : ''?>
-						<? } else { ?>
-							"<?=$this->trans($buttonName)?>": function() {
-								Application.goUrl('<?=$buttonOptions['url']?>')
-							}<?=!$isLast ? ',' : ''?>
-						<? }
-					} ?>
-				}
+				height: windowHeight
 			});
+			DialogController.buttons('<?=$dialogName?>', <?=$this->getButtonsJson($buttonUrlList)?>);
 			var widget = $('#<?=$dialogName?>').dialog('widget');
 			var widgetHeader = widget.find('.ui-widget-header');
 			if (!widgetHeader.find('.ui-dialog-titlebar-refresh').length) {
