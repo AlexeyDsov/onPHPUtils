@@ -20,7 +20,7 @@ $exportValue = $primitive->exportValue(); ?>
 				<option value=""></option>
 			<? }
 			foreach ($nameList as $id => $name) {
-				$isSelected = is_null($exportValue) && ($id == $exportValue); ?>
+				$isSelected = !is_null($exportValue) && ($id == $exportValue); ?>
 				<option value="<?=$this->escape($id)?>" <?=$isSelected ? 'selected' : ''?> >
 					<?=$this->escape($name)?>
 				</option>
