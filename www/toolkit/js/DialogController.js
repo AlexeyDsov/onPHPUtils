@@ -143,6 +143,8 @@ DialogController.refreshParent = function(dialogId) {
 (function($){
 
 	$.widget('tk.dialog', $.ui.dialog, {
+		minimized: false,
+		minimizedHeight: 0,
 		_init: function () {
 			$.ui.dialog.prototype._init.apply(this, arguments);
 			
@@ -151,32 +153,34 @@ DialogController.refreshParent = function(dialogId) {
 				+ '<span class="ui-icon ui-icon-minus">minimize</span>'
 				+ '</a>';
 
+			var self = this;
 			var uiDialogTitlebar = this.uiDialogTitlebar;
-
 			uiDialogTitlebar.append(minimizeHtml);
-			var minimized = false;
-			var widget = this.uiDialog;
-			var widgetHideParts = $('.ui-widget-header', widget).nextAll();
-			var widgetHeight = 0;
-
-			//Minimize Button
 			this.uiDialogTitlebarMin = $('.ui-dialog-titlebar-minimize', uiDialogTitlebar)
 				.click(function(){
-					if (minimized) {
-						$(widget).height(widgetHeight);
-						widgetHideParts.show();
-						minimized = false;
-					} else {
-						widgetHeight = $(widget).height();
-						widgetHideParts.hide();
-						$(widget).height(uiDialogTitlebar.height() + 20);
-						minimized = true;
-					}
+					self.switchMinimize();
 					return false;
 				});
-			// } Minimize button part end
 		},
-
+		_setOption: function() {
+			$.ui.dialog.prototype._setOption.apply(this, arguments);
+			
+		},
+		switchMinimize: function() {
+			var widget = this.uiDialog;
+			var uiDialogTitlebar = this.uiDialogTitlebar;
+			var widgetHideParts = $('.ui-widget-header', widget).nextAll();
+			if (this.minimized) {
+				$(widget).height(this.widgetHeight);
+				widgetHideParts.show();
+				this.minimized = false;
+			} else {
+				this.widgetHeight = $(widget).height();
+				widgetHideParts.hide();
+				$(widget).height(uiDialogTitlebar.height() + 20);
+				this.minimized = true;
+			}
+		},
 		buttons: function(buttonsOptions) {
 			var buttons = {};
 			var dialogId = this.element.attr('id');
