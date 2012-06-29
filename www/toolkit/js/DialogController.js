@@ -154,9 +154,8 @@ DialogController.refreshParent = function(dialogId) {
 				+ '</a>';
 
 			var self = this;
-			var uiDialogTitlebar = this.uiDialogTitlebar;
-			uiDialogTitlebar.append(minimizeHtml);
-			this.uiDialogTitlebarMin = $('.ui-dialog-titlebar-minimize', uiDialogTitlebar)
+			$(minimizeHtml)
+				.appendTo(this.uiDialogTitlebar)
 				.click(function(){
 					self.switchMinimize();
 					return false;
