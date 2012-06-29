@@ -10,7 +10,7 @@
 				width: 600,
 				height: windowHeight
 			});
-			DialogController.buttons('<?=$dialogName?>', <?=$this->getButtonsJson($buttonUrlList)?>);
+			$('#<?=$dialogName?>').dialog('buttons', <?=$this->getButtonsJson($buttonUrlList)?>);
 			var widget = $('#<?=$dialogName?>').dialog('widget');
 			var widgetHeader = widget.find('.ui-widget-header');
 			if (!widgetHeader.find('.ui-dialog-titlebar-refresh').length) {

@@ -139,41 +139,6 @@ DialogController.refreshParent = function(dialogId) {
 	}
 };
 
-DialogController.buttons = function(dialogId, buttonsOptions) {
-	var dialog = $('#' + dialogId);
-	if (dialog.length == 0)
-		return;
-	
-	var buttons = {};
-	$.each(buttonsOptions, function(buttonName, buttonParams){
-		var button = null;
-		if (typeof buttonParams == 'function') {
-			button = buttonParams;
-		} else {
-			if (!buttonParams.url)
-				return;
-
-			if (buttonParams.window) {
-				var buttonDialog = buttonParams.dialogName;
-				button = function() {
-					DialogController.spawnByUrl(
-						buttonParams.url,
-						typeof(buttonDialog) !== 'undefined' ? buttonDialog : dialogId
-					);
-				};
-			} else {
-				button = function() {
-					Application.goUrl(buttonParams.url);
-				};
-			}
-		}
-		if (button) {
-			buttons[buttonName] = button;
-		}
-	});
-	dialog.dialog('option', 'buttons', buttons);
-};
-
 //costmization dialog
 (function($){
 
@@ -210,13 +175,40 @@ DialogController.buttons = function(dialogId, buttonsOptions) {
 					return false;
 				});
 			// } Minimize button part end
+		},
+
+		buttons: function(buttonsOptions) {
+			var buttons = {};
+			var dialogId = this.element.attr('id');
+			
+			$.each(buttonsOptions, function(buttonName, buttonParams){
+				var button = null;
+				if (typeof buttonParams == 'function') {
+					button = buttonParams;
+				} else {
+					if (!buttonParams.url)
+						return;
+
+					if (buttonParams.window) {
+						var buttonDialog = buttonParams.dialogName;
+						button = function() {
+							DialogController.spawnByUrl(
+								buttonParams.url,
+								typeof(buttonDialog) !== 'undefined' ? buttonDialog : dialogId
+							);
+						};
+					} else {
+						button = function() {
+							Application.goUrl(buttonParams.url);
+						};
+					}
+				}
+				if (button) {
+					buttons[buttonName] = button;
+				}
+			});
+			
+			this.option('buttons', buttons);
 		}
 	});
-	
-	//Custom Dialog Functions
-//	$.extend($.ui.dialog.prototype, {
-//		example: function(value) {
-//			debugger;
-//		}
-//	});
 })(jQuery);

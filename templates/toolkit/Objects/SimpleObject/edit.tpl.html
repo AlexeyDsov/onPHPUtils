@@ -29,7 +29,7 @@ $formId = 'editForm'.time().rand(10000, 99999); ?>
 				cancel = function() {$(this).dialog('close');}
 			}
 			buttons["<?=$this->trans('Cancel')?>"] = cancel;
-			DialogController.buttons('<?=$dialogName?>', buttons);
+			$('#<?=$dialogName?>').dialog('buttons', buttons);
 		});
 	</script>
 <? } elseif ($infoObject) { ?>
