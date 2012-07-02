@@ -15,7 +15,7 @@
 		_init: function () {
 			$.ui.dialog.prototype._init.apply(this, arguments);
 			var self = this;
-				
+			
 			//refresh button part {
 			var refreshHtml = '<a href="#" class="ui-dialog-titlebar-refresh ui-corner-all" role="button" style="display: none;">'
 				+ '<span class="ui-icon ui-icon-refresh">refresh</span>'
@@ -91,23 +91,25 @@
 		},
 		buttons: function(buttonsOptions) {
 			var buttons = {};
-			var dialogId = this.element.attr('id');
+			var self = this;
 			
 			$.each(buttonsOptions, function(buttonName, buttonParams){
 				var button = null;
 				if (typeof buttonParams == 'function') {
 					button = buttonParams;
 				} else {
+					var buttonParams = $.extend({}, {url: null, dialogName: null}, buttonParams);
 					if (!buttonParams.url)
 						return;
 
 					if (buttonParams.window) {
-						var buttonDialog = buttonParams.dialogName;
 						button = function() {
-							$.tk.load({
-								url: buttonParams.url,
-								id: typeof(buttonDialog) !== 'undefined' ? buttonDialog : dialogId
-							});
+							var options = {url: buttonParams.url};
+							if (buttonParams.dialogName)
+								options.id = buttonParams.dialogName;
+							else
+								options.dialog = self.element;
+							$.tk.load(options);
 						};
 					} else {
 						button = function() {
