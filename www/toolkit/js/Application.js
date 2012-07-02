@@ -59,7 +59,7 @@ Application.submit = function(form) {
 }
 
 Application.goUrl = function(url) {
-	var linkId = 'link' + DialogController.generateId();
+	var linkId = 'link' + $.tk.randomId();
 	var html = '<a class="js-pjax" href="' + url + '" id="' + linkId + '" style="display: none;">redirect</a>';
 	$('#pjaxArea').append(html);
 	$('#' + linkId).click();

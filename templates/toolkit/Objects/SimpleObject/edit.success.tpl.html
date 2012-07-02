@@ -14,7 +14,7 @@ if ($this->get('isAjax') && $infoObject) {
 			$(function() {
 				$('#<?=$currentDialog?>').dialog('close');
 				<? if (!isset($closeDialog) || !$closeDialog) { ?>
-					DialogController.spawnByUrl('<?=$infoUrl?>', '<?=$dialogName?>');
+					$.tk.load({url: '<?=$infoUrl?>', id: '<?=$dialogName?>'});
 				<? } else { ?>
 					$('#<?=$dialogName?>').dialog('close');
 				<? } ?>

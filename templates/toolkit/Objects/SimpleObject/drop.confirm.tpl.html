@@ -6,7 +6,7 @@
 		$('#<?=$dialogName?>').dialog('option', {
 			title: "<?=$this->trans('Dropping object')?>",
 			buttons: {
-				"<?=$this->trans('Drop')?>": function() {DialogController.spawnByUrl('<?=$dropUrl?>', '<?=$dialogName?>');},
+				"<?=$this->trans('Drop')?>": function() {$.tk.load({url: '<?=$dropUrl?>', id: '<?=$dialogName?>'});},
 				"<?=$this->trans('Cancel')?>": function() {$(this).dialog('close');}
 			}
 		});

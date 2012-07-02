@@ -24,7 +24,7 @@ $formId = 'editForm'.time().rand(10000, 99999); ?>
 			var buttons = {};
 			buttons["<?=$this->trans('Save')?>"] = function() {$.sendPostForm($('#<?=$formId?>'), $('#<?=$dialogName?>'));}
 			if (hasId && !closeDialog) {
-				cancel = function() {DialogController.spawnByUrl('<?=$infoUrl?>', '<?=$dialogName?>');}
+				cancel = function() {$.tk.load({url: '<?=$infoUrl?>', id: '<?=$dialogName?>'});}
 			} else {
 				cancel = function() {$(this).dialog('close');}
 			}

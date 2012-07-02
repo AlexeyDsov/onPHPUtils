@@ -3,7 +3,7 @@
 	if ($this->get('linker')->isObjectSupported($object, 'info')) {
 		$dialogName = $this->get('linker')->getDialogName($object);
 		$infoUrl = $this->get('linker')->getUrl($object); ?>
-		<a href="<?=$infoUrl?>" onclick="return DialogController.spawnByLink(event, this, '<?=$dialogName?>');">
+		<a href="<?=$infoUrl?>" onclick="return $.tk.load({event: event, link: this, id: '<?=$dialogName?>'});">
 			<?=$this->escape($objectName)?>
 		</a>
 	<? } else {

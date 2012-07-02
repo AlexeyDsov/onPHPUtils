@@ -1,85 +1,7 @@
 /***************************************************************************
- *   Copyright (C) 2011 by Alexey Denisov                                  *
+ *   Copyright (C) 2011-2012 by Alexey Denisov                             *
  *   alexeydsov@gmail.com                                                  *
  ***************************************************************************/
-
-var DialogController = DialogController || {};
-
-DialogController.spawnByLink = function (event, link, dialogId, parentId) {
-	if ( event.which > 1 || event.metaKey ) {
-		return true
-	}
-	var url = $(link).attr('href');
-	this.spawnByUrl(url, dialogId, link, parentId);
-	return false
-};
-
-DialogController.spawnByUrl = function (url, dialogId, initiateObject, parentId) {
-	var self = this;
-	$.ajax({
-		url: url,
-		type: 'GET',
-		dataType: "html",
-		cache: false,
-		// Complete callback (responseText is used internally)
-		complete: function(jqXHR, status, responseText) {
-			// Store the response as specified by the jqXHR object
-			responseText = jqXHR.responseText;
-			// If successful, inject the HTML into all the matched elements
-			if (jqXHR.isResolved()) {
-				jqXHR.done(function(r) {
-					responseText = r;
-				});
-				var dialog = $.tk._getDialog({id: dialogId, parent: parentId})
-				if (typeof(initiateObject) !== 'undefined') {
-					initiateObject = $(initiateObject);
-					dialog.dialog('option', "position", [initiateObject.offset().left, initiateObject.offset().top]);
-				}
-				dialog.html($("<div>").append(responseText));
-				dialog.dialog("open").dialog( "moveToTop" );
-				$('body').trigger('dialog.loaded');
-				dialog.dialog('option', 'url', url);
-			} else {
-				//If not success - making window with error msg
-				var dialog = $.tk._spawn();
-				dialog.html($("<div>").append("Loading page error..."));
-				if (typeof(initiateObject) !== 'undefined') {
-					initiateObject = $(initiateObject);
-					dialog.dialog('option', "position", [initiateObject.offset().left, initiateObject.offset().top]);
-				}
-				dialog.dialog('option', {dialogClass: 'ui-state-error', title: 'Error'});
-				dialog.dialog('open');
-			}
-		}
-	});
-	return false;
-};
-
-DialogController.setParam = function(dialogId, name, value) {
-	$('#' + dialogId).dialog('option', 'TK_' + name, value);
-};
-
-DialogController.getParam = function(dialogId, name) {
-	var dialog = $('#' + dialogId);
-	var result = dialog.dialog('option', 'TK_' + name);
-	return result == dialog ? null : result;
-};
-
-DialogController.shareUrl = function(dialogId) {
-	var url = DialogController.getParam(dialogId, 'url')
-	if (url) {
-		var urlDialog = $.tk._spawn();
-		urlDialog.html('<input type="text" value="' + url + '&_window&_dialogId=' + dialogId + '" readonly disabled class="w95"/>');
-		urlDialog.dialog('open');
-	}
-};
-
-DialogController.refreshParent = function(dialogId) {
-	var parentId = DialogController.getParam(dialogId, 'parent_id');
-	if(parentId) {
-		$.tk.getDialog.dialog('refresh');
-	}
-};
 
 //costmization dialog
 (function($){
@@ -138,12 +60,12 @@ DialogController.refreshParent = function(dialogId) {
 		},
 		refreshUrl: function() {
 			if (this.options.url) {
-				DialogController.spawnByUrl(this.options.url, this.element.attr('id'));
+				$.tk.load({url: this.options.url, id: this.element.attr('id')});
 			}
 		},
 		shareUrl: function() {
 			if (this.options.url) {
-				var urlDialog = $.tk._spawn({id: null});
+				var urlDialog = $.tk.get();
 				urlDialog.html(
 					'<input type="text" value="'
 						+ this.options.url + '&_window&_dialogId='
@@ -182,10 +104,10 @@ DialogController.refreshParent = function(dialogId) {
 					if (buttonParams.window) {
 						var buttonDialog = buttonParams.dialogName;
 						button = function() {
-							DialogController.spawnByUrl(
-								buttonParams.url,
-								typeof(buttonDialog) !== 'undefined' ? buttonDialog : dialogId
-							);
+							$.tk.load({
+								url: buttonParams.url,
+								id: typeof(buttonDialog) !== 'undefined' ? buttonDialog : dialogId
+							});
 						};
 					} else {
 						button = function() {
@@ -212,19 +134,71 @@ DialogController.refreshParent = function(dialogId) {
 		},
 		get: function(options) {
 			options = $.extend({}, this._getDialogOptions, options);
-			this._fillUrl(options);
-			this._fillPosition(options);
-		},
-		_getDialog: function(options) {
+			
 			var dialog = null;
-			if ((dialog = $('#' + options.id)).length == 1) {
-				if (options.parent) {
-					dialog.dialog('option', 'parent', options.parent);
-				}
-			} else {
+			if (options.dialog) {
+				dialog = options.dialog;
+			} else if ((dialog = $('#' + options.id)).length == 0) {
 				dialog = $.tk._spawn(options);
 			}
+			if (options.parent) {
+				dialog.dialog('option', 'parent', options.parent);
+			}
 			return dialog;
+		},
+		load: function(options) {
+			options = $.extend({}, this._getDialogOptions, options);
+			if (options.event && (options.event.which > 1 || options.event.metaKey)) {
+				return true;
+			}
+			
+			this._fillUrl(options);
+			this._fillPosition(options);
+			var self = this;
+			
+			if (options.url) {
+				$.ajax({
+					url: options.url,
+					type: 'GET',
+					dataType: "html",
+					cache: false,
+					// Complete callback (responseText is used internally)
+					complete: function(jqXHR, status, responseText) {
+						// Store the response as specified by the jqXHR object
+						responseText = jqXHR.responseText;
+						// If successful, inject the HTML into all the matched elements
+						if (jqXHR.isResolved()) {
+							jqXHR.done(function(r) {
+								responseText = r;
+							});
+							var dialog = self.get(options)
+							if (options.position) {
+								dialog.dialog('option', 'position', options.position);
+							}
+							dialog
+								.html($("<div>").append(responseText))
+								.dialog("open")
+								.dialog("moveToTop")
+								.dialog('option', 'url', options.url);
+							$('body').trigger('dialog.loaded');
+							if ($.isFunction(options.callback)) {
+								options.callback.apply(this);
+							}
+						} else {
+							//If not success - making window with error msg
+							var dialog = self.get();
+							dialog.html($("<div>").append("Loading page error..."));
+							if (typeof(initiateObject) !== 'undefined') {
+								initiateObject = $(initiateObject);
+								dialog.dialog('option', "position", [initiateObject.offset().left, initiateObject.offset().top]);
+							}
+							dialog.dialog('option', {dialogClass: 'ui-state-error', title: 'Error'});
+							dialog.dialog('open');
+						}
+					}
+				});
+			}
+			return false;
 		},
 		_spawn: function(options) {
 			if (options.id === null) {
@@ -234,8 +208,7 @@ DialogController.refreshParent = function(dialogId) {
 				.appendTo('body')
 				.dialog({
 					disabled: true,
-					autoOpen: false,
-					parent: options.parent ? options.parent : null
+					autoOpen: false
 			});
 		},
 		_fillUrl: function(options) {
@@ -254,10 +227,12 @@ DialogController.refreshParent = function(dialogId) {
 		},
 		_getDialogOptions: {
 			id: null,
+			dialog: null, //instead id you can pass dialg container
 			parent: null,
 			link: null,
 			event: null,
 			url: null,
+			callback: null,
 			options: {},
 			position: null
 		}

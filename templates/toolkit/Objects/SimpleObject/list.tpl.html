@@ -2,7 +2,7 @@
 
 $partViewer->view('helpers/ListMaker/form', $listHeaderModel);
 if ($showAddButton) {?>
-	<a href="<?=$addButtonUrl?>" onclick="return DialogController.spawnByLink(event, this, '<?=$addButtonDialogId?>');">
+	<a href="<?=$addButtonUrl?>" onclick="return $.tk.load({event: event, link: this, id: '<?=$addButtonDialogId?>'});">
 		<?=$this->trans('Create new object')?>
 	</a>
 <? }

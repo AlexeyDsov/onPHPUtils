@@ -24,7 +24,7 @@
 			$objectDialogName = $this->get('linker')->getDialogName($infoObject); ?>
 			<a
 				href="<?=$objectDialogUrl?>"
-				onclick="return DialogController.spawnByLink(event, this, '<?=$objectDialogName?>');"
+				onclick="return $.tk.load({event: event, link: this, id: '<?=$objectDialogName?>'});"
 			>
 				<?=$this->trans('list.Info')?>
 			</a>
@@ -36,7 +36,7 @@
 			&nbsp;
 			<a
 				href="<?=$objectDialogUrl?>"
-				onclick="return DialogController.spawnByLink(event, this, '<?=$objectDialogName?>');"
+				onclick="return $.tk.load({event: event, link: this, id: '<?=$objectDialogName?>'});"
 			>
 				<?=$this->trans('Drop')?>
 			</a>
