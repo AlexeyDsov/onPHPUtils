@@ -5,8 +5,6 @@
 
 var DialogController = DialogController || {};
 
-DialogController.currentDialog = null;
-
 DialogController.spawnByLink = function (event, link, dialogId, parentId) {
 	if ( event.which > 1 || event.metaKey ) {
 		return true
@@ -32,7 +30,7 @@ DialogController.spawnByUrl = function (url, dialogId, initiateObject, parentId)
 				jqXHR.done(function(r) {
 					responseText = r;
 				});
-				var dialog = self.markCurrent(self.getDialog(dialogId, parentId));
+				var dialog = self.getDialog(dialogId, parentId);
 				if (typeof(initiateObject) !== 'undefined') {
 					initiateObject = $(initiateObject);
 					dialog.dialog('option', "position", [initiateObject.offset().left, initiateObject.offset().top]);
@@ -43,7 +41,7 @@ DialogController.spawnByUrl = function (url, dialogId, initiateObject, parentId)
 				self.setParam(dialogId, 'url', url);
 			} else {
 				//If not success - making window with error msg
-				var dialog = self.markCurrent(self.spawn());
+				var dialog = self.spawn();
 				dialog.html($("<div>").append("Loading page error..."));
 				if (typeof(initiateObject) !== 'undefined') {
 					initiateObject = $(initiateObject);
@@ -55,11 +53,6 @@ DialogController.spawnByUrl = function (url, dialogId, initiateObject, parentId)
 		}
 	});
 	return false;
-};
-
-DialogController.markCurrent = function (dialog) {
-	this.currentDialog = dialog;
-	return dialog;
 };
 
 DialogController.getDialog = function (dialogId, parentId) {
