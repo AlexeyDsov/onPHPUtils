@@ -76,9 +76,9 @@ DialogController.getDialog = function (dialogId, parentId) {
 
 DialogController.spawn = function(dialogId, parentId) {
 	if (typeof(dialogId) == 'undefined') {
-		dialogId = this.generateId();
+		dialogId = $.tk.randomId();
 	}
-	var html = "<div id=" + dialogId + "><!-- --></div><div id='" + dialogId + "_params' style='display: none'><!-- --></div>";
+	var html = "<div id=" + dialogId + "><!-- --></div>";
 	$('body').append(html);
 	var dialog = $('#' + dialogId).dialog({
 		disabled: true,
@@ -107,14 +107,6 @@ DialogController.getParam = function(dialogId, name) {
 	var dialog = $('#' + dialogId);
 	var result = dialog.dialog('option', 'DC_' + name);
 	return result == dialog ? null : result;
-};
-
-DialogController.generateId = function () {
-	var min = 10000;
-	var max = 99999;
-	var time = Math.floor(new Date().getTime() / 1000);
-	var rand = Math.floor(Math.random() * (max - min + 1)) + min;
-	return "" + time + rand;
 };
 
 DialogController.refresh = function(dialogId) {
@@ -212,6 +204,45 @@ DialogController.refreshParent = function(dialogId) {
 			});
 			
 			this.option('buttons', buttons);
+		}
+	});
+	
+	$.extend($.tk, {
+		randomId: function () {
+			debugger;
+			var min = 10000;
+			var max = 99999;
+			var time = Math.floor(new Date().getTime() / 1000);
+			var rand = Math.floor(Math.random() * (max - min + 1)) + min;
+			return "" + time + rand;
+		},
+		create: function(options) {
+			options = $.extend({}, this._getDialogOptions, options);
+			this._fillUrl(options);
+			
+		},
+		_fillUrl: function(options) {
+			if (options.url) return;
+			if ($(options.link).filter('a').length == 1)
+				options.url = $(options.link).attr('href');
+		},
+		_fillPosition: function(options) {
+			if (!options.position && options.link) {
+				initiateObject = $(options.link);
+				var left = initiateObject.offset().left;
+				var top = initiateObject.offset().top;
+				if (left && top)
+					options.position = [initiateObject.offset().left, initiateObject.offset().top];
+			}
+		},
+		_getDialogOptions: {
+			dialogId: null,
+			parentId: null,
+			link: null,
+			event: null,
+			url: null,
+			options: {},
+			position: null
 		}
 	});
 })(jQuery);
