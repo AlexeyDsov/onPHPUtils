@@ -11,28 +11,6 @@
 				height: windowHeight
 			});
 			$('#<?=$dialogName?>').dialog('buttons', <?=$this->getButtonsJson($buttonUrlList)?>);
-			var widget = $('#<?=$dialogName?>').dialog('widget');
-			var widgetHeader = widget.find('.ui-widget-header');
-			if (!widgetHeader.find('.ui-dialog-titlebar-refresh').length) {
-				var refreshHtml = '<a href="#" class="ui-dialog-titlebar-refresh ui-corner-all" role="button">'
-					+ '<span class="ui-icon ui-icon-refresh">refresh</span>'
-					+ '</a>';
-				widgetHeader.find('.ui-dialog-titlebar-close').before(refreshHtml);
-				widgetHeader.find('.ui-dialog-titlebar-refresh').click(function() {
-					DialogController.refresh('<?=$dialogName?>');
-					return false;
-				});
-			}
-			if (!widgetHeader.find('.ui-dialog-titlebar-share').length) {
-				var shareHtml = '<a href="#" class="ui-dialog-titlebar-share ui-corner-all" role="button">'
-					+ '<span class="ui-icon ui-icon-signal-diag">share</span>'
-					+ '</a>';
-				widgetHeader.find('.ui-dialog-titlebar-close').before(shareHtml);
-				widgetHeader.find('.ui-dialog-titlebar-share').click(function() {
-					DialogController.shareUrl('<?=$dialogName?>');
-					return false;
-				});
-			}
 		});
 	</script>
 <? } else { ?>

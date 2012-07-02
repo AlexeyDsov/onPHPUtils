@@ -30,7 +30,7 @@ DialogController.spawnByUrl = function (url, dialogId, initiateObject, parentId)
 				jqXHR.done(function(r) {
 					responseText = r;
 				});
-				var dialog = self.getDialog(dialogId, parentId);
+				var dialog = $.tk._getDialog({id: dialogId, parent: parentId})
 				if (typeof(initiateObject) !== 'undefined') {
 					initiateObject = $(initiateObject);
 					dialog.dialog('option', "position", [initiateObject.offset().left, initiateObject.offset().top]);
@@ -38,10 +38,10 @@ DialogController.spawnByUrl = function (url, dialogId, initiateObject, parentId)
 				dialog.html($("<div>").append(responseText));
 				dialog.dialog("open").dialog( "moveToTop" );
 				$('body').trigger('dialog.loaded');
-				self.setParam(dialogId, 'url', url);
+				dialog.dialog('option', 'url', url);
 			} else {
 				//If not success - making window with error msg
-				var dialog = self.spawn();
+				var dialog = $.tk._spawn();
 				dialog.html($("<div>").append("Loading page error..."));
 				if (typeof(initiateObject) !== 'undefined') {
 					initiateObject = $(initiateObject);
@@ -55,64 +55,21 @@ DialogController.spawnByUrl = function (url, dialogId, initiateObject, parentId)
 	return false;
 };
 
-DialogController.getDialog = function (dialogId, parentId) {
-	var dialog = $('#' + dialogId);
-	if (dialog.length != 1) {
-		dialog = this.spawn(dialogId, parentId);
-	} else {
-		if (parentId) {
-			DialogController.setParent(dialogId, parentId);
-		}
-	}
-	return dialog;
-};
-
-DialogController.spawn = function(dialogId, parentId) {
-	if (typeof(dialogId) == 'undefined') {
-		dialogId = $.tk.randomId();
-	}
-	var html = "<div id=" + dialogId + "><!-- --></div>";
-	$('body').append(html);
-	var dialog = $('#' + dialogId).dialog({
-		disabled: true,
-		autoOpen: false
-	});
-	if (parentId) {
-		DialogController.setParent(dialogId, parentId);
-	}
-	return dialog;
-};
-
-DialogController.setParent = function(dialogId, parentId) {
-	DialogController.setParam(dialogId, 'parent_id', parentId);
-	$('#' + dialogId).dialog({
-		close: function() {
-			DialogController.refresh(parentId);
-		}
-	})
-};
-
 DialogController.setParam = function(dialogId, name, value) {
-	$('#' + dialogId).dialog('option', 'DC_' + name, value);
+	$('#' + dialogId).dialog('option', 'TK_' + name, value);
 };
 
 DialogController.getParam = function(dialogId, name) {
 	var dialog = $('#' + dialogId);
-	var result = dialog.dialog('option', 'DC_' + name);
+	var result = dialog.dialog('option', 'TK_' + name);
 	return result == dialog ? null : result;
-};
-
-DialogController.refresh = function(dialogId) {
-	if ((url = DialogController.getParam(dialogId, 'url')) !== null) {
-		DialogController.spawnByUrl(url, dialogId);
-	}
 };
 
 DialogController.shareUrl = function(dialogId) {
 	var url = DialogController.getParam(dialogId, 'url')
 	if (url) {
-		var urlDialog = DialogController.spawn();
-		urlDialog.html('<input type="text" value="' + url + '&_window&_dialogId=' + dialogId + '" readonly disabled style="width: 100%"/>');
+		var urlDialog = $.tk._spawn();
+		urlDialog.html('<input type="text" value="' + url + '&_window&_dialogId=' + dialogId + '" readonly disabled class="w95"/>');
 		urlDialog.dialog('open');
 	}
 };
@@ -120,7 +77,7 @@ DialogController.shareUrl = function(dialogId) {
 DialogController.refreshParent = function(dialogId) {
 	var parentId = DialogController.getParam(dialogId, 'parent_id');
 	if(parentId) {
-		DialogController.refresh(parentId);
+		$.tk.getDialog.dialog('refresh');
 	}
 };
 
@@ -130,25 +87,70 @@ DialogController.refreshParent = function(dialogId) {
 	$.widget('tk.dialog', $.ui.dialog, {
 		minimized: false,
 		minimizedHeight: 0,
+		options: {parent: null, url: null},
+		refreshButton: null,
+		shareButton: null,
 		_init: function () {
 			$.ui.dialog.prototype._init.apply(this, arguments);
+			var self = this;
+				
+			//refresh button part {
+			var refreshHtml = '<a href="#" class="ui-dialog-titlebar-refresh ui-corner-all" role="button" style="display: none;">'
+				+ '<span class="ui-icon ui-icon-refresh">refresh</span>'
+				+ '</a>';
+			this.refreshButton = $(refreshHtml)
+				.appendTo(this.uiDialogTitlebar)
+				.click(function(){
+					self.refreshUrl();
+					return false;
+				});
+			// } refresh button part 
+
+			//share button part {
+			var shareHtml = '<a href="#" class="ui-dialog-titlebar-share ui-corner-all" role="button">'
+				+ '<span class="ui-icon ui-icon-signal-diag">share</span>'
+				+ '</a>';
+			this.shareButton = $(shareHtml)
+				.appendTo(this.uiDialogTitlebar)
+				.click(function(){
+					self.shareUrl();
+					return false;
+				});
+			// } share button part 
 			
 			// { Minimize button part
 			var minimizeHtml = '<a href="#" class="ui-dialog-titlebar-minimize ui-corner-all" role="button">'
 				+ '<span class="ui-icon ui-icon-minus">minimize</span>'
 				+ '</a>';
-
-			var self = this;
 			$(minimizeHtml)
 				.appendTo(this.uiDialogTitlebar)
 				.click(function(){
 					self.switchMinimize();
 					return false;
 				});
+			// } Minimize button part
 		},
 		_setOption: function() {
 			$.ui.dialog.prototype._setOption.apply(this, arguments);
 			
+			$(this.refreshButton).toggle(this.options.url !== null);
+			$(this.shareButton).toggle(this.options.url !== null);
+		},
+		refreshUrl: function() {
+			if (this.options.url) {
+				DialogController.spawnByUrl(this.options.url, this.element.attr('id'));
+			}
+		},
+		shareUrl: function() {
+			if (this.options.url) {
+				var urlDialog = $.tk._spawn({id: null});
+				urlDialog.html(
+					'<input type="text" value="'
+						+ this.options.url + '&_window&_dialogId='
+						+ this.element.attr('id') + '" readonly disabled class="w95"/>'
+				);
+				urlDialog.dialog('open');
+			}
 		},
 		switchMinimize: function() {
 			var widget = this.uiDialog;
@@ -202,17 +204,39 @@ DialogController.refreshParent = function(dialogId) {
 	
 	$.extend($.tk, {
 		randomId: function () {
-			debugger;
 			var min = 10000;
 			var max = 99999;
 			var time = Math.floor(new Date().getTime() / 1000);
 			var rand = Math.floor(Math.random() * (max - min + 1)) + min;
 			return "" + time + rand;
 		},
-		create: function(options) {
+		get: function(options) {
 			options = $.extend({}, this._getDialogOptions, options);
 			this._fillUrl(options);
-			
+			this._fillPosition(options);
+		},
+		_getDialog: function(options) {
+			var dialog = null;
+			if ((dialog = $('#' + options.id)).length == 1) {
+				if (options.parent) {
+					dialog.dialog('option', 'parent', options.parent);
+				}
+			} else {
+				dialog = $.tk._spawn(options);
+			}
+			return dialog;
+		},
+		_spawn: function(options) {
+			if (options.id === null) {
+				options.id = $.tk.randomId();
+			}
+			return dialog = $("<div id=" + options.id + "><!-- --></div>")
+				.appendTo('body')
+				.dialog({
+					disabled: true,
+					autoOpen: false,
+					parent: options.parent ? options.parent : null
+			});
 		},
 		_fillUrl: function(options) {
 			if (options.url) return;
@@ -229,8 +253,8 @@ DialogController.refreshParent = function(dialogId) {
 			}
 		},
 		_getDialogOptions: {
-			dialogId: null,
-			parentId: null,
+			id: null,
+			parent: null,
 			link: null,
 			event: null,
 			url: null,
