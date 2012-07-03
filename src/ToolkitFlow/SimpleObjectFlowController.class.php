@@ -113,7 +113,7 @@
 
 			$command = $this->getCommand();
 			/* @var $command EditorCommand */
-			if ($this->isTakeInTransaction()) {
+			if ($this->isTakeInTransaction() || $command instanceof CommandInTransaction) {
 				$command = new CarefulDatabaseRunner($command);
 			}
 
