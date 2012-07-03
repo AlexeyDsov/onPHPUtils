@@ -29,7 +29,7 @@
 			// } refresh button part 
 
 			//share button part {
-			var shareHtml = '<a href="#" class="ui-dialog-titlebar-share ui-corner-all" role="button">'
+			var shareHtml = '<a href="#" class="ui-dialog-titlebar-share ui-corner-all" role="button" style="display: none;">'
 				+ '<span class="ui-icon ui-icon-signal-diag">share</span>'
 				+ '</a>';
 			this.shareButton = $(shareHtml)
@@ -51,6 +51,15 @@
 					return false;
 				});
 			// } Minimize button part
+		},
+		close: function() {
+			$.ui.dialog.prototype.close.apply(this, arguments);
+			if (this.options.parent) {
+				var parentDialog = $('#' + this.options.parent);
+				if (parentDialog.length == 1) {
+					parentDialog.dialog('refreshUrl');
+				}
+			}
 		},
 		_setOption: function() {
 			$.ui.dialog.prototype._setOption.apply(this, arguments);
@@ -206,12 +215,14 @@
 			if (options.id === null) {
 				options.id = $.tk.randomId();
 			}
-			return dialog = $("<div id=" + options.id + "><!-- --></div>")
-				.appendTo('body')
-				.dialog({
+			var dialogOptions = {
 					disabled: true,
 					autoOpen: false
-			});
+			};
+			$.extend(dialogOptions, options.options);
+			return dialog = $("<div id=" + options.id + "><!-- --></div>")
+				.appendTo('body')
+				.dialog(dialogOptions);
 		},
 		_fillUrl: function(options) {
 			if (options.url) return;
