@@ -10,7 +10,7 @@
  ***************************************************************************/
 
 	class WebApplication extends InterceptingChain implements IServiceLocatorSupport
-	{
+	{	
 		const OBJ_REQUEST = 'request';
 		const OBJ_MAV = 'mav';
 		const OBJ_CONTROLLER_NAME = 'controllerName';

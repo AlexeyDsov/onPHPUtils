@@ -10,15 +10,24 @@
  *                                                                         *
  ***************************************************************************/
 
-	/**
-	 * @hack
-	 * Хак что бы у классов находящихся в этом проекты было от кого наследоваться
-	 * Этот класс должен быть в настоящем проекте и в списке автолоада должен идти первым
-	 * 
-	 * Сделано по дурацки, в будуйщем надо SimpleListController и SimpleObjectFlowController
-	 *  подключать к контроллерам проекта иначе, а не через прямое наследование от них
-	 */
-	abstract class ToolkitBaseController extends BaseController implements IServiceLocatorSupport {
-		use TServiceLocatorSupport;
+	trait TServiceLocatorSupport {
 		
+		/**
+		 * @var ServiceLocator
+		 */
+		protected $serviceLocator = null;
+		
+		/**
+		 * @param IServiceLocator $serviceLocator
+		 * @return TServiceLocatorSupport
+		 */
+		public function setServiceLocator(IServiceLocator $serviceLocator) {
+			$this->serviceLocator = $serviceLocator;
+			return $this;
+		}
+
+		public function getServiceLocator() {
+			return $this->serviceLocator;
+		}
 	}
+?>
