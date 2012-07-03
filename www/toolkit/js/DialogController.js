@@ -9,7 +9,7 @@
 	$.widget('tk.dialog', $.ui.dialog, {
 		minimized: false,
 		minimizedHeight: 0,
-		options: {parent: null, url: null},
+		options: {parent: null, url: null, once: false},
 		refreshButton: null,
 		shareButton: null,
 		_init: function () {
@@ -62,6 +62,14 @@
 			}
 		},
 		_setOption: function() {
+			if (arguments[0] == 'once') {
+				if (this.options.once == false) {
+					this.options.once = true;
+					this.option(arguments[1]);
+				}
+				return;
+			}
+			
 			$.ui.dialog.prototype._setOption.apply(this, arguments);
 			
 			$(this.refreshButton).toggle(this.options.url !== null);
@@ -148,13 +156,15 @@
 			
 			var dialog = null;
 			if (options.dialog) {
-				dialog = options.dialog;
+				dialog = $(options.dialog);
+				if (dialog.length != 1) {
+					return null;
+				}
 			} else if ((dialog = $('#' + options.id)).length == 0) {
 				dialog = $.tk._spawn(options);
 			}
-			if (options.parent) {
-				dialog.dialog('option', 'parent', options.parent);
-			}
+			options.options.parent = options.parent;
+			dialog.dialog('option', options.options);
 			return dialog;
 		},
 		load: function(options) {

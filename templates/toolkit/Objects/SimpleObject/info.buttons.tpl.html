@@ -5,12 +5,13 @@
 	<script type="text/javascript">
 		$(function() {
 			var windowHeight = (window.innerHeight - 200);
-			$('#<?=$dialogName?>').dialog('option', {
+			var onceOptions = {once: {
 				title: "<?=$this->trans('Info of')?> <?=$title?>",
 				width: 600,
 				height: windowHeight
-			});
-			$('#<?=$dialogName?>').dialog('buttons', <?=$this->getButtonsJson($buttonUrlList)?>);
+			}};
+			$.tk.get({dialog: $('#<?=$dialogName?>'), options: onceOptions})
+				.dialog('buttons', <?=$this->getButtonsJson($buttonUrlList)?>);
 		});
 	</script>
 <? } else { ?>
