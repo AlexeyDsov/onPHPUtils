@@ -69,11 +69,6 @@
 				return '';
 			}
 
-			if ($this->isDatePrimitive($form, $propertyName, $filterName)) {
-				$value = $propertyData[$filterName];
-				return $value['year'] . '-' . $value['month'] . '-' . $value['day'];
-			}
-
 			return $this->escape($propertyData[$filterName]);
 		}
 	}
