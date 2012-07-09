@@ -3,12 +3,15 @@
 <? $dialogName = $this->get('linker')->getDialogName($infoObject); ?>	
 <? if ($this->get('isAjax') && $infoObject) { ?>
 	<script type="text/javascript">
-		$('#<?=$dialogName?>').dialog('option', {
-			title: "<?=$this->trans('Dropping object')?>",
-			buttons: {
-				"<?=$this->trans('Drop')?>": function() {$.tk.load({url: '<?=$dropUrl?>', id: '<?=$dialogName?>'});},
-				"<?=$this->trans('Cancel')?>": function() {$(this).dialog('close');}
-			}
+		$(function(){
+			var parent = $('#<?=$dialogName?>').dialog('option', 'parent');
+			$('#<?=$dialogName?>').dialog('option', {
+				title: "<?=$this->trans('Dropping object')?>",
+				buttons: {
+					"<?=$this->trans('Drop')?>": function() {$.tk.load({url: '<?=$dropUrl?>', id: '<?=$dialogName?>', parent: parent});},
+					"<?=$this->trans('Cancel')?>": function() {$(this).dialog('close');}
+				}
+			});
 		});
 	</script>
 <? } elseif ($infoObject) { ?>
