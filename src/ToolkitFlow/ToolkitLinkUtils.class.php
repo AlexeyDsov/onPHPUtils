@@ -3,11 +3,8 @@
 	 * Утилита для генерации url/имени диалогового окна на информацию/редактирование/логи объекта
 	 */
 	class ToolkitLinkUtils implements IServiceLocatorSupport {
+		use TServiceLocatorSupport;
 
-		/**
-		 * @var IServiceLocator
-		 */
-		protected $serviceLocator = null;
 		protected $logClassName = null;
 		protected $baseUrl = null;
 		protected $authorisatorName = 'admin';
@@ -18,24 +15,6 @@
 		public static function create()
 		{
 			return new self;
-		}
-
-		/**
-		 * @param IServiceLocator $serviceLocator
-		 * @return ToolkitLinkUtils
-		 */
-		public function setServiceLocator(IServiceLocator $serviceLocator)
-		{
-			$this->serviceLocator = $serviceLocator;
-			return $this;
-		}
-
-		/**
-		 * @return IServiceLocator
-		 */
-		public function getServiceLocator()
-		{
-			return $this->serviceLocator;
 		}
 		
 		/**

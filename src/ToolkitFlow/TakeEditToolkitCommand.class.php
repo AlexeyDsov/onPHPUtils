@@ -15,31 +15,13 @@
 	 * Логгирует состояние объекта до и после сохранения.
 	 */
 	class TakeEditToolkitCommand extends TakeEditTemplateCommand implements IServiceLocatorSupport {
-
-		/**
-		 * @var ServiceLocator
-		 */
-		protected $serviceLocator = null;
+		
+		use TServiceLocatorSupport;
+		
 		/**
 		 * @var Closure
 		 */
 		protected $logCallback = null;
-
-		/**
-		 * @param IServiceLocator $serviceLocator
-		 * @return TakeEditToolkitCommand
-		 */
-		public function setServiceLocator(IServiceLocator $serviceLocator) {
-			$this->serviceLocator = $serviceLocator;
-			return $this;
-		}
-
-		/**
-		 * @return ServiceLocator
-		 */
-		public function getServiceLocator() {
-			return $this->serviceLocator;
-		}
 		
 		/**
 		 * @param Closure $logCallback

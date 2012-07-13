@@ -11,27 +11,7 @@
  ***************************************************************************/
 
 	abstract class SimpleSearchController implements Controller, IServiceLocatorSupport {
-		
-		/**
-		 * @var ServiceLocator
-		 */
-		protected $serviceLocator = null;
-		
-		/**
-		 * @param IServiceLocator $serviceLocator
-		 * @return SimpleSearchController 
-		 */
-		public function setServiceLocator(IServiceLocator $serviceLocator) {
-			$this->serviceLocator = $serviceLocator;
-			return $this;
-		}
-
-		/**
-		 * @return SimpleSearchController
-		 */
-		public function getServiceLocator() {
-			return $this->serviceLocator;
-		}
+		use TServiceLocatorSupport;
 		
 		public function handleRequest(HttpRequest $request) {
 			$searchMap = $this->getSearchMap();
