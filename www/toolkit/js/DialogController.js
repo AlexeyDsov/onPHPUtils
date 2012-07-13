@@ -178,7 +178,7 @@
 			var self = this;
 			
 			if (options.url) {
-				$.ajax({
+				var ajaxOpts = {
 					url: options.url,
 					type: 'GET',
 					dataType: "html",
@@ -217,7 +217,12 @@
 							dialog.dialog('open');
 						}
 					}
-				});
+				};
+				if (options.post) {
+					ajaxOpts.data = options.post;
+					ajaxOpts.type = 'POST';
+				}
+				$.ajax(ajaxOpts);
 			}
 			return false;
 		},
@@ -255,6 +260,7 @@
 			link: null,
 			event: null,
 			url: null,
+			post: null,
 			callback: null,
 			options: {},
 			position: null
