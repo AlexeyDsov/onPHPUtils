@@ -68,8 +68,11 @@ $primitiveValue = $primitive->getValue(); ?>
 			<input type="text" class="_hasDatepickerTime" name="<?=$propertyName?>" value="<?=$primitiveValue ? $primitiveValue->toString() : ''?>" />
 		<? } elseif (in_array($primitiveType, array('PrimitiveTime'))) { ?>
 			<input type="text" size="8" maxlength="8" name="<?=$propertyName?>" value="<?=$primitiveValue ? $primitiveValue->toString() : ''?>" />
-		<? } elseif (in_array($primitiveType, array('PrimitiveTimestampTZ', 'PrimitiveTimestampTZM'))) { ?>
-			<input type="text" class="_hasDatepickerTime" name="<?=$propertyName?>" value="<?=$primitiveValue ? $primitiveValue->format(TimestampTZ::ATOM) : ''?>" />
+		<? } elseif (in_array($primitiveType, array('PrimitiveTimestampTZ', 'PrimitiveTimestampTZM'))) {
+			if ($primitive instanceof ComplexPrimitive)
+				$primitive->setSingle();
+			?>
+			<input type="text" class="_hasDatepickerTime" name="<?=$propertyName?>" value="<?=$primitive->exportValue()?>" />
 		<? } elseif (in_array($primitiveType, array('PrimitiveString', 'PrimitiveFloat', 'PrimitiveInteger'))) { ?>
 			<input type="text" name="<?=$propertyName?>" value="<?=$this->escape($primitiveValue)?>" />
 		<? } elseif (in_array($primitiveType, array('PrimitiveIdentifierList', 'PrimitiveEnumerationList', 'PrimitiveEnumList'))) { ?>

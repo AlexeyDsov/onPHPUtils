@@ -217,7 +217,10 @@
 				case 'timestamp':
 					return Primitive::timestamp($filterName)->setSingle();
 				case 'timestampTZ':
-					return Primitive::timestampTZ($filterName);
+					$prm = Primitive::timestampTZ($filterName);
+					if ($prm instanceof ComplexPrimitive)
+						$prm->setSingle();
+					return $prm;
 				case 'date':
 					return Primitive::date($filterName)->setSingle();
 				case 'string':
