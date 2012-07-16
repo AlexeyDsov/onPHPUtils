@@ -63,7 +63,8 @@
 				set('infoObject', $infoObject)->
 				set('customInfoFieldsData', $this->getCustomInfoFieldsData($infoObject))->
 				set('orderFunction', $this->getFunctionListOrder())->
-				set('buttonUrlList', $this->getButtonUrlList($infoObject));
+				set('buttonUrlList', $this->getButtonUrlList($infoObject))->
+				set('windowOnce', $this->getWindowOnce());
 			return $this->getMav('info');
 		}
 
@@ -200,7 +201,8 @@
 				set('orderFunction', $this->getFunctionListOrder())->
 				set('infoUrl', $this->getUrlInfo($infoObject))->
 				set('takeUrl', $this->getUrlTake($infoObject))->
-				set('closeDialog', $this->toCloseDialog($infoObject))
+				set('closeDialog', $this->toCloseDialog($infoObject))->
+				set('windowOnce', $this->getWindowOnce())
 				;
 			$linker = $this->getLinker();
 			if ($linker->isObjectSupported($infoObject, $this->getDropAction())) {
@@ -438,6 +440,31 @@
 		
 		protected function getCurrentMenu(HttpRequest $request, ModelAndView $mav) {
 			return '';
+		}
+		
+		/**
+		 * @return string (null | 100 | 100%)
+		 */
+		protected function getWindowWidth() {
+			return null;
+		}
+		
+		/**
+		 * @return string (null | 100 | 100%)
+		 */
+		protected function getWindowHeight() {
+			return null;
+		}
+		
+		private function getWindowOnce() {
+			$options = array();
+			if ($size = $this->getWindowWidth()) {
+				$options['width'] = $size;
+			}
+			if ($size = $this->getWindowHeight()) {
+				$options['width'] = $size;
+			}
+			return $options;
 		}
 
 		/**

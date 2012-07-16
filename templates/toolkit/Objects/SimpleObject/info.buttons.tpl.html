@@ -4,13 +4,12 @@
 	$title .= $this->escape($this->get('nameConverter')->get($infoObject)); ?>
 	<script type="text/javascript">
 		$(function() {
-			var windowHeight = (window.innerHeight - 200);
-			var onceOptions = {once: {
+			debugger;
+			var options = {
 				title: "<?=$this->trans('Info of')?> <?=$title?>",
-				width: 600,
-				height: windowHeight
-			}};
-			$.tk.get({dialog: $('#<?=$dialogName?>'), options: onceOptions})
+				once: <?=json_encode($windowOnce, JSON_FORCE_OBJECT)?>
+			};
+			$.tk.get({dialog: $('#<?=$dialogName?>'), options: options})
 				.dialog('buttons', <?=$this->getButtonsJson($buttonUrlList)?>);
 		});
 	</script>

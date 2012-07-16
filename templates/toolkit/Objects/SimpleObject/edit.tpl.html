@@ -15,9 +15,11 @@ $formId = 'editForm'.time().rand(10000, 99999); ?>
 	?>
 	<script type="text/javascript">
 		$(function(){
-			$('#<?=$dialogName?>').dialog('option', {
-				title: "<?=$this->trans('Editing')?> <?=$title?>"
-			});
+			var options = {
+				title: "<?=$this->trans('Editing')?> <?=$title?>",
+				once: <?=json_encode($windowOnce, JSON_FORCE_OBJECT)?>
+			};
+			$('#<?=$dialogName?>').dialog('option', options);
 			
 			var closeDialog = <?=$closeDialog ? 'true' : 'false'?>;
 			var hasId = <?=$form->getValue('id') ? 'true' : 'false'?>;
