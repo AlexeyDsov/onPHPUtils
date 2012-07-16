@@ -16,6 +16,15 @@
 	</script>
 <? } else { ?>
 	<? foreach ($buttonUrlList as $buttonName => $buttonOptions) { ?>
-		<a href="<?=$buttonOptions['url']?>" class="js-pjax"><?=$this->trans($buttonName)?></a>
+		<? if (isset($buttonOptions['post']) && isset($buttonOptions['url'])) { ?>
+			<form class="js-pjax" style="display: inline;" method="post" action="<?=$buttonOptions['url']?>">
+				<a href="#" onclick="$(this).parent().submit(); return false;"><?=$this->trans($buttonName)?></a>
+				<? foreach ($buttonOptions['post'] as $name => $value) { ?>
+					<input type="hidden" name="<?=$this->escape($name)?>" value="<?=$this->escape($value)?>" />
+				<? } ?>
+			</form>
+		<? } elseif (isset($buttonOptions['url'])) { ?>
+			<a href="<?=$buttonOptions['url']?>" class="js-pjax"><?=$this->trans($buttonName)?></a>
+		<? } ?>
 	<? } ?>
 <? } ?>
