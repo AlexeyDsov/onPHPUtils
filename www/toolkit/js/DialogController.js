@@ -115,7 +115,10 @@
 				if (typeof buttonParams == 'function') {
 					button = buttonParams;
 				} else {
-					var buttonParams = $.extend({}, {url: null, dialogName: null}, buttonParams);
+					var buttonParams = $.extend(
+						{url: null, dialogName: null, window: false, post: null},
+						buttonParams
+					);
 					if (!buttonParams.url)
 						return;
 
@@ -130,7 +133,7 @@
 						};
 					} else {
 						button = function() {
-							Application.goUrl(buttonParams.url);
+							Application.goUrl(buttonParams.url, buttonParams.post);
 						};
 					}
 				}

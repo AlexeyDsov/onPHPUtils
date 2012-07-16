@@ -58,11 +58,16 @@ Application.submit = function(form) {
 	return false;
 }
 
-Application.goUrl = function(url) {
-	var linkId = 'link' + $.tk.randomId();
-	var html = '<a class="js-pjax" href="' + url + '" id="' + linkId + '" style="display: none;">redirect</a>';
-	$('#pjaxArea').append(html);
-	$('#' + linkId).click();
+Application.goUrl = function(url, post) {
+	if (post == 'undefined')
+		post = null;
+	
+	var method = post ? 'POST' : 'GET';
+	var options = {container: '#pjaxArea', url: url, type: method};
+	if (post) {
+		options.data = post;
+	}
+	$.pjax(options);
 }
 
 Application.initDatepicker = function () {
