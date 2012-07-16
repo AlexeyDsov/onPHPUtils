@@ -81,15 +81,7 @@
 			}
 		},
 		shareUrl: function() {
-			if (this.options.url) {
-				var urlDialog = $.tk.get();
-				urlDialog.html(
-					'<input type="text" value="'
-						+ this.options.url + '&_window&_dialogId='
-						+ this.element.attr('id') + '" readonly disabled class="w95"/>'
-				);
-				urlDialog.dialog('open');
-			}
+			window.open(this.options.url);
 		},
 		switchMinimize: function() {
 			var widget = this.uiDialog;
