@@ -271,7 +271,7 @@
 		 * @return string
 		 */
 		protected function getDropCommandName() {
-			return 'DropCommand';
+			return 'DropToolkitCommand';
 		}
 		
 		
@@ -296,7 +296,13 @@
 		 * @return DropCommand
 		 */
 		protected function getDropCommand() {
-			return $this->serviceLocator->spawn($this->getDropCommandName());
+			$command = $this->serviceLocator->spawn($this->getDropCommandName());
+			if ($command instanceof DropToolkitCommand) {
+				if ($callbackLog = $this->getCallbackLog()) {
+					$command->setLogCallback($callbackLog);
+				}
+			}
+			return $command;
 		}
 
 		/**
