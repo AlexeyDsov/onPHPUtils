@@ -61,9 +61,9 @@
 				}
 			}
 		},
-		_setOption: function() {
+		_setOption: function(name, value) {
 			var args = arguments;
-			if (args[0] == 'once') {
+			if (name == 'once') {
 				if (this.options.once == false) {
 					this.options.once = true;
 					var options = $.extend({}, $.tk._defaultOnce, args[1]);
@@ -71,8 +71,10 @@
 				}
 				return;
 			}
-			if (args[0] == 'width' || args[0] == 'height') {
-				if (args[1].indexOf('%', 0) == (args[1].length - 1) && args[1].length > 1) {
+			if (name == 'width' || name == 'height') {
+				if (parseInt(value).toString() == value) {
+					//ok it's already number
+				} else if (value.indexOf('%', 0) == (value.length - 1) && value.length > 1) {
 					var percent = parseInt(args[1]);
 					if (percent < 0) percent = 0;
 					if (percent > 100) percent = 100;
