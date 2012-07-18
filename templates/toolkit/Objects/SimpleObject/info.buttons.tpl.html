@@ -4,7 +4,6 @@
 	$title .= $this->escape($this->get('nameConverter')->get($infoObject)); ?>
 	<script type="text/javascript">
 		$(function() {
-			debugger;
 			var options = {
 				title: "<?=$this->trans('Info of')?> <?=$title?>",
 				once: <?=json_encode($windowOnce, JSON_FORCE_OBJECT)?>

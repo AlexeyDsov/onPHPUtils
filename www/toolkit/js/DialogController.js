@@ -81,7 +81,6 @@
 					
 					var maxValue = args[0] == 'width' ? $(window).width() : $(window).height();
 					args[1] = maxValue / 100 * percent;
-					debugger;
 				}
 			}
 			
