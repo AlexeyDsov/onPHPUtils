@@ -130,11 +130,12 @@
 
 					if (buttonParams.window) {
 						button = function() {
-							var options = {url: buttonParams.url};
+							var options = {url: buttonParams.url, post: buttonParams.post};
 							if (buttonParams.dialogName)
 								options.id = buttonParams.dialogName;
 							else
 								options.dialog = self.element;
+							
 							$.tk.load(options);
 						};
 					} else {
