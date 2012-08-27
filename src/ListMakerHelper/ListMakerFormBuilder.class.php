@@ -31,7 +31,7 @@
 		 * @return ListMakerFormBuilder
 		 */
 		public static function create(AbstractProtoClass $proto, array $propertyList) {
-			return new self($proto, $propertyList);
+			return new static($proto, $propertyList);
 		}
 
 		/**

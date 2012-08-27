@@ -57,7 +57,7 @@
 			$propertyList = $this->getPropertyList();
 			$proto = $this->getProto();
 
-			$form = ListMakerFormBuilder::create($proto, $propertyList)->
+			$form = $this->getListMakerFormBuilder($proto, $propertyList)->
 				setDefaultLimit($this->getPageLimit())->
 				buildForm();
 			
@@ -91,7 +91,7 @@
 			$propertyList = $this->getPropertyList();
 			$proto = $this->getProto();
 
-			$form = ListMakerFormBuilder::create($proto, $propertyList)->
+			$form = $this->getListMakerFormBuilder($proto, $propertyList)->
 				setDefaultLimit($this->getPageLimit())->
 				buildForm();
 			$this->applySearchRules($form);
@@ -108,7 +108,7 @@
 				return $this->model;
 			}
 
-			$constructor = ListMakerConstructor::create($proto, $propertyList);
+			$constructor = $this->getListMakerConstructor($proto, $propertyList);
 			$queryResult = $constructor->getResult($form, $this->getPreparedCriteria());
 
 			$this->model->
@@ -259,6 +259,24 @@
 		
 		protected function getPostListTemplate() {
 			return null;
+		}
+		
+		/**
+		 * @param AbstractProtoClass $proto
+		 * @param array $propertyList
+		 * @return ListMakerFormBuilder
+		 */
+		protected function getListMakerFormBuilder(AbstractProtoClass $proto, array $propertyList) {
+			return ListMakerFormBuilder::create($proto, $propertyList);
+		}
+		
+		/**
+		 * @param AbstractProtoClass $proto
+		 * @param array $propertyList
+		 * @return ListMakerConstructor
+		 */
+		protected function getListMakerConstructor(AbstractProtoClass $proto, array $propertyList) {
+			return ListMakerConstructor::create($proto, $propertyList);
 		}
 
 		protected function prepairData(HttpRequest $request, ModelAndView $mav) {
