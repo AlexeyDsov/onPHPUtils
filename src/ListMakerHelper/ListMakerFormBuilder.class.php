@@ -226,6 +226,7 @@
 				case 'string':
 				case 'scalarIdentifier':
 				case 'inet':
+				case 'httpUrl':
 					return Primitive::string($filterName);
 				case 'boolean':
 					$errorMsg = "Для propertyType 'boolean' операции сравнения невозможны";
