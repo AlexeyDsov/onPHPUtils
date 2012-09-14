@@ -124,6 +124,7 @@
 				if ($command instanceof CarefulCommand) {
 					$command->rollback();
 				}
+				FormErrorTextApplier::create()->apply($form);
 				return $this->getEditMav($form, $subject, $mav->getModel());
 			}
 

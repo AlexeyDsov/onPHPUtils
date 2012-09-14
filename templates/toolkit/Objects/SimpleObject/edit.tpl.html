@@ -1,6 +1,7 @@
 <? /* @var $infoUrl string */
 $partViewer->view('header');
 
+/* @var $form Form */
 $formId = 'editForm'.time().rand(10000, 99999); ?>
 <form id="<?=$formId?>" method="post" action="<?=$takeUrl?>" class="js-pjax">
 	<? $this->template('Objects/SimpleObject/edit.table', array('formId' => $formId)); ?>
@@ -12,13 +13,21 @@ $formId = 'editForm'.time().rand(10000, 99999); ?>
 	$dialogName = $this->get('linker')->getDialogName($infoObject);
 	$title = $this->trans(get_class($infoObjectPrototype)).' '
 		.$this->escape($this->get('nameConverter')->get($infoObject));
+	
 	?>
 	<script type="text/javascript">
+		<?
+		$options = [
+			'title' => $this->trans('Editing')." {$title}",
+			'once' => $windowOnce,
+		];
+		
+		if ($errors = $form->getErrors()) {
+			$options['error'] = FormErrorTextAggregator::create()->getMessage($form);
+		}
+		?>
 		$(function(){
-			var options = {
-				title: "<?=$this->trans('Editing')?> <?=$title?>",
-				once: <?=json_encode($windowOnce, JSON_FORCE_OBJECT)?>
-			};
+			var options = <?=json_encode($options, JSON_FORCE_OBJECT)?>;
 			$('#<?=$dialogName?>').dialog('option', options);
 			
 			var closeDialog = <?=$closeDialog ? 'true' : 'false'?>;

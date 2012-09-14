@@ -12,6 +12,7 @@
 		options: {parent: null, url: null, once: false},
 		refreshButton: null,
 		shareButton: null,
+		errorField: null,
 		_init: function () {
 			$.ui.dialog.prototype._init.apply(this, arguments);
 			var self = this;
@@ -51,6 +52,13 @@
 					return false;
 				});
 			// } Minimize button part
+			
+			var errorFieldHtml = '<div class="ui-helper-clearfix errorField"></div>';
+			this.errorField = $(errorFieldHtml)
+				.insertAfter(this.uiDialogTitlebar)
+				.css('max-height', '100px')
+				.css('overflow-y', 'scroll')
+				.css('margin-bottom', '5px');
 		},
 		close: function() {
 			$.ui.dialog.prototype.close.apply(this, arguments);
@@ -81,6 +89,18 @@
 					
 					var maxValue = args[0] == 'width' ? $(window).width() : $(window).height();
 					args[1] = maxValue / 100 * percent;
+				}
+			}
+			if (name == 'error') {
+				this.errorField.toggle(!!value);
+				this.errorField.empty();
+				if (value) {
+					var texts = (value ? value : '').split("\n");
+					for (i = 0; i < texts.length; i++) {
+						$('<span />').text(texts[i]).appendTo(this.errorField);
+						if (i < texts.length - 1)
+							this.errorField.append('<br />');
+					}
 				}
 			}
 			
@@ -272,7 +292,7 @@
 			url: null,
 			post: null,
 			callback: null,
-			options: {},
+			options: {error: null},
 			position: null
 		},
 		_defaultOnce: {
