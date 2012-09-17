@@ -57,7 +57,7 @@
 			this.errorField = $(errorFieldHtml)
 				.insertAfter(this.uiDialogTitlebar)
 				.css('max-height', '100px')
-				.css('overflow-y', 'scroll')
+				.css('overflow-y', 'auto')
 				.css('margin-bottom', '5px');
 		},
 		close: function() {
