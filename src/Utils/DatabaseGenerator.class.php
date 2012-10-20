@@ -90,6 +90,7 @@
 					if (
 						mb_strpos($e->getMessage(), 'does not exist') === false
 						&& mb_strpos($e->getMessage(), 'missing database') === false
+						&& mb_strpos($e->getMessage(), 'no such table') === false
 					) {
 						throw $e;
 					}
