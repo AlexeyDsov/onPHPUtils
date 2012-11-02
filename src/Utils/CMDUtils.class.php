@@ -1,5 +1,7 @@
 <?php
-	class CMDUtils extends StaticFactory {
+	namespace Onphp\Utils;
+
+	class CMDUtils extends \Onphp\StaticFactory {
 
 		/**
 		 * Возвращает ассоциативный массив стартовых настроек для скрипта

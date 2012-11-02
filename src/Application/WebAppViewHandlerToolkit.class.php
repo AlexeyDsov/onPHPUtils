@@ -10,12 +10,14 @@
  *                                                                         *
  ***************************************************************************/
 
+	namespace Onphp\Utils;
+
 	class WebAppViewHandlerToolkit extends WebAppViewHandler
 	{
 		private $authorisatorName = null;
 		
 		/**
-		 * @return WebAppViewHandlerToolkit
+		 * @return \Onphp\Utils\WebAppViewHandlerToolkit
 		 */
 		public static function create() {
 			return new self();
@@ -23,7 +25,7 @@
 		
 		/**
 		 * @param string $authorisatorName
-		 * @return WebAppViewHandlerToolkit 
+		 * @return \Onphp\Utils\WebAppViewHandlerToolkit 
 		 */
 		public function setAuthorisatorName($authorisatorName) {
 			$this->authorisatorName = $authorisatorName;
@@ -31,11 +33,11 @@
 		}
 
 		/**
-		 * @param InterceptingChain $chain
-		 * @param Model $model
-		 * @return ViewResolver
+		 * @param \Onphp\Utils\InterceptingChain $chain
+		 * @param \Onphp\Model $\Onphp\Model
+		 * @return \Onphp\ViewResolver
 		 */
-		protected function getViewResolver(InterceptingChain $chain, Model $model) {
+		protected function getViewResolver(InterceptingChain $chain, \Onphp\Model $model) {
 			$isPjax = $chain->hasVar('isPjax') ? $chain->getVar('isPjax') : false;
 			$isAjax = $chain->hasVar('isAjax') ? $chain->getVar('isAjax') : false;
 			
@@ -58,8 +60,8 @@
 		}
 
 		/**
-		 * @param InterceptingChain $chain
-		 * @return ToolkitMenuConstructor
+		 * @param \Onphp\Utils\InterceptingChain $chain
+		 * @return \Onphp\Utils\ToolkitMenuConstructor
 		 */
 		protected function getMenuList(InterceptingChain $chain)
 		{
@@ -78,22 +80,22 @@
 
 		/**
 		 * Getting class' name for template
-		 * @return WebAppViewHandler
+		 * @return \Onphp\Utils\WebAppViewHandler
 		 */
 		protected function getViewClassName()
 		{
-			return 'SimplePhpViewParametrizedToolkit';
+			return '\Onphp\Utils\SimplePhpViewParametrizedToolkit';
 		}
 		
 		protected function getMenuContructor() {
-			return 'ToolkitMenuConstructor';
+			return '\Onphp\Utils\ToolkitMenuConstructor';
 		}
 		
 		/**
 		 * @return string
 		 */
 		protected function getNameConverterClass() {
-			return 'ObjectNameConverter';
+			return '\Onphp\Utils\ObjectNameConverter';
 		}
 	}
 ?>

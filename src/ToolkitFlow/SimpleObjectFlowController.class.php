@@ -13,6 +13,8 @@
 	/**
 	 * Класс для отображения данных об объекте и редактировании их
 	 */
+	namespace Onphp\Utils;
+
 	abstract class SimpleObjectFlowController extends ToolkitBaseController {
 
 		/**
@@ -30,21 +32,21 @@
 		/**
 		 * Определяет, какое действие должен выполнить контроллер, вызывает его и возвращает результат
 		 * @param $request HttpRequest
-		 * @return ModelAndView
+		 * @return \Onphp\ModelAndView
 		**/
-		public function handleRequest(HttpRequest $request) {
+		public function handleRequest(\Onphp\HttpRequest $request) {
 			return $this->resolveAction($request);
 		}
 
 		/**
 		 * Возвращает модель для отображения информации об объекте
 		 * @param $request HttpRequest
-		 * @return ModelAndView
+		 * @return \Onphp\ModelAndView
 		**/
-		protected function infoProcess(HttpRequest $request) {
+		protected function infoProcess(\Onphp\HttpRequest $request) {
 			$proto = $this->getObjectProto();
 
-			$form = Form::create();
+			$form = \Onphp\Form::create();
 			$proto->getPropertyByName('id')->fillForm($form);
 			$form->get('id')->required();
 
@@ -71,16 +73,16 @@
 		/**
 		 * Возвращает модель с данными для редактирования объекта (форму)
 		 * @param $request HttpRequest
-		 * @return ModelAndView
+		 * @return \Onphp\ModelAndView
 		**/
-		protected function editProcess(HttpRequest $request) {
+		protected function editProcess(\Onphp\HttpRequest $request) {
 			$proto = $this->getObjectProto();
 
 			$form = $proto->makeForm();
-			$subject = ClassUtils::callStaticMethod("{$this->getObjectName()}::create");
+			$subject = \Onphp\ClassUtils::callStaticMethod("{$this->getObjectName()}::create");
 
 			$command = $this->getCommand();
-			/* @var $command EditorCommand */
+			/* @var $command \Onphp\EditorCommand */
 			$mav = $command->run($subject, $form, $request);
 			
 			$accessObject = $form->getValue('id') ?: $this->getObjectName();
@@ -97,12 +99,12 @@
 		 * если данные не валидны - отмечает не валидные примитивы в форме
 		 *  и возвращает форму для продолжения редактирования
 		 * @param $request HttpRequest
-		 * @return ModelAndView
+		 * @return \Onphp\ModelAndView
 		**/
-		protected function takeProcess(HttpRequest $request) {
+		protected function takeProcess(\Onphp\HttpRequest $request) {
 			$proto = $this->getObjectProto();
 			$form = $proto->makeForm();
-			$subject = ClassUtils::callStaticMethod("{$this->getObjectName()}::create");
+			$subject = \Onphp\ClassUtils::callStaticMethod("{$this->getObjectName()}::create");
 			if ($request->hasGetVar('id')) {
 				$form->importOne('id', $request->getGet());
 			}
@@ -113,22 +115,22 @@
 			}
 
 			$command = $this->getCommand();
-			/* @var $command EditorCommand */
+			/* @var $command \Onphp\EditorCommand */
 			if ($this->isTakeInTransaction() || $command instanceof CommandInTransaction) {
-				$command = new CarefulDatabaseRunner($command);
+				$command = new \Onphp\CarefulDatabaseRunner($command);
 			}
 
 			$mav = $command->run($subject, $form, $request);
 
-			if ($mav->getView() != EditorController::COMMAND_SUCCEEDED) {
-				if ($command instanceof CarefulCommand) {
+			if ($mav->getView() != \Onphp\EditorController::COMMAND_SUCCEEDED) {
+				if ($command instanceof \Onphp\CarefulCommand) {
 					$command->rollback();
 				}
 				FormErrorTextApplier::create()->apply($form);
 				return $this->getEditMav($form, $subject, $mav->getModel());
 			}
 
-			if ($command instanceof CarefulCommand) {
+			if ($command instanceof \Onphp\CarefulCommand) {
 				$command->commit();
 			}
 
@@ -146,10 +148,10 @@
 			return $this->getMavRedirectByUrl($this->getUrlInfo($subject));
 		}
 
-		protected function dropProcess(HttpRequest $request) {
+		protected function dropProcess(\Onphp\HttpRequest $request) {
 			$proto = $this->getObjectProto();
 
-			$form = Form::create();
+			$form = \Onphp\Form::create();
 			$proto->getPropertyByName('id')->fillForm($form);
 			$form->get('id')->required();
 			$form->import($request->getGet());
@@ -173,10 +175,10 @@
 			}
 			
 			$command = $this->getDropCommand();
-			/* @var $command DropCommand */
+			/* @var $command \Onphp\DropCommand */
 			$mav = $command->run($subject, $form, $request);
 
-			if ($mav->getView() != EditorController::COMMAND_SUCCEEDED) {
+			if ($mav->getView() != \Onphp\EditorController::COMMAND_SUCCEEDED) {
 				return $this->getEditMav($form, $subject, $mav->getModel());
 			}
 
@@ -191,7 +193,7 @@
 			return $this->getMavRedirectByUrl($this->getUrlInfo($subject));
 		}
 
-		protected function getEditMav(Form $form, IdentifiableObject $subject, Model $commandModel) {
+		protected function getEditMav(\Onphp\Form $form, \Onphp\IdentifiableObject $subject, \Onphp\Model $commandModel) {
 			$infoObject = $form->getValue('id') ?: $subject;
 			$this->model->
 				set('form', $form)->
@@ -215,20 +217,20 @@
 
 		/**
 		 * Возвращает массив дополнительных данных для кастомного отображения свойств объекта
-		 * @param IdentifiableObject $infoObject
+		 * @param \Onphp\IdentifiableObject $infoObject
 		 * @return array
 		 */
-		protected function getCustomInfoFieldsData(IdentifiableObject $infoObject) {
+		protected function getCustomInfoFieldsData(\Onphp\IdentifiableObject $infoObject) {
 			return array();
 		}
 
 		/**
 		 * Возвращает массив дополнительных данных для кастомного отображения редактируемых полей объекта
-		 * @param Form $form
-		 * @param IdentifiableObject $subject
+		 * @param \Onphp\Form $\Onphp\Form
+		 * @param \Onphp\IdentifiableObject $subject
 		 * @return array
 		 */
-		protected function getCustomEditFieldsData(Form $form, IdentifiableObject $subject) {
+		protected function getCustomEditFieldsData(\Onphp\Form $form, \Onphp\IdentifiableObject $subject) {
 			return array();
 		}
 
@@ -253,10 +255,10 @@
 
 		/**
 		 * Возвращает прото объекта, с которым происходит работа в текущем контроллере
-		 * @return AbstractProtoClass
+		 * @return \Onphp\AbstractProtoClass
 		 */
 		protected function getObjectProto() {
-			return ClassUtils::callStaticMethod("{$this->getObjectName()}::proto");
+			return \Onphp\ClassUtils::callStaticMethod("{$this->getObjectName()}::proto");
 		}
 
 		/**
@@ -264,7 +266,7 @@
 		 * @return string
 		 */
 		protected function getCommandName() {
-			return 'TakeEditToolkitCommand';
+			return '\Onphp\Utils\TakeEditToolkitCommand';
 		}
 
 		/**
@@ -272,13 +274,13 @@
 		 * @return string
 		 */
 		protected function getDropCommandName() {
-			return 'DropToolkitCommand';
+			return '\Onphp\Utils\DropToolkitCommand';
 		}
 		
 		
 		/**
 		 * Создает и возвращает комманду для редактирования объекта
-		 * @return EditorCommand
+		 * @return \Onphp\EditorCommand
 		 */
 		protected function getCommand() {
 			$command = $this->serviceLocator->spawn($this->getCommandName());
@@ -294,7 +296,7 @@
 
 		/**
 		 * Создает и возвращает комманду для редактирования объекта
-		 * @return DropCommand
+		 * @return \Onphp\DropCommand
 		 */
 		protected function getDropCommand() {
 			$command = $this->serviceLocator->spawn($this->getDropCommandName());
@@ -327,9 +329,9 @@
 		 * - url'ов действий которые можно делать пользователю с объектом
 		 * @param type $infoObject
 		 */
-		protected function getButtonUrlList(IdentifiableObject $infoObject) {
+		protected function getButtonUrlList(\Onphp\IdentifiableObject $infoObject) {
 			$linker = $this->getLinker();
-			/* @var $linker ToolkitLinkUtils */
+			/* @var $linker \Onphp\Utils\ToolkitLinkUtils */
 			$buttonList = array();
 			if ($linker->isObjectSupported($infoObject, $this->getEditAction($infoObject))) {
 				$buttonList['Edit'] = array(
@@ -366,32 +368,32 @@
 
 		/**
 		 * Возвращает url для просмотра свойств объекта
-		 * @param IdentifiableObject $infoObject
+		 * @param \Onphp\IdentifiableObject $infoObject
 		 * @return string
 		 */
-		protected function getUrlInfo(IdentifiableObject $infoObject) {
+		protected function getUrlInfo(\Onphp\IdentifiableObject $infoObject) {
 			return $this->getLinker()->getUrl($infoObject, array('action' => 'info') + $this->getUrlParams(), $this->getInfoAction());
 		}
 
 		/**
 		 * Возвращает url для формы-редактирования объекта
-		 * @param IdentifiableObject $infoObject
+		 * @param \Onphp\IdentifiableObject $infoObject
 		 * @return string
 		 */
-		protected function getUrlEdit(IdentifiableObject $infoObject) {
+		protected function getUrlEdit(\Onphp\IdentifiableObject $infoObject) {
 			return $this->getLinker()->getUrl($infoObject, array('action' => 'edit') + $this->getUrlParams(), $this->getEditAction($infoObject));
 		}
 
 		/**
 		 * Возвращает url для операции сохранения новых свойств из формы объекта
-		 * @param IdentifiableObject $infoObject
+		 * @param \Onphp\IdentifiableObject $infoObject
 		 * @return string
 		 */
-		protected function getUrlTake(IdentifiableObject $infoObject) {
+		protected function getUrlTake(\Onphp\IdentifiableObject $infoObject) {
 			return $this->getLinker()->getUrl($infoObject, array('action' => 'take') + $this->getUrlParams(), $this->getEditAction($infoObject));
 		}
 		
-		protected function getUrlDrop(IdentifiableObject $infoObject, $confirm = false) {
+		protected function getUrlDrop(\Onphp\IdentifiableObject $infoObject, $confirm = false) {
 			$urlParams = array('action' => 'drop') + $this->getUrlParams();
 			if ($confirm)
 				$urlParams['confirm'] = '1';
@@ -400,7 +402,7 @@
 		}
 		
 		/**
-		 * @return ToolkitLinkUtils
+		 * @return \Onphp\Utils\ToolkitLinkUtils
 		 */
 		protected function getLinker() {
 			return $this->serviceLocator->get('linker');
@@ -417,7 +419,7 @@
 			);
 		}
 		
-		protected function toCloseDialog(IdentifiableObject $subject) {
+		protected function toCloseDialog(\Onphp\IdentifiableObject $subject) {
 			return false;
 		}
 		
@@ -437,7 +439,7 @@
 			return 'drop';
 		}
 
-		protected function prepairData(HttpRequest $request, ModelAndView $mav) {
+		protected function prepairData(\Onphp\HttpRequest $request, \Onphp\ModelAndView $mav) {
 			$mav = parent::prepairData($request, $mav);
 			if ($currentMenu = $this->getCurrentMenu($request, $mav)) {
 				$mav->getModel()->set('currentMenu', $currentMenu);
@@ -445,7 +447,7 @@
 			return $mav;
 		}
 		
-		protected function getCurrentMenu(HttpRequest $request, ModelAndView $mav) {
+		protected function getCurrentMenu(\Onphp\HttpRequest $request, \Onphp\ModelAndView $mav) {
 			return '';
 		}
 		

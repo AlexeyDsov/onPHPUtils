@@ -1,14 +1,16 @@
 <?php
+	namespace Onphp\Utils;
+
 	class FormErrorTextAggregator {
 
 		/**
-		 * @return FormErrorTextAggregator
+		 * @return \Onphp\Utils\FormErrorTextAggregator
 		 */
 		public static function create() {
 			return new self;
 		}
 		
-		public function getMessage(Form $form, $preField = null) {
+		public function getMessage(\Onphp\Form $form, $preField = null) {
 			$msg = '';
 			foreach ($form->getInnerErrors() as $field => $innerCode) {
 				$msg .= ($msg ? "\n" : '')
@@ -17,7 +19,7 @@
 			return $msg;
 		}
 		
-		private function getMessageField(Form $form, $field, $innerCode, $preField = null) {
+		private function getMessageField(\Onphp\Form $form, $field, $innerCode, $preField = null) {
 			$msg = '';
 			if ($error = $form->getTextualErrorFor($field)) {
 				$msg = ($preField ? "$preField." : '')."{$field}: ".$error;
@@ -31,15 +33,15 @@
 			return $msg;
 		}
 		
-		private function getInnerMessage(Form $form, $field, $preField = null) {
+		private function getInnerMessage(\Onphp\Form $form, $field, $preField = null) {
 			$value = $form->getValue($field);
 			
-			if ($value instanceof Form) {
+			if ($value instanceof \Onphp\Form) {
 				return $this->getMessage(
 					$form->getValue($value),
 					($preField ? "$preField." : '').$field
 				);
-			} elseif (is_array($value) && count($value) && reset($value) instanceof Form) {
+			} elseif (is_array($value) && count($value) && reset($value) instanceof \Onphp\Form) {
 				$msg = '';
 				foreach ($value as $key => $valueEl) {
 					$msg .= ($msg ? "\n" : '')

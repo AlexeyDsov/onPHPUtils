@@ -9,6 +9,8 @@
  *                                                                         *
  ***************************************************************************/
 
+	namespace Onphp\Utils;
+
 	class WebAppSessionHandler implements InterceptingChainHandler
 	{
 		protected $sessionName		= null;
@@ -17,7 +19,7 @@
 		protected $cookieTime		= 0;
 
 		/**
-		 * @return WebAppSessionHandler
+		 * @return \Onphp\Utils\WebAppSessionHandler
 		 */
 		public static function create()
 		{
@@ -25,11 +27,11 @@
 		}
 
 		/**
-		 * @return WebAppSessionHandler
+		 * @return \Onphp\Utils\WebAppSessionHandler
 		 */
 		public function run(InterceptingChain $chain)
 		{
-			Assert::isNotEmpty($this->sessionName, 'sessionName must not be empty');
+			\Onphp\Assert::isNotEmpty($this->sessionName, 'sessionName must not be empty');
 
 			$sessionName = session_name($this->sessionName);
 			session_set_cookie_params(
@@ -65,7 +67,7 @@
 		}
 
 		/**
-		 * @return WebAppSessionHandler
+		 * @return \Onphp\Utils\WebAppSessionHandler
 		 */
 		public function setSessionName($sessionName)
 		{
@@ -75,7 +77,7 @@
 		}
 
 		/**
-		 * @return WebAppSessionHandler
+		 * @return \Onphp\Utils\WebAppSessionHandler
 		 */
 		public function setCookiePath($cookiePath)
 		{
@@ -85,7 +87,7 @@
 		}
 
 		/**
-		 * @return WebAppSessionHandler
+		 * @return \Onphp\Utils\WebAppSessionHandler
 		 */
 		public function setCookieDomain($cookieDomain)
 		{
@@ -96,7 +98,7 @@
 
 		/**
 		 * @param int $cookieTime
-		 * @return WebAppSessionHandler
+		 * @return \Onphp\Utils\WebAppSessionHandler
 		 */
 		public function setCookieTime($cookieTime)
 		{

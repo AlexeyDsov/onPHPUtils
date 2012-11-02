@@ -10,26 +10,28 @@
  *                                                                         *
  ***************************************************************************/
 
+	namespace Onphp\Utils;
+
 	class ObjectNameConverter
 	{
 		/**
-		 * @param IdentifiableObject $object
+		 * @param \Onphp\IdentifiableObject $object
 		 * @return string 
 		 */
-		public function get(IdentifiableObject $object) {
-			if ($object instanceof NamedObject) {
+		public function get(\Onphp\IdentifiableObject $object) {
+			if ($object instanceof \Onphp\NamedObject) {
 				return "{$object->getName()} [{$object->getId()}]";
-			} elseif ($object instanceof Enumeration || $object instanceof Enum) {
+			} elseif ($object instanceof \Onphp\Enumeration || $object instanceof \Onphp\Enum) {
 				return "{$object->getName()} [{$object->getId()}]";
 			}
 			
 			return $object->getId();
 		}
 		
-		protected function getWithPropertyId(IdentifiableObject $object, $propertyName) {
-			Assert::isInstance($object, 'Prototyped');
+		protected function getWithPropertyId(\Onphp\IdentifiableObject $object, $propertyName) {
+			\Onphp\Assert::isInstance($object, '\Onphp\Prototyped');
 			$property = $object->proto()->getPropertyByName($propertyName);
-			/* @var $property LightMetaProperty */
+			/* @var $property \Onphp\LightMetaProperty */
 			$getter = $property->getGetter();
 			
 			return $object->{$getter}()." [{$object->getId()}]";

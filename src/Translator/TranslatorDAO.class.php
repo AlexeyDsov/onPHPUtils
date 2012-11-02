@@ -10,6 +10,8 @@
  *                                                                         *
  ***************************************************************************/
 
+	namespace Onphp\Utils;
+
 	class TranslatorDAO implements ITranslator
 	{
 		/**
@@ -18,7 +20,7 @@
 		private $dao = null;
 		
 		/**
-		 * @return TranslatorDAO
+		 * @return \Onphp\Utils\TranslatorDAO
 		 */
 		public static function create() {
 			return new self;
@@ -26,7 +28,7 @@
 		
 		/**
 		 * @param IPhraseContainerDao $dao
-		 * @return TranslatorDAO 
+		 * @return \Onphp\Utils\TranslatorDAO 
 		 */
 		public function setClassName(IPhraseContainerDAO $dao) {
 			$this->dao = $dao;

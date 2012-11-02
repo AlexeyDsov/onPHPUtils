@@ -10,5 +10,7 @@
  *                                                                         *
  ***************************************************************************/
 
-	class TakeEditTemplateCommandException extends BaseException {/*_*/}
+	namespace Onphp\Utils;
+
+	class TakeEditTemplateCommandException extends \Onphp\BaseException {/*_*/}
 ?>

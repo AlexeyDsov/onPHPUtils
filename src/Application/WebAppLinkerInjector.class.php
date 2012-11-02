@@ -10,6 +10,8 @@
  *                                                                         *
  ***************************************************************************/
 
+	namespace Onphp\Utils;
+
 	class WebAppLinkerInjector implements InterceptingChainHandler
 	{
 		/**
@@ -19,7 +21,7 @@
 		private $baseUrl = null;
 		
 		/**
-		 * @return WebAppLinkerInjector
+		 * @return \Onphp\Utils\WebAppLinkerInjector
 		 */
 		public static function create()
 		{
@@ -28,7 +30,7 @@
 
 		/**
 		 * @param string $logClassName
-		 * @return WebAppLinkerInjector 
+		 * @return \Onphp\Utils\WebAppLinkerInjector 
 		 */
 		public function setLogClassName($logClassName)
 		{
@@ -38,7 +40,7 @@
 		
 		/**
 		 * @param string $baseUrl
-		 * @return WebAppLinkerInjector 
+		 * @return \Onphp\Utils\WebAppLinkerInjector 
 		 */
 		public function setBaseUrl($baseUrl) {
 			$this->baseUrl = $baseUrl;
@@ -47,10 +49,10 @@
 		
 		public function run(InterceptingChain $chain)
 		{
-			/* @var $chain WebApplication */
+			/* @var $chain \Onphp\Utils\WebApplication */
 			$serviceLocator = $chain->getServiceLocator();
-			$linker = $serviceLocator->spawn('ToolkitLinkUtils');
-			/* @var $linker ToolkitLinkUtils */
+			$linker = $serviceLocator->spawn('\Onphp\Utils\ToolkitLinkUtils');
+			/* @var $linker \Onphp\Utils\ToolkitLinkUtils */
 			$linker->setLogClassName($this->logClassName)->setBaseUrl($this->baseUrl);
 			$serviceLocator->set('linker', $linker);
 			

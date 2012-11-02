@@ -10,6 +10,8 @@
  *                                                                         *
  ***************************************************************************/
 
+	namespace Onphp\Utils;
+
 	class ListMakerProperties
 	{
 		const OPTION_COLUMN = 'column';

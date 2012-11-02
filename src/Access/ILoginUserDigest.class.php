@@ -13,7 +13,9 @@
 	/**
 	 * Реализует методы класса пользователя, необходимые для получения разрешенного ему списка действий
 	 */
-	interface ILoginUserDigest extends Identifiable, DAOConnected {
+	namespace Onphp\Utils;
+
+	interface ILoginUserDigest extends \Onphp\Identifiable, \Onphp\DAOConnected {
 		
 		/**
 		 * Возвращает область авторизации

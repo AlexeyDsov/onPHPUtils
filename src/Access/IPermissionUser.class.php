@@ -13,7 +13,9 @@
 	/**
 	 * Реализует методы класса пользователя, необходимые для получения разрешенного ему списка действий
 	 */
-	interface IPermissionUser extends Identifiable {
+	namespace Onphp\Utils;
+
+	interface IPermissionUser extends \Onphp\Identifiable {
 
 		/**
 		 * Возвращает список действий, доступных пользователю

@@ -13,6 +13,8 @@
 	/**
 	 * Interface of dynamic wrapper around session_*() functions.
 	**/
+	namespace Onphp\Utils;
+
 	interface ISessionWrapper
 	{
 		/**
@@ -21,7 +23,7 @@
 		public function start();
 
 		/**
-		 * @throws SessionWrapperNotStartedException
+		 * @throws \Onphp\Utils\SessionWrapperNotStartedException
 		 * @return void
 		**/
 		public function destroy();
@@ -32,39 +34,39 @@
 		public function flush();
 
 		/**
-		 * @throws SessionWrapperNotStartedException
+		 * @throws \Onphp\Utils\SessionWrapperNotStartedException
 		 * @return void
 		**/
 		public function assign($var, $val);
 
 		/**
-		 * @throws WrongArgumentException
-		 * @throws SessionWrapperNotStartedException
+		 * @throws \Onphp\WrongArgumentException
+		 * @throws \Onphp\Utils\SessionWrapperNotStartedException
 		 * @return boolean
 		**/
 		public function exist(/* ... */);
 
 		/**
-		 * @throws SessionWrapperNotStartedException
+		 * @throws \Onphp\Utils\SessionWrapperNotStartedException
 		 * @return any
 		**/
 		public function get($var);
 
 		/**
-		 * @throws SessionWrapperNotStartedException
+		 * @throws \Onphp\Utils\SessionWrapperNotStartedException
 		 * @return array
 		**/
 		public function &getAll();
 
 		/**
-		 * @throws WrongArgumentException
-		 * @throws SessionWrapperNotStartedException
+		 * @throws \Onphp\WrongArgumentException
+		 * @throws \Onphp\Utils\SessionWrapperNotStartedException
 		 * @return void
 		**/
 		public function drop(/* ... */);
 
 		/**
-		 * @throws SessionWrapperNotStartedException
+		 * @throws \Onphp\Utils\SessionWrapperNotStartedException
 		 * @return void
 		**/
 		public function dropAll();
@@ -81,13 +83,13 @@
 		public function arrayAssign($scope, $array);
 
 		/**
-		 * @throws SessionWrapperNotStartedException
+		 * @throws \Onphp\Utils\SessionWrapperNotStartedException
 		 * @return string
 		**/
 		public function getName();
 
 		/**
-		 * @throws SessionWrapperNotStartedException
+		 * @throws \Onphp\Utils\SessionWrapperNotStartedException
 		 * @return string
 		**/
 		public function getId();

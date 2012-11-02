@@ -10,6 +10,8 @@
  *                                                                         *
  ***************************************************************************/
 
+	namespace Onphp\Utils;
+
 	class WebAppAjaxHandler implements InterceptingChainHandler {
 		
 		private static $ajaxRequestVar = 'HTTP_X_REQUESTED_WITH';
@@ -17,17 +19,17 @@
 		private static $pjaxRequestVar = 'HTTP_X_PJAX';
 
 		/**
-		 * @return WebAppAjaxHandler
+		 * @return \Onphp\Utils\WebAppAjaxHandler
 		 */
 		public static function create() {
 			return new self();
 		}
 
 		/**
-		 * @return WebAppAjaxHandler
+		 * @return \Onphp\Utils\WebAppAjaxHandler
 		 */
 		public function run(InterceptingChain $chain) {
-			/* @var $chain WebApplication */
+			/* @var $chain \Onphp\Utils\WebApplication */
 			$isPjaxRequest = $this->isPjaxRequest($chain->getRequest());
 			$isAjaxRequest = !$isPjaxRequest && $this->isAjaxRequest($chain->getRequest());
 
@@ -45,14 +47,14 @@
 		/**
 		 * @return boolean
 		 */
-		private function isAjaxRequest(HttpRequest $request) {
-			$form = Form::create()->
+		private function isAjaxRequest(\Onphp\HttpRequest $request) {
+			$form = \Onphp\Form::create()->
 				add(
-					Primitive::plainChoice(self::$ajaxRequestVar)->
+					\Onphp\Primitive::plainChoice(self::$ajaxRequestVar)->
 						setList(self::$ajaxRequestValueList)
 				)->
 				add(
-					Primitive::boolean('_isAjax')
+					\Onphp\Primitive::boolean('_isAjax')
 				)->
 				import($request->getServer())->
 				importOneMore('_isAjax', $request->getGet());
@@ -72,13 +74,13 @@
 		/**
 		 * @return boolean
 		 */
-		private function isPjaxRequest(HttpRequest $request) {
-			$form = Form::create()->
+		private function isPjaxRequest(\Onphp\HttpRequest $request) {
+			$form = \Onphp\Form::create()->
 				add(
-					Primitive::boolean(self::$pjaxRequestVar)
+					\Onphp\Primitive::boolean(self::$pjaxRequestVar)
 				)->
 				add(
-					Primitive::boolean('_isPjax')
+					\Onphp\Primitive::boolean('_isPjax')
 				)->
 				import($request->getServer())->
 				importOneMore('_isPjax', $request->getGet());

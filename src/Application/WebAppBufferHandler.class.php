@@ -9,10 +9,12 @@
  *                                                                         *
  ***************************************************************************/
 
+	namespace Onphp\Utils;
+
 	class WebAppBufferHandler implements InterceptingChainHandler
 	{
 		/**
-		 * @return WebAppBufferHandler
+		 * @return \Onphp\Utils\WebAppBufferHandler
 		 */
 		public static function create()
 		{
@@ -20,7 +22,7 @@
 		}
 
 		/**
-		 * @return WebAppBufferHandler
+		 * @return \Onphp\Utils\WebAppBufferHandler
 		 */
 		public function run(InterceptingChain $chain)
 		{

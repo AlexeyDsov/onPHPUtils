@@ -10,6 +10,8 @@
  *                                                                         *
  ***************************************************************************/
 
+	namespace Onphp\Utils;
+
 	interface IServiceLocator
 	{
 		/**
@@ -21,7 +23,7 @@
 		/**
 		 * @param string $name
 		 * @param any $service
-		 * @return ServiceLocator
+		 * @return \Onphp\Utils\ServiceLocator
 		 */
 		public function set($name, $service);
 
@@ -33,7 +35,7 @@
 
 		/**
 		 * @param string $name
-		 * @return ServiceLocator
+		 * @return \Onphp\Utils\ServiceLocator
 		 */
 		public function drop($name);
 

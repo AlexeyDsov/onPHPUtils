@@ -10,12 +10,14 @@
  *                                                                         *
  ***************************************************************************/
 
-	class MultiPrefixPhpViewResolverParametrized extends MultiPrefixPhpViewResolver {
+	namespace Onphp\Utils;
+
+	class MultiPrefixPhpViewResolverParametrized extends \Onphp\MultiPrefixPhpViewResolver {
 
 		protected $params = array();
 
 		/**
-		 * @return MultiPrefixPhpViewResolverParametrized
+		 * @return \Onphp\Utils\MultiPrefixPhpViewResolverParametrized
 		**/
 		public static function create() {
 			return new self;
@@ -23,11 +25,11 @@
 
 		/**
 		 * @param string $name
-		 * @return MultiPrefixPhpViewResolverParametrized
+		 * @return \Onphp\Utils\MultiPrefixPhpViewResolverParametrized
 		 */
 		public function get($name) {
 			if (!$this->has($name)) {
-				throw new MissingElementException("not setted value with name '$name'");
+				throw new \Onphp\MissingElementException("not setted value with name '$name'");
 			}
 			return $this->params[$name];
 		}
@@ -35,11 +37,11 @@
 		/**
 		 * @param string $name
 		 * @param mixed $value
-		 * @return MultiPrefixPhpViewResolverParametrized
+		 * @return \Onphp\Utils\MultiPrefixPhpViewResolverParametrized
 		 */
 		public function set($name, $value) {
 			if ($this->has($name)) {
-				throw new WrongStateException("value with name '$name' already setted ");
+				throw new \Onphp\WrongStateException("value with name '$name' already setted ");
 			}
 			$this->params[$name] = $value;
 			return $this;
@@ -47,11 +49,11 @@
 
 		/**
 		 * @param string $name
-		 * @return MultiPrefixPhpViewResolverParametrized
+		 * @return \Onphp\Utils\MultiPrefixPhpViewResolverParametrized
 		 */
 		public function drop($name) {
 			if (!$this->has($name)) {
-				throw new MissingElementException("not setted value with name '$name'");
+				throw new \Onphp\MissingElementException("not setted value with name '$name'");
 			}
 			unset($this->params[$name]);
 			return $this;
@@ -62,12 +64,12 @@
 		 * @return boolean
 		 */
 		public function has($name) {
-			Assert::isScalar($name);
+			\Onphp\Assert::isScalar($name);
 			return array_key_exists($name, $this->params);
 		}
 
 		/**
-		 * @return View
+		 * @return \Onphp\View
 		**/
 		protected function makeView($prefix, $viewName) {
 			$view = parent::makeView($prefix, $viewName);

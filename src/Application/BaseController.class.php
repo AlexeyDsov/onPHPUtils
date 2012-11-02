@@ -11,10 +11,12 @@
  *                                                                         *
  ***************************************************************************/
 
-	abstract class BaseController implements Controller
+	namespace Onphp\Utils;
+
+	abstract class BaseController implements \Onphp\Controller
 	{
 		/**
-		 * @var Model
+		 * @var \Onphp\Model
 		 */
 		protected $model = null;
 		protected $methodMap = array();
@@ -22,12 +24,12 @@
 		protected $actionName = 'action';
 
 		/**
-		 * @var HeadHelper
+		 * @var \Onphp\Utils\HeadHelper
 		**/
 		protected $meta	= null;
 
 		public function __construct() {
-			$this->model = Model::create();
+			$this->model = \Onphp\Model::create();
 			$this->setupMeta();
 		}
 
@@ -36,7 +38,7 @@
 		}
 
 		protected function getMav($tpl = 'index', $path = null) {
-			return ModelAndView::create()->
+			return \Onphp\ModelAndView::create()->
 				setModel($this->model)->
 				setView($this->getViewTemplate($tpl, $path));
 		}
@@ -52,23 +54,23 @@
 		}
 
 		protected function getMavRedirectByUrl($url) {
-			return ModelAndView::create()->setView(
-				CleanRedirectView::create($url)
+			return \Onphp\ModelAndView::create()->setView(
+				\Onphp\CleanRedirectView::create($url)
 			);
 		}
 
-		protected function resolveAction(HttpRequest $request, Form $form = null) {
+		protected function resolveAction(\Onphp\HttpRequest $request, \Onphp\Form $form = null) {
 			if (empty($this->methodMap)) {
-				throw new WrongStateException('You must specify $methodMap array');
+				throw new \Onphp\WrongStateException('You must specify $methodMap array');
 			}
 
 			if (!$form) {
-				$form = Form::create();
+				$form = \Onphp\Form::create();
 			}
 
 			$form->
 				add(
-					Primitive::choice($this->actionName)->
+					\Onphp\Primitive::choice($this->actionName)->
 						setList($this->methodMap)->
 						setDefault($this->defaultAction)
 				)->
@@ -77,9 +79,9 @@
 				importMore($request->getAttached());
 
 			if ($form->getErrors()) {
-				return ModelAndView::create()->
+				return \Onphp\ModelAndView::create()->
 					setModel($this->model)->
-					setView(View::ERROR_VIEW);
+					setView(\Onphp\View::ERROR_VIEW);
 			}
 
 			if (!$action = $form->getSafeValue($this->actionName)) {
@@ -99,10 +101,10 @@
 			return $mav;
 		}
 
-		protected function getControllerVar(HttpRequest $request) {
-			$form = Form::create()->
+		protected function getControllerVar(\Onphp\HttpRequest $request) {
+			$form = \Onphp\Form::create()->
 				add(
-					Primitive::string($this->ajaxVar)->
+					\Onphp\Primitive::string($this->ajaxVar)->
 						setDefault('')
 				)->
 				importOne($this->ajaxVar, $request->getGet())->
@@ -113,11 +115,11 @@
 
 		/**
 		 * Дает возможность в наследниках модифицировать model в ModelAndView перед возвращением ее пользователю
-		 * @param HttpRequest $request
-		 * @param ModelAndView $mav
-		 * @return ModelAndView 
+		 * @param \Onphp\HttpRequest $request
+		 * @param \Onphp\ModelAndView $mav
+		 * @return \Onphp\ModelAndView 
 		 */
-		protected function prepairData(HttpRequest $request, ModelAndView $mav) {
+		protected function prepairData(\Onphp\HttpRequest $request, \Onphp\ModelAndView $mav) {
 			return $mav;
 		}
 

@@ -1,35 +1,37 @@
 <?php
+	namespace Onphp\Utils;
+
 	class FormErrorTextApplier {
 
 		/**
-		 * @return FormErrorTextApplier
+		 * @return \Onphp\Utils\FormErrorTextApplier
 		 */
 		public static function create() {
 			return new self;
 		}
 		
 		/**
-		 * @param Form $form
+		 * @param \Onphp\Form $\Onphp\Form
 		 */
-		public function apply(Form $form) {
+		public function apply(\Onphp\Form $form) {
 			foreach ($form->getInnerErrors() as $field => $code)
 				$this->applyField($form, $field, $code);
 		}
 		
-		private function applyField(Form $form, $field, $code) {
+		private function applyField(\Onphp\Form $form, $field, $code) {
 			if (is_array($code)) {
 				$this->applySubField($form, $field);
 			}
 			
-			$code = $form->getError($field) ?: Form::WRONG;
+			$code = $form->getError($field) ?: \Onphp\Form::WRONG;
 			
 			if ($form->getTextualErrorFor($field))
 				return;
 			
 			switch ($code) {
-				case Form::WRONG:
+				case \Onphp\Form::WRONG:
 					$label = "Wrong value"; break;
-				case Form::MISSING:
+				case \Onphp\Form::MISSING:
 					$label = "Missing value"; break;
 				default:
 					$label = "Custom error"; break;
@@ -37,11 +39,11 @@
 			$form->addCustomLabel($field, $code, $label);
 		}
 		
-		private function applySubField(Form $form, $field) {
+		private function applySubField(\Onphp\Form $form, $field) {
 			$value = $form->getValue($field);
-			if ($value instanceof Form) {
+			if ($value instanceof \Onphp\Form) {
 				$this->apply($value);
-			} elseif (is_array($value) && count($value) && reset($value) instanceof Form) {
+			} elseif (is_array($value) && count($value) && reset($value) instanceof \Onphp\Form) {
 				foreach ($value as $valueEl)
 					$this->apply($valueEl);
 			}

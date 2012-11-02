@@ -10,10 +10,12 @@
  *                                                                         *
  ***************************************************************************/
 
+	namespace Onphp\Utils;
+
 	class WebAppAuthorisatorHandlerHttpDigest extends WebAppAuthorisatorHandler
 	{
 		/**
-		 * @return WebAppAuthorisatorHandlerHttpDigest
+		 * @return \Onphp\Utils\WebAppAuthorisatorHandlerHttpDigest
 		 */
 		public static function create() {
 			return new self();
@@ -21,7 +23,7 @@
 
 		/**
 		 * Настраивает авторизатор и находит ему пользователя по настройкам серверных параметров
-		 * @param Authorisator $authorisator
+		 * @param \Onphp\Utils\Authorisator $\Onphp\Utils\Authorisator
 		 * @return $this;
 		 */
 		protected function setupAuthorisator(InterceptingChain $chain, Authorisator $authorisator) {
@@ -38,12 +40,12 @@
 
 		/**
 		 * Возвращает данные уникально идентифицирующие пользователя
-		 * @param InterceptingChain $chain
+		 * @param \Onphp\Utils\InterceptingChain $chain
 		 * @return string
 		 */
 		protected function getUniqUserData(InterceptingChain $chain) {
 			$request = $chain->getRequest();
-			/* @var $request HttpRequest */
+			/* @var $request \Onphp\HttpRequest */
 			return parent::getUniqUserData($chain)
 				. ($request->hasServerVar('PHP_AUTH_USER') ? $request->getServerVar('PHP_AUTH_USER') : '')
 				. ($request->hasServerVar('PHP_AUTH_PW') ? $request->getServerVar('PHP_AUTH_PW') : '');
@@ -51,13 +53,13 @@
 
 		/**
 		 * Находит админа по параметрам Http Digest и возвращает если нашел
-		 * @param InterceptingChain $chain
-		 * @return ILoginUserDigest
+		 * @param \Onphp\Utils\InterceptingChain $chain
+		 * @return \Onphp\Utils\ILoginUserDigest
 		 */
 		protected function findUser(WebApplication $chain, Authorisator $authorisator) {
 			$session = $chain->getServiceLocator()->get('session');
-			$loginHelper = $chain->getServiceLocator()->spawn('LoginHelperDigest');
-			/* @var $loginHelper LoginHelperDigest */
+			$loginHelper = $chain->getServiceLocator()->spawn('\Onphp\Utils\LoginHelperDigest');
+			/* @var $loginHelper \Onphp\Utils\LoginHelperDigest */
 			$loginHelper->setAuthorisator($authorisator);
 			$loginHelper->setSession($session);
 			

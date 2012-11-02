@@ -10,6 +10,8 @@
  *                                                                         *
  ***************************************************************************/
 
-	class PermissionException extends BaseException {
+	namespace Onphp\Utils;
+
+	class PermissionException extends \Onphp\BaseException {
 
 	}

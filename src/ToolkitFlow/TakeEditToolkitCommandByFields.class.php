@@ -13,6 +13,8 @@
 	/**
 	 * Комманда для редактирования объектов через toolkit со списком разрешенных для редактирования полей
 	 */
+	namespace Onphp\Utils;
+
 	class TakeEditToolkitCommandByFields extends TakeEditToolkitCommand {
 
 		/**
@@ -36,10 +38,10 @@
 
 		/**
 		 * Базовая настройка формы - копирует в прототип нередактируемые свойства
-		 * @return TakeEditTemplateCommand
+		 * @return \Onphp\Utils\TakeEditTemplateCommand
 		 */
-		protected function prepairForm(Prototyped $subject, Form $form, HttpRequest $request) {
-			Assert::isNotEmpty($this->editableFieldList, "call before self::setEditableFieldList");
+		protected function prepairForm(\Onphp\Prototyped $subject, \Onphp\Form $form, \Onphp\HttpRequest $request) {
+			\Onphp\Assert::isNotEmpty($this->editableFieldList, "call before self::setEditableFieldList");
 			parent::prepairForm($subject, $form, $request);
 
 			if ($old = $form->getValue('id')) {
@@ -52,9 +54,9 @@
 		/**
 		 * Импортирование/подготовка/доп.валидация формы перед сохранением объекта
 		 *   Удаление из полной формы полей, не разрешенных для редактирования
-		 * @return TakeEditTemplateCommand
+		 * @return \Onphp\Utils\TakeEditTemplateCommand
 		 */
-		protected function prepairFormTakeImport(IdentifiableObject $subject, Form $form, HttpRequest $request) {
+		protected function prepairFormTakeImport(\Onphp\IdentifiableObject $subject, \Onphp\Form $form, \Onphp\HttpRequest $request) {
 			parent::prepairFormTakeImport($subject, $form, $request);
 
 			ToolkitFormUtils::dropFormValuesNotInList($form, $this->editableFieldList);

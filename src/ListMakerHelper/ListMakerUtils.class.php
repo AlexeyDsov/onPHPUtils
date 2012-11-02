@@ -10,18 +10,20 @@
  *                                                                         *
  ***************************************************************************/
 
+	namespace Onphp\Utils;
+
 	class ListMakerUtils
 	{
 		/**
-		 * @return LightMetaProperty
+		 * @return \Onphp\LightMetaProperty
 		 */
-		public static function getPropertyByName($objectLink, AbstractProtoClass $proto)
+		public static function getPropertyByName($objectLink, \Onphp\AbstractProtoClass $proto)
 		{
-			Assert::isString($objectLink);
+			\Onphp\Assert::isString($objectLink);
 			$pathParts = explode('.', $objectLink);
 			$length = count($pathParts);
 			if ($length == 0) {
-				throw new WrongStateException('Object link must have minimum one object name on chain');
+				throw new \Onphp\WrongStateException('Object link must have minimum one object name on chain');
 			}
 
 			for ($i = 0; $i < $length; $i++) {
@@ -36,7 +38,7 @@
 					if ($className === null) {
 						return null;
 					}
-					$proto = ClassUtils::callStaticMethod($className.'::proto');
+					$proto = \Onphp\ClassUtils::callStaticMethod($className.'::proto');
 				}
 			}
 

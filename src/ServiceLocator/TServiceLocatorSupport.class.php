@@ -10,16 +10,18 @@
  *                                                                         *
  ***************************************************************************/
 
+	namespace Onphp\Utils;
+
 	trait TServiceLocatorSupport {
 		
 		/**
-		 * @var ServiceLocator
+		 * @var \Onphp\Utils\ServiceLocator
 		 */
 		protected $serviceLocator = null;
 		
 		/**
-		 * @param IServiceLocator $serviceLocator
-		 * @return TServiceLocatorSupport
+		 * @param \Onphp\Utils\IServiceLocator $serviceLocator
+		 * @return \Onphp\Utils\TServiceLocatorSupport
 		 */
 		public function setServiceLocator(IServiceLocator $serviceLocator) {
 			$this->serviceLocator = $serviceLocator;

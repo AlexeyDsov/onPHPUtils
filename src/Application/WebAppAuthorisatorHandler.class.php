@@ -10,19 +10,21 @@
  *                                                                         *
  ***************************************************************************/
 
+	namespace Onphp\Utils;
+
 	class WebAppAuthorisatorHandler implements InterceptingChainHandler
 	{
 		protected $authorisatorList = array();
 
 		/**
-		 * @return WebAppAuthorisatorHandler
+		 * @return \Onphp\Utils\WebAppAuthorisatorHandler
 		 */
 		public static function create() {
 			return new self();
 		}
 
 		/**
-		 * @return WebAppAuthorisatorHandler
+		 * @return \Onphp\Utils\WebAppAuthorisatorHandler
 		 */
 		public function run(InterceptingChain $chain) {
 			$serviceLocator = $chain->getServiceLocator();
@@ -37,7 +39,7 @@
 		}
 
 		/**
-		 * @return WebAppAuthorisatorHandler
+		 * @return \Onphp\Utils\WebAppAuthorisatorHandler
 		 */
 		public function addAuthorisator($nameInLocator, Authorisator $authorisator) {
 			$this->authorisatorList[$nameInLocator] = $authorisator;
@@ -45,7 +47,7 @@
 		}
 
 		/**
-		 * @param Authorisator $authorisator
+		 * @param \Onphp\Utils\Authorisator $\Onphp\Utils\Authorisator
 		 * @return $this;
 		 */
 		protected function setupAuthorisator(InterceptingChain $chain, Authorisator $authorisator) {
@@ -58,12 +60,12 @@
 		}
 
 		/**
-		 * @param InterceptingChain $chain
+		 * @param \Onphp\Utils\InterceptingChain $chain
 		 * @return string
 		 */
 		protected function getUniqUserData(InterceptingChain $chain) {
 			$request = $chain->getRequest();
-			/* @var $request HttpRequest */
+			/* @var $request \Onphp\HttpRequest */
 			$remoteIp = $request->getServerVar('REMOTE_ADDR');
 			$remoteUserAgent = $request->getServerVar('HTTP_USER_AGENT');
 			return $remoteIp.$remoteUserAgent;

@@ -10,35 +10,37 @@
  *                                                                         *
  ***************************************************************************/
 
-	final class TrustyFormToObjectConverter extends ObjectBuilder
+	namespace Onphp\Utils;
+
+	final class TrustyFormToObjectConverter extends \Onphp\ObjectBuilder
 	{
 		/**
-		 * @var Form
+		 * @var \Onphp\Form
 		 */
 		protected $form = null;
 
 		/**
-		 * @return TrustyFormToObjectConverter
+		 * @return \Onphp\Utils\TrustyFormToObjectConverter
 		**/
-		public static function create(EntityProto $proto)
+		public static function create(\Onphp\EntityProto $proto)
 		{
 			return new self($proto);
 		}
 
 		/**
-		 * @return FormGetter
+		 * @return \Onphp\FormGetter
 		**/
 		protected function getGetter($object)
 		{
-			return new FormGetter($this->proto, $object);
+			return new \Onphp\FormGetter($this->proto, $object);
 		}
 
 		/**
-		 * @return ObjectSetter
+		 * @return \Onphp\ObjectSetter
 		**/
 		protected function getSetter(&$object)
 		{
-			return new ObjectSetter($this->proto, $object);
+			return new \Onphp\ObjectSetter($this->proto, $object);
 		}
 
 		public function upperFill($object, &$result)
@@ -53,7 +55,7 @@
 		}
 
 		protected function getFormMapping() {
-			Assert::isInstance($this->form, 'Form', 'use setForm first');
+			\Onphp\Assert::isInstance($this->form, '\Onphp\Form', 'use setForm first');
 			return $this->form->getPrimitiveList();
 		}
 	}

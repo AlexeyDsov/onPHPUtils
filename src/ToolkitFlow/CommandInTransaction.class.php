@@ -13,6 +13,8 @@
 	/**
 	 * При добавлении к команде является маркером, что команду нужно выполнять внутри транзакции
 	 */
+	namespace Onphp\Utils;
+
 	interface CommandInTransaction {
 	}
 ?>

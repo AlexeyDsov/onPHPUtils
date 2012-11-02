@@ -9,10 +9,12 @@
  *                                                                         *
  ***************************************************************************/
 
+	namespace Onphp\Utils;
+
 	class WebAppControllerHandler implements InterceptingChainHandler
 	{
 		/**
-		 * @return WebAppControllerHandler
+		 * @return \Onphp\Utils\WebAppControllerHandler
 		 */
 		public static function create()
 		{
@@ -20,7 +22,7 @@
 		}
 
 		/**
-		 * @return WebAppControllerHandler
+		 * @return \Onphp\Utils\WebAppControllerHandler
 		 */
 		public function run(InterceptingChain $chain)
 		{
@@ -37,13 +39,13 @@
 		}
 
 		/**
-		 * @return ModelAndView
+		 * @return \Onphp\ModelAndView
 		 */
-		protected function handleRequest(InterceptingChain $chain, Controller $controller) {
+		protected function handleRequest(InterceptingChain $chain, \Onphp\Controller $controller) {
 			$modelAndView = $controller->handleRequest($chain->getRequest());
 
-			if (!$modelAndView instanceof ModelAndView) {
-				throw new WrongStateException(
+			if (!$modelAndView instanceof \Onphp\ModelAndView) {
+				throw new \Onphp\WrongStateException(
 					'Controller \''.get_class($controller).'\' instead ModelAndView return null'
 				);
 			}
@@ -53,8 +55,8 @@
 
 		/**
 		 * По параметрам из chain создаем контроллер
-		 * @param InterceptingChain $chain
-		 * @return Controller
+		 * @param \Onphp\Utils\InterceptingChain $chain
+		 * @return \Onphp\Controller
 		 */
 		protected function getController(InterceptingChain $chain) {
 			$controllerName = $chain->getControllerName();
@@ -62,9 +64,9 @@
 		}
 
 		/**
-		 * @return WebAppControllerHandler
+		 * @return \Onphp\Utils\WebAppControllerHandler
 		 */
-		protected function prepairModelAndView(InterceptingChain $chain, ModelAndView $modelAndView) {
+		protected function prepairModelAndView(InterceptingChain $chain, \Onphp\ModelAndView $modelAndView) {
 			$controllerName = $chain->getControllerName();
 
 			if (!$modelAndView->getView()) {

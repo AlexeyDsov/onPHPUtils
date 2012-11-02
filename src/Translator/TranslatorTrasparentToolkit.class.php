@@ -10,10 +10,12 @@
  *                                                                         *
  ***************************************************************************/
 
+	namespace Onphp\Utils;
+
 	class TranslatorTrasparentToolkit implements ITranslator
 	{
 		/**
-		 * @return TranslatorTrasparentToolkit
+		 * @return \Onphp\Utils\TranslatorTrasparentToolkit
 		 */
 		public static function create() {
 			return new self;

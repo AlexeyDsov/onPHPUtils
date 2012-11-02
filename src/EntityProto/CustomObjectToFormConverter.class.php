@@ -10,26 +10,28 @@
  *                                                                         *
  ***************************************************************************/
 
-	final class CustomObjectToFormConverter extends FormBuilder
+	namespace Onphp\Utils;
+
+	final class CustomObjectToFormConverter extends \Onphp\FormBuilder
 	{
-		protected $getterName = 'ObjectGetter';
-		protected $setterName = 'FormSetter';
+		protected $getterName = '\Onphp\ObjectGetter';
+		protected $setterName = '\Onphp\FormSetter';
 
 		/**
-		 * @return CustomObjectToFormConverter
+		 * @return \Onphp\Utils\CustomObjectToFormConverter
 		**/
-		public static function create(EntityProto $proto)
+		public static function create(\Onphp\EntityProto $proto)
 		{
 			return new self($proto);
 		}
 
 		/**
-		 * @return CustomObjectToFormConverter
+		 * @return \Onphp\Utils\CustomObjectToFormConverter
 		**/
 		public function setGetterName($getterName)
 		{
-			Assert::isString($getterName);
-			Assert::isInstance($getterName, 'PrototypedGetter');
+			\Onphp\Assert::isString($getterName);
+			\Onphp\Assert::isInstance($getterName, '\Onphp\PrototypedGetter');
 
 			$this->getterName = $getterName;
 			return $this;
@@ -41,12 +43,12 @@
 		}
 
 		/**
-		 * @return CustomObjectToFormConverter
+		 * @return \Onphp\Utils\CustomObjectToFormConverter
 		**/
 		public function setSetterName($setterName)
 		{
-			Assert::isString($setterName);
-			Assert::isInstance($getterName, 'PrototypedSetter');
+			\Onphp\Assert::isString($setterName);
+			\Onphp\Assert::isInstance($getterName, '\Onphp\PrototypedSetter');
 
 			$this->setterName = $setterName;
 			return $this;
@@ -65,20 +67,20 @@
 		}
 
 		/**
-		 * @return ObjectGetter
+		 * @return \Onphp\ObjectGetter
 		**/
 		protected function getGetter($object)
 		{
-			Assert::isNotNull($this->getterName, 'You must set getterName before to use this converter');
+			\Onphp\Assert::isNotNull($this->getterName, 'You must set getterName before to use this converter');
 			return new $this->getterName($this->proto, $object);
 		}
 
 		/**
-		 * @return FormSetter
+		 * @return \Onphp\FormSetter
 		**/
 		protected function getSetter(&$object)
 		{
-			Assert::isNotNull($this->setterName, 'You must set setterName before to use this converter');
+			\Onphp\Assert::isNotNull($this->setterName, 'You must set setterName before to use this converter');
 			return new $this->setterName($this->proto, $object);
 		}
 	}

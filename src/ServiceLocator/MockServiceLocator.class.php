@@ -10,13 +10,15 @@
  *                                                                         *
  ***************************************************************************/
 
+	namespace Onphp\Utils;
+
 	class MockServiceLocator extends ServiceLocator
 	{
 		protected $store = array();
 		protected $objectList = array();
 
 		/**
-		 * @return MockServiceLocator
+		 * @return \Onphp\Utils\MockServiceLocator
 		 */
 		public static function create()
 		{
@@ -26,7 +28,7 @@
 		/**
 		 * @param string $className
 		 * @param object $object
-		 * @return MockServiceLocator
+		 * @return \Onphp\Utils\MockServiceLocator
 		 */
 		public function addSpawnObject($className, $object)
 		{
@@ -36,7 +38,7 @@
 
 		/**
 		 * @param array $objectList
-		 * @return MockServiceLocator
+		 * @return \Onphp\Utils\MockServiceLocator
 		 */
 		public function setObjectList(array $objectList)
 		{
@@ -53,13 +55,13 @@
 			if (isset($this->objectList[$className])) {
 				$classNameList = $this->objectList[$className];
 				if (empty($classNameList)) {
-					throw new WrongStateException("Object list for class '{$className}' already empty");
+					throw new \Onphp\WrongStateException("Object list for class '{$className}' already empty");
 				}
 				$object = reset($classNameList);
 				unset($classNameList[key($classNameList)]);
 				return $this->implementSelf($object);
 			} else {
-				throw new WrongStateException("Class '{$className}' was not added for spawn");
+				throw new \Onphp\WrongStateException("Class '{$className}' was not added for spawn");
 			}
 		}
 

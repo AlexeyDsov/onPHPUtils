@@ -2,6 +2,8 @@
 	/**
 	 * Утилита для генерации url/имени диалогового окна на информацию/редактирование/логи объекта
 	 */
+	namespace Onphp\Utils;
+
 	class ToolkitLinkUtils implements IServiceLocatorSupport {
 		use TServiceLocatorSupport;
 
@@ -10,7 +12,7 @@
 		protected $authorisatorName = 'admin';
 
 		/**
-		 * @return ToolkitLinkUtils
+		 * @return \Onphp\Utils\ToolkitLinkUtils
 		 */
 		public static function create()
 		{
@@ -19,7 +21,7 @@
 		
 		/**
 		 * @param string $logClassName
-		 * @return ToolkitLinkUtils 
+		 * @return \Onphp\Utils\ToolkitLinkUtils 
 		 */
 		public function setLogClassName($logClassName)
 		{
@@ -29,7 +31,7 @@
 		
 		/**
 		 * @param string $baseUrl
-		 * @return ToolkitLinkUtils 
+		 * @return \Onphp\Utils\ToolkitLinkUtils 
 		 */
 		public function setBaseUrl($baseUrl) {
 			$this->baseUrl = $baseUrl;
@@ -38,7 +40,7 @@
 		
 		/**
 		 * @param string $authorisatorName
-		 * @return ToolkitLinkUtils 
+		 * @return \Onphp\Utils\ToolkitLinkUtils 
 		 */
 		public function setAuthorisatorName($authorisatorName) {
 			$this->authorisatorName = $authorisatorName;
@@ -73,14 +75,14 @@
 		{
 			$method = $method ?: (isset($urlParams['action']) ? $urlParams['action'] : 'info');
 			$urlParams['action'] = isset($urlParams['action']) ? $urlParams['action'] : $method;
-			Assert::isTrue(
+			\Onphp\Assert::isTrue(
 				$this->isObjectSupported($object, $method),
 				'not supported action: '.$this->getObjectName($object).'.'.$method
 			);
 
 			$urlParams += array(
 				'area' => $this->getObjectName($object),
-				'id' => ($object instanceof IdentifiableObject ? $object->getId() : ''),
+				'id' => ($object instanceof \Onphp\IdentifiableObject ? $object->getId() : ''),
 			);
 
 			return $this->baseUrl . http_build_query($urlParams);
@@ -94,9 +96,9 @@
 		 */
 		public function getUrlLog($object, $urlParams = array())
 		{
-			Assert::isTrue(is_object($object), '$object is not an object');
-			Assert::isInstance($object, 'IdentifiableObject', '$object is not identifiable object');
-			Assert::isTrue(
+			\Onphp\Assert::isTrue(is_object($object), '$object is not an object');
+			\Onphp\Assert::isInstance($object, '\Onphp\IdentifiableObject', '$object is not identifiable object');
+			\Onphp\Assert::isTrue(
 				$this->isObjectSupported($this->logClassName, 'info'),
 				'not supported logs for object'.$this->getObjectName($object)
 			);
@@ -135,7 +137,7 @@
 		}
 		
 		/**
-		 * @return PermissionManager
+		 * @return \Onphp\Utils\PermissionManager
 		 */
 		private function getPermissionManager() {
 			return $this->serviceLocator->get('permissionManager');

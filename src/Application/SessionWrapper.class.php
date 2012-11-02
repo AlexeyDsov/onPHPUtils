@@ -13,12 +13,14 @@
 	/**
 	 * Dynamic wrapper around session_*() functions.
 	**/
-	class SessionWrapper extends Singleton implements ISessionWrapper
+	namespace Onphp\Utils;
+
+	class SessionWrapper extends \Onphp\Singleton implements ISessionWrapper
 	{
 		private $isStarted = false;
 
 		/**
-		 * @return SessionWrapper
+		 * @return \Onphp\Utils\SessionWrapper
 		 */
 		public static function me() {
 			return self::getInstance(__CLASS__);
@@ -30,7 +32,7 @@
 		}
 
 		/**
-		 * @throws SessionWrapperNotStartedException
+		 * @throws \Onphp\Utils\SessionWrapperNotStartedException
 		**/
 		/* void */ public function destroy() {
 			if (!$this->isStarted)
@@ -40,7 +42,7 @@
 
 			try {
 				session_destroy();
-			} catch (BaseException $e) {
+			} catch (\Onphp\BaseException $e) {
 				// stfu
 			}
 
@@ -52,7 +54,7 @@
 		}
 
 		/**
-		 * @throws SessionWrapperNotStartedException
+		 * @throws \Onphp\Utils\SessionWrapperNotStartedException
 		**/
 		/* void */ public function assign($var, $val) {
 			if (!self::isStarted())
@@ -62,15 +64,15 @@
 		}
 
 		/**
-		 * @throws WrongArgumentException
-		 * @throws SessionWrapperNotStartedException
+		 * @throws \Onphp\WrongArgumentException
+		 * @throws \Onphp\Utils\SessionWrapperNotStartedException
 		**/
 		public function exist(/* ... */) {
 			if (!self::isStarted())
 				throw new SessionWrapperNotStartedException();
 
 			if (!func_num_args())
-				throw new WrongArgumentException('missing argument(s)');
+				throw new \Onphp\WrongArgumentException('missing argument(s)');
 
 			foreach (func_get_args() as $arg) {
 				if (!isset($_SESSION[$arg]))
@@ -81,7 +83,7 @@
 		}
 
 		/**
-		 * @throws SessionWrapperNotStartedException
+		 * @throws \Onphp\Utils\SessionWrapperNotStartedException
 		**/
 		public function get($var) {
 			if (!self::isStarted())
@@ -95,22 +97,22 @@
 		}
 
 		/**
-		 * @throws WrongArgumentException
-		 * @throws SessionWrapperNotStartedException
+		 * @throws \Onphp\WrongArgumentException
+		 * @throws \Onphp\Utils\SessionWrapperNotStartedException
 		**/
 		/* void */ public function drop(/* ... */) {
 			if (!self::isStarted())
 				throw new SessionWrapperNotStartedException();
 
 			if (!func_num_args())
-				throw new WrongArgumentException('missing argument(s)');
+				throw new \Onphp\WrongArgumentException('missing argument(s)');
 
 			foreach (func_get_args() as $arg)
 				unset($_SESSION[$arg]);
 		}
 
 		/**
-		 * @throws SessionWrapperNotStartedException
+		 * @throws \Onphp\Utils\SessionWrapperNotStartedException
 		**/
 		/* void */ public function dropAll() {
 			if (!self::isStarted())
@@ -131,7 +133,7 @@
 		 * assigns to $_SESSION scope variables defined in given array
 		**/
 		/* void */ public function arrayAssign($scope, $array) {
-			Assert::isArray($array);
+			\Onphp\Assert::isArray($array);
 
 			foreach ($array as $var) {
 				if (isset($scope[$var])) {
@@ -141,7 +143,7 @@
 		}
 
 		/**
-		 * @throws SessionWrapperNotStartedException
+		 * @throws \Onphp\Utils\SessionWrapperNotStartedException
 		**/
 		public function getName() {
 			if (!self::isStarted())
@@ -151,7 +153,7 @@
 		}
 
 		/**
-		 * @throws SessionWrapperNotStartedException
+		 * @throws \Onphp\Utils\SessionWrapperNotStartedException
 		**/
 		public function getId() {
 			if (!self::isStarted())

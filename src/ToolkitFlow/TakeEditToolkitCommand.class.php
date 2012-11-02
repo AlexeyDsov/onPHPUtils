@@ -14,31 +14,33 @@
 	 * Комманда для редактирования объектов через toolkit.
 	 * Логгирует состояние объекта до и после сохранения.
 	 */
+	namespace Onphp\Utils;
+
 	class TakeEditToolkitCommand extends TakeEditTemplateCommand implements IServiceLocatorSupport {
 		
 		use TServiceLocatorSupport;
 		
 		/**
-		 * @var Closure
+		 * @var \Closure
 		 */
 		protected $logCallback = null;
 		
 		/**
-		 * @param Closure $logCallback
-		 * @return TakeEditToolkitCommand 
+		 * @param \Closure $logCallback
+		 * @return \Onphp\Utils\TakeEditToolkitCommand 
 		 */
-		public function setLogCallback(Closure $logCallback) {
+		public function setLogCallback(\Closure $logCallback) {
 			$this->logCallback = $logCallback;
 			return $this;
 		}
 
 		/**
 		 * Выполнение сохранения изменений объекта в базу и логиирование изменений
-		 * @param Form $form
-		 * @param IdentifiableObject $subject
-		 * @return IdentifiableObject
+		 * @param \Onphp\Form $\Onphp\Form
+		 * @param \Onphp\IdentifiableObject $subject
+		 * @return \Onphp\IdentifiableObject
 		 */
-		final protected function takeObject(Form $form, IdentifiableObject $subject) {
+		final protected function takeObject(\Onphp\Form $form, \Onphp\IdentifiableObject $subject) {
 			$logData = array('command' => get_class($this), 'formData' => $form->export());
 			if ($oldObject = $form->getValue('id')) {
 				$oldObjectDump = $this->getLogOldData($form, $oldObject);
@@ -65,42 +67,42 @@
 
 		/**
 		 * Возвращает ассоциативный массив соотвествующий текущим параметрам объекта до изменения
-		 * @param Form $form
-		 * @param IdentifiableObject $oldObject
+		 * @param \Onphp\Form $\Onphp\Form
+		 * @param \Onphp\IdentifiableObject $oldObject
 		 * @return array
 		 */
-		protected function getLogOldData(Form $form, IdentifiableObject $oldObject) {
+		protected function getLogOldData(\Onphp\Form $form, \Onphp\IdentifiableObject $oldObject) {
 			return $this->getLogObjectData($form, $oldObject);
 		}
 
 		/**
 		 * Возвращает ассоциативный массив соотвествующий текущим параметрам объекта после изменения
-		 * @param Form $form
-		 * @param IdentifiableObject $subject
+		 * @param \Onphp\Form $\Onphp\Form
+		 * @param \Onphp\IdentifiableObject $subject
 		 * @return array
 		 */
-		protected function getLogNewData(Form $form, IdentifiableObject $subject) {
+		protected function getLogNewData(\Onphp\Form $form, \Onphp\IdentifiableObject $subject) {
 			return $this->getLogObjectData($form, $subject);
 		}
 
 		/**
 		 * Возвращает ассоциативный массив соотвествующий текущим параметрам объекта
-		 * @param Form $form
-		 * @param IdentifiableObject $subject
+		 * @param \Onphp\Form $\Onphp\Form
+		 * @param \Onphp\IdentifiableObject $subject
 		 * @return type
 		 */
-		protected function getLogObjectData(Form $form, IdentifiableObject $subject) {
+		protected function getLogObjectData(\Onphp\Form $form, \Onphp\IdentifiableObject $subject) {
 			$newSubjectForm = $subject->proto()->makeForm();
-			FormUtils::object2form($subject, $newSubjectForm);
+			\Onphp\FormUtils::object2form($subject, $newSubjectForm);
 			return $newSubjectForm->export();
 		}
 
 		/**
 		 * @param array $data
-		 * @param IdentifiableObject $subject
-		 * @return TakeEditToolkitCommand
+		 * @param \Onphp\IdentifiableObject $subject
+		 * @return \Onphp\Utils\TakeEditToolkitCommand
 		 */
-		protected function logData($data, IdentifiableObject $subject) {
+		protected function logData($data, \Onphp\IdentifiableObject $subject) {
 			if ($this->logCallback) {
 				$this->logCallback->__invoke($data, $subject);
 			}
@@ -116,10 +118,10 @@
 					if ($oldValue === $newValue) {
 						continue;
 					} elseif ($this->isStringable($oldValue) && $this->isStringable($newValue)) {
-						if ($oldValue instanceof Stringable) {
+						if ($oldValue instanceof \Onphp\Stringable) {
 							$oldValue = $oldValue->toString();
 						}
-						if ($newValue instanceof Stringable) {
+						if ($newValue instanceof \Onphp\Stringable) {
 							$newValue = $newValue->toString();
 						}
 						$diff[$newKey.'+/-'] = $newValue.'/'.$oldValue;
@@ -157,7 +159,7 @@
 
 		private function isStringable($value) {
 			return is_scalar($value)
-				|| ($value instanceof Stringable)
+				|| ($value instanceof \Onphp\Stringable)
 				|| ($value === null)
 				;
 		}

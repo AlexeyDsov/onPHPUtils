@@ -9,6 +9,8 @@
  *                                                                         *
  ***************************************************************************/
 
+	namespace Onphp\Utils;
+
 	interface InterceptingChainHandler
 	{
 		public function run(InterceptingChain $chain);

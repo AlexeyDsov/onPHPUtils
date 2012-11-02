@@ -10,28 +10,30 @@
  *                                                                         *
  ***************************************************************************/
 
-	abstract class SimpleSearchController implements Controller, IServiceLocatorSupport {
+	namespace Onphp\Utils;
+
+	abstract class SimpleSearchController implements \Onphp\Controller, IServiceLocatorSupport {
 		use TServiceLocatorSupport;
 		
-		public function handleRequest(HttpRequest $request) {
+		public function handleRequest(\Onphp\HttpRequest $request) {
 			$searchMap = $this->getSearchMap();
 			
 			$form = $this
 				->getFormObject($searchMap)
 				->import($request->getGet());
 			if ($form->getErrors()) {
-				return ModelAndView::create()->setView(EmptyView::create());
+				return \Onphp\ModelAndView::create()->setView(\Onphp\EmptyView::create());
 			}
 			
 			$propertyForm = $this
 				->getFormProperty($searchMap, $form->getValue('object'))
 				->import($request->getGet());
 			if ($propertyForm->getErrors()) {
-				return ModelAndView::create()->setView(EmptyView::create());
+				return \Onphp\ModelAndView::create()->setView(\Onphp\EmptyView::create());
 			}
 			if (!$this->hasAccess($form->getValue('object'), $propertyForm->getValue('property'))) {
-				HeaderUtils::sendHttpStatus(new HttpStatus(HttpStatus::CODE_403));
-				return ModelAndView::create()->setView(EmptyView::create());
+				\Onphp\HeaderUtils::sendHttpStatus(new \Onphp\HttpStatus(\Onphp\HttpStatus::CODE_403));
+				return \Onphp\ModelAndView::create()->setView(\Onphp\EmptyView::create());
 			}
 			
 			
@@ -45,9 +47,9 @@
 				)
 			);
 			
-			return ModelAndView::create()
-				->setView(JsonView::create()->setForceObject(false))
-				->setModel(Model::create()->set('array', $searchResult));
+			return \Onphp\ModelAndView::create()
+				->setView(\Onphp\JsonView::create()->setForceObject(false))
+				->setModel(\Onphp\Model::create()->set('array', $searchResult));
 		}
 		
 		/**
@@ -59,7 +61,7 @@
 		abstract protected function getSearchMap();
 		
 		/**
-		 * @return ObjectNameConverter 
+		 * @return \Onphp\Utils\ObjectNameConverter 
 		 */
 		protected function getNameConverter() {
 			return new ObjectNameConverter();
@@ -71,7 +73,7 @@
 		 * @param string $search
 		 * @return array 
 		 */
-		protected function getListByParam(HttpRequest $request, $class, $property, $search) {
+		protected function getListByParam(\Onphp\HttpRequest $request, $class, $property, $search) {
 			$criteria = $this->getListCriteria($class);
 			foreach ($this->getExprForSearchCriteria($request, $class, $property, $search) as $expr) {
 				$criteria->add($expr);
@@ -85,24 +87,24 @@
 			return $criteria->getList();
 		}
 		
-		protected function getExprForSearchCriteria(HttpRequest $request, $class, $property, $search) {
-			$expr = Expression::ilike(
-				SQLFunction::create('lower', $property),
-				DBValue::create(mb_strtolower($search).'%')
+		protected function getExprForSearchCriteria(\Onphp\HttpRequest $request, $class, $property, $search) {
+			$expr = \Onphp\Expression::ilike(
+				\Onphp\SQLFunction::create('lower', $property),
+				\Onphp\DBValue::create(mb_strtolower($search).'%')
 			);
 			return array($expr);
 		}
 		
 		protected function getOrderForSearchCriteria($class, $property) {
-			return array(OrderBy::create($property)->asc());
+			return array(\Onphp\OrderBy::create($property)->asc());
 		}
 		
 		/**
 		 * @param string $class
-		 * @return Criteria 
+		 * @return \Onphp\Criteria 
 		 */
 		protected function getListCriteria($class) {
-			return Criteria::create(ClassUtils::callStaticMethod("{$class}::dao"));
+			return \Onphp\Criteria::create(\Onphp\ClassUtils::callStaticMethod("{$class}::dao"));
 		}
 		
 		protected function getArrayConvertFunc() {
@@ -125,25 +127,25 @@
 		}
 		
 		/**
-		 * @return Form
+		 * @return \Onphp\Form
 		 */
 		private function getFormObject($searchMap) {
-			return Form::create()
+			return \Onphp\Form::create()
 				->add(
-					Primitive::plainChoice('object')
+					\Onphp\Primitive::plainChoice('object')
 						->setList(array_keys($searchMap))
 						->required()
 				)
-				->add(Primitive::string('search')->required());
+				->add(\Onphp\Primitive::string('search')->required());
 		}
 		
 		/**
-		 * @return Form
+		 * @return \Onphp\Form
 		 */
 		private function getFormProperty($searchMap, $class) {
-			return Form::create()
+			return \Onphp\Form::create()
 				->add(
-					Primitive::plainChoice('property')
+					\Onphp\Primitive::plainChoice('property')
 						->setList($searchMap[$class])
 						->required()
 				);

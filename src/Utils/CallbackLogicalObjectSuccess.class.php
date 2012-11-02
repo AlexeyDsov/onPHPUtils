@@ -15,23 +15,25 @@
 	 * 
 	 * @ingroup Logic
 	**/
-	class CallbackLogicalObjectSuccess extends CallbackLogicalObject
+	namespace Onphp\Utils;
+
+	class CallbackLogicalObjectSuccess extends \Onphp\CallbackLogicalObject
 	{
 		/**
 		 * @static
-		 * @param Closure $callback
-		 * @return CallbackLogicalObjectSuccess
+		 * @param \Closure $callback
+		 * @return \Onphp\Utils\CallbackLogicalObjectSuccess
 		 */
-		static public function create(Closure $callback)
+		static public function create(\Closure $callback)
 		{
 			return new self($callback);
 		}
 
 		/**
-		 * @param Form $form
+		 * @param \Onphp\Form $\Onphp\Form
 		 * @return bool
 		 */
-		public function toBoolean(Form $form)
+		public function toBoolean(\Onphp\Form $form)
 		{
 			parent::toBoolean($form);
 			return true;

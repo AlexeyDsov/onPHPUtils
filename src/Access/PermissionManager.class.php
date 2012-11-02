@@ -10,11 +10,13 @@
  *                                                                         *
  ***************************************************************************/
 
+	namespace Onphp\Utils;
+
 	class PermissionManager {
 
 		/**
 		 * Статическое создание объекта класса
-		 * @return PermissionManager
+		 * @return \Onphp\Utils\PermissionManager
 		 */
 		public static function create() {
 			return new self;
@@ -22,7 +24,7 @@
 
 		/**
 		 * Возвращает признак
-		 * @param IPermissionUser $user
+		 * @param \Onphp\Utils\IPermissionUser $user
 		 * @param string $method
 		 * @param mixed $object can be classname or IdentifiableObject
 		 * @return bool
@@ -39,9 +41,9 @@
 		 * @param mixed $object string|object
 		 */
 		final public function getObjectName($object) {
-			Assert::isTrue(is_object($object) || is_string($object), '$object is not an object or string');
+			\Onphp\Assert::isTrue(is_object($object) || is_string($object), '$object is not an object or string');
 			if (is_object($object)) {
-				Assert::isInstance($object, 'IdentifiableObject', '$object is not IdentifiableObject');
+				\Onphp\Assert::isInstance($object, '\Onphp\IdentifiableObject', '$object is not IdentifiableObject');
 			}
 			
 			return $this->convertObjectName(is_object($object) ? get_class($object) : $object);

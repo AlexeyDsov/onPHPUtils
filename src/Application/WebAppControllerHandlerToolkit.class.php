@@ -10,13 +10,15 @@
  *                                                                         *
  ***************************************************************************/
 
+	namespace Onphp\Utils;
+
 	class WebAppControllerHandlerToolkit extends WebAppControllerHandler
 	{
 		private $authorisatorName = null;
 		private $baseUrl = null;
 		
 		/**
-		 * @return WebAppControllerHandlerToolkit
+		 * @return \Onphp\Utils\WebAppControllerHandlerToolkit
 		 */
 		public static function create() {
 			return new self();
@@ -24,7 +26,7 @@
 
 		/**
 		 * @param string $authorisatorName
-		 * @return WebAppControllerHandlerToolkit 
+		 * @return \Onphp\Utils\WebAppControllerHandlerToolkit 
 		 */
 		public function setAuthorisatorName($authorisatorName) {
 			$this->authorisatorName = $authorisatorName;
@@ -33,7 +35,7 @@
 		
 		/**
 		 * @param string $baseUrl 
-		 * @return WebAppControllerHandlerToolkit 
+		 * @return \Onphp\Utils\WebAppControllerHandlerToolkit 
 		 */
 		public function setBaseUrl($baseUrl) {
 			$this->baseUrl = $baseUrl;
@@ -41,11 +43,11 @@
 		}
 
 		/**
-		 * @param InterceptingChain $chain
+		 * @param \Onphp\Utils\InterceptingChain $chain
 		 * @return string
 		 */
 		protected function getController(InterceptingChain $chain) {
-			/* @var $chain WebApplication */
+			/* @var $chain \Onphp\Utils\WebApplication */
 			if (
 				$chain->getRequest()->hasGetVar('_window')
 				&& $chain->getRequest()->hasGetVar('_dialogId')
@@ -68,7 +70,7 @@
 			}
 
 			$authorisator = $chain->getServiceLocator()->get($this->authorisatorName);
-			/* @var $authorisator Authorisator */
+			/* @var $\Onphp\Utils\Authorisator \Onphp\Utils\Authorisator */
 
 			if (!$authorisator->getUser()) {
 				if (!in_array($controllerName, $this->getNoUserAllowedControllerList())) {
@@ -82,8 +84,8 @@
 			return $chain->getServiceLocator()->spawn($controllerName);
 		}
 
-		protected function handleRequest(InterceptingChain $chain, Controller $controller) {
-			/* @var $chain WebApplication */
+		protected function handleRequest(InterceptingChain $chain, \Onphp\Controller $controller) {
+			/* @var $chain \Onphp\Utils\WebApplication */
 			try {
 				return parent::handleRequest($chain, $controller);
 			} catch (PermissionException $e) {
@@ -107,7 +109,7 @@
 		}
 		
 		protected function getDefaultController() {
-			return 'MainController';
+			return '\Onphp\Utils\MainController';
 		}
 		
 		protected function getAccessDeniedController() {

@@ -13,19 +13,21 @@
 	/**
 	 * Класс для создания верхнего меню в админке/тулките. Простейшее решение создания многоуровневых вкладок
 	 */
+	namespace Onphp\Utils;
+
 	class ToolkitMenuConstructor
 	{
 		/**
-		 * @var PermissionManager
+		 * @var \Onphp\Utils\PermissionManager
 		 */
 		protected $permissionManager = null;
 		/**
-		 * @var IPermissionUser
+		 * @var \Onphp\Utils\IPermissionUser
 		 */
 		protected $user = null;
 
 		/**
-		 * @return ToolkitMenuConstructor
+		 * @return \Onphp\Utils\ToolkitMenuConstructor
 		 */
 		public static function create()
 		{
@@ -33,8 +35,8 @@
 		}
 
 		/**
-		 * @param PermissionManager $permissionManager
-		 * @return ToolkitMenuConstructor
+		 * @param \Onphp\Utils\PermissionManager $\Onphp\Utils\PermissionManager
+		 * @return \Onphp\Utils\ToolkitMenuConstructor
 		 */
 		public function setPermissionManager(PermissionManager $permissionManager)
 		{
@@ -43,8 +45,8 @@
 		}
 
 		/**
-		 * @param IPermissionUser $user
-		 * @return ToolkitMenuConstructor
+		 * @param \Onphp\Utils\IPermissionUser $user
+		 * @return \Onphp\Utils\ToolkitMenuConstructor
 		 */
 		public function setUser(IPermissionUser $user)
 		{

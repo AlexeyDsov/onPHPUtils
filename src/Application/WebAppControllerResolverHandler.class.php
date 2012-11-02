@@ -9,16 +9,18 @@
  *                                                                         *
  ***************************************************************************/
 
+	namespace Onphp\Utils;
+
 	class WebAppControllerResolverHandler implements InterceptingChainHandler
 	{
-		const CONTROLLER_POSTFIX = 'Controller';
+		const CONTROLLER_POSTFIX = '\Onphp\Controller';
 
-		protected $defaultController = 'MainController';
+		protected $defaultController = '\Onphp\Utils\MainController';
 
 		protected $notfoundController = 'NotFoundController';
 
 		/**
-		 * @return WebAppControllerResolverHandler
+		 * @return \Onphp\Utils\WebAppControllerResolverHandler
 		 */
 		public static function create()
 		{
@@ -26,10 +28,10 @@
 		}
 
 		/**
-		 * @return WebAppControllerResolverHandler
+		 * @return \Onphp\Utils\WebAppControllerResolverHandler
 		 */
 		public function run(InterceptingChain $chain) {
-			/* @var $chain WebApplication */
+			/* @var $chain \Onphp\Utils\WebApplication */
 			$request = $chain->getRequest();
 
 			if ($controllerName = $this->getControllerNameByArea($chain)) {
@@ -46,7 +48,7 @@
 		}
 
 		/**
-		 * @return WebAppControllerResolverHandler
+		 * @return \Onphp\Utils\WebAppControllerResolverHandler
 		 */
 		public function setDefaultController($defaultController)
 		{
@@ -56,7 +58,7 @@
 		}
 
 		/**
-		 * @return WebAppControllerResolverHandler
+		 * @return \Onphp\Utils\WebAppControllerResolverHandler
 		 */
 		public function setNotfoundController($notfoundController)
 		{
@@ -84,7 +86,7 @@
 			) {
 				return $area.self::CONTROLLER_POSTFIX;
 			} elseif ($area) {
-				HeaderUtils::sendHttpStatus(new HttpStatus(HttpStatus::CODE_404));
+				\Onphp\HeaderUtils::sendHttpStatus(new \Onphp\HttpStatus(\Onphp\HttpStatus::CODE_404));
 				return $this->notfoundController;
 			}
 			return null;
@@ -98,7 +100,7 @@
 		protected function checkControllerName($controllerName, $path)
 		{
 			return
-				ClassUtils::isClassName($controllerName)
+				\Onphp\ClassUtils::isClassName($controllerName)
 				&& $path
 				&& is_readable($path.$controllerName.EXT_CLASS);
 		}

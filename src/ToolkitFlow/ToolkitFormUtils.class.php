@@ -10,16 +10,18 @@
  *                                                                         *
  ***************************************************************************/
 
-	class ToolkitFormUtils extends StaticFactory {
+	namespace Onphp\Utils;
+
+	class ToolkitFormUtils extends \Onphp\StaticFactory {
 
 		/**
 		 * Копирует из $old объекта в $prototype все параметры кроме перечисленных в списке $workParams
-		 * @param Prototyped $prototype
-		 * @param Prototyped $old
+		 * @param \Onphp\Prototyped $prototype
+		 * @param \Onphp\Prototyped $old
 		 * @param type $workParams
 		 * @return type 
 		 */
-		public static function setUpProtoSubject(Prototyped $prototype, Prototyped $old, $workParams)
+		public static function setUpProtoSubject(\Onphp\Prototyped $prototype, \Onphp\Prototyped $old, $workParams)
 		{
 			self::copyOldToSubject($prototype, $old);
 			foreach ($workParams as $path) {
@@ -31,10 +33,10 @@
 
 		/**
 		 * Сбрасывает ошибки у примитивов формы не перечисленных в списке второым аргументом
-		 * @param Form $form
+		 * @param \Onphp\Form $\Onphp\Form
 		 * @param type $primitiveNameList 
 		 */
-		public static function markGoodValuesNotInList(Form $form, $primitiveNameList)
+		public static function markGoodValuesNotInList(\Onphp\Form $form, $primitiveNameList)
 		{
 			$primitiveAList = array();
 			foreach ($primitiveNameList as $primitiveName) {
@@ -43,7 +45,7 @@
 			$errors = $form->getErrors();
 			foreach ($form->getPrimitiveList() as $primitiveName => $primitive) {
 				if (!isset($primitiveAList[$primitiveName])) {
-					if (isset($errors[$primitiveName]) && $errors[$primitiveName] == Form::MISSING) {
+					if (isset($errors[$primitiveName]) && $errors[$primitiveName] == \Onphp\Form::MISSING) {
 						$form->markGood($primitiveName);
 					}
 				}
@@ -52,11 +54,11 @@
 
 		/**
 		 * Сбрасывает значения примитивов формы у параметров не перечисленных в списке вторым аргументом
-		 * @param Form $form
+		 * @param \Onphp\Form $\Onphp\Form
 		 * @param type $primitiveNameList
 		 * @return type 
 		 */
-		public static function dropFormValuesNotInList(Form $form, $primitiveNameList)
+		public static function dropFormValuesNotInList(\Onphp\Form $form, $primitiveNameList)
 		{
 			$primitiveAList = array();
 			foreach ($primitiveNameList as $primitiveName) {
@@ -67,8 +69,8 @@
 					$primitive->dropValue();
 				} else {
 					if (
-						$primitive instanceof PrimitiveHstore
-						|| $primitive instanceof PrimitiveForm
+						$primitive instanceof \Onphp\PrimitiveHstore
+						|| $primitive instanceof \Onphp\PrimitiveForm
 					) {
 						$subPrimitiveNameList = array();
 						foreach ($primitiveNameList as $subPrimitiveName) {
@@ -80,7 +82,7 @@
 							}
 						}
 
-						if ($primitive instanceof PrimitiveFormsList) {
+						if ($primitive instanceof \Onphp\PrimitiveFormsList) {
 							if ($subFormList = $primitive->getValue()) {
 								foreach ($subFormList as $subForm) {
 									self::dropFormValuesNotInList(
@@ -89,10 +91,10 @@
 									);
 								}
 							}
-						} elseif ($primitive instanceof PrimitiveHstore || $primitive instanceof PrimitiveForm) {
+						} elseif ($primitive instanceof \Onphp\PrimitiveHstore || $primitive instanceof \Onphp\PrimitiveForm) {
 							if (
 								$subForm = (
-									$primitive instanceof PrimitiveHstore
+									$primitive instanceof \Onphp\PrimitiveHstore
 										? $primitive->getInnerForm()
 										: $primitive->getValue()
 								)
@@ -110,15 +112,15 @@
 			return null;
 		}
 
-		protected static function copyOldToSubject(Prototyped $prototype, Prototyped $old)
+		protected static function copyOldToSubject(\Onphp\Prototyped $prototype, \Onphp\Prototyped $old)
 		{
-			Assert::isInstance($prototype, $old);
+			\Onphp\Assert::isInstance($prototype, $old);
 			$proto = $prototype->proto();
 			foreach ($proto->getPropertyList() as $propertyName => $lightMeta) {
 				if (($subOld = $old->{$lightMeta->getGetter()}()) !== null) {
-					if ($lightMeta->getClassName() == 'Hstore') {
+					if ($lightMeta->getClassName() == '\Onphp\Hstore') {
 						$prototype->{$lightMeta->getSetter()}(clone $subOld);
-					} elseif ($lightMeta instanceof InnerMetaProperty) {
+					} elseif ($lightMeta instanceof \Onphp\InnerMetaProperty) {
 						if (($subPrototype = $prototype->{$lightMeta->getGetter()}()) === null) {
 							$subPrototype = $subOld->create();
 							$prototype->{$lightMeta->getSetter()}($subPrototype);
@@ -139,7 +141,7 @@
 			return true;
 		}
 
-		protected static function dropSubjectProperty(Prototyped $prototype, $path)
+		protected static function dropSubjectProperty(\Onphp\Prototyped $prototype, $path)
 		{
 			if ($prototype->proto()->isPropertyExists($path)) {
 				//удаление обычных свойств и объектов
@@ -167,7 +169,7 @@
 				$subParamName = mb_substr($path, $dpos + 1);
 				if ($prototype->proto()->isPropertyExists($paramName)) {
 					$lightMeta = $prototype->proto()->getPropertyByName($paramName);
-					if ($lightMeta->getClassName() == 'Hstore') {
+					if ($lightMeta->getClassName() == '\Onphp\Hstore') {
 						if ($hstore = $prototype->{$lightMeta->getGetter()}()) {
 							if ($hstore->isExists($subParamName)) {
 								$hstore->drop($subParamName);

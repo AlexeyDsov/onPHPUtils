@@ -14,6 +14,8 @@
 	 * Реализует отображение списков объектов.
 	 * В наследнике класса необходимо указать proto объекта и propertyList - настройки для получения списка
 	 */
+	namespace Onphp\Utils;
+
 	abstract class SimpleListController extends ToolkitBaseController {
 
 		protected $methodMap = array(
@@ -23,9 +25,9 @@
 		protected $defaultAction = 'show';
 
 		/**
-		 * @return ModelAndView
+		 * @return \Onphp\ModelAndView
 		**/
-		public function handleRequest(HttpRequest $request) {
+		public function handleRequest(\Onphp\HttpRequest $request) {
 			$className = $this->getObjectName();
 			if (!$this->serviceLocator->get('linker')->isObjectSupported($className, 'info')) {
 				throw new PermissionException('No permission for info '.$className);
@@ -51,9 +53,9 @@
 		/**
 		 * Возвращает MaV для отображения условий поиска
 		 * @param $request HttpRequest
-		 * @return ModelAndView
+		 * @return \Onphp\ModelAndView
 		**/
-		protected function showProcess(HttpRequest $request) {
+		protected function showProcess(\Onphp\HttpRequest $request) {
 			$propertyList = $this->getPropertyList();
 			$proto = $this->getProto();
 
@@ -74,9 +76,9 @@
 		/**
 		 * Возвращает MaV с результатами поиска
 		 * @param $request HttpRequest
-		 * @return ModelAndView
+		 * @return \Onphp\ModelAndView
 		**/
-		protected function listProcess(HttpRequest $request) {
+		protected function listProcess(\Onphp\HttpRequest $request) {
 			$this->searchProcess($request);
 			return $this->getMav('list');
 		}
@@ -84,10 +86,10 @@
 		/**
 		 * Заполняет модель результатом поиска
 		 *
-		 * @param HttpRequest $request
-		 * @return Model
+		 * @param \Onphp\HttpRequest $request
+		 * @return \Onphp\Model
 		 */
-		protected function searchProcess(HttpRequest $request) {
+		protected function searchProcess(\Onphp\HttpRequest $request) {
 			$propertyList = $this->getPropertyList();
 			$proto = $this->getProto();
 
@@ -127,12 +129,12 @@
 
 		/**
 		 * Возвращает подмодель с данными для фильтров поиска
-		 * @param Form $form
+		 * @param \Onphp\Form $\Onphp\Form
 		 * @param array $propertyList
-		 * @return Model
+		 * @return \Onphp\Model
 		 */
-		protected function makeListHeaderModel(Form $form, array $propertyList) {
-			return Model::create()->
+		protected function makeListHeaderModel(\Onphp\Form $form, array $propertyList) {
+			return \Onphp\Model::create()->
 				set('form', $form)->
 				set('propertyList', $propertyList)->
 				set('proto', $this->getProto())->
@@ -143,12 +145,12 @@
 
 		/**
 		 * Возвращает подмодель с данными для пейджера
-		 * @param QueryResult $queryResult
-		 * @param Form $form
-		 * @return Model
+		 * @param \Onphp\QueryResult $\Onphp\QueryResult
+		 * @param \Onphp\Form $\Onphp\Form
+		 * @return \Onphp\Model
 		 */
-		protected function makePagerModel(QueryResult $queryResult, Form $form) {
-			return Model::create()->
+		protected function makePagerModel(\Onphp\QueryResult $queryResult, \Onphp\Form $form) {
+			return \Onphp\Model::create()->
 				set('totalCount', $queryResult->getCount())->
 				set('offset', $form->getSafeValue('offset'))->
 				set('limit', $form->getSafeValue('limit'))->
@@ -158,18 +160,18 @@
 
 		/**
 		 * Возвращает подмодель с данными для рендеринга колонок сортировки
-		 * @param Form $form
+		 * @param \Onphp\Form $\Onphp\Form
 		 * @param array $propertyList
-		 * @return Model
+		 * @return \Onphp\Model
 		 */
-		protected function makeColumnModel(Form $form, array $propertyList) {
+		protected function makeColumnModel(\Onphp\Form $form, array $propertyList) {
 			$columnParams = $form->export();
 			foreach (array_keys($columnParams) as $propertyName) {
 				unset($columnParams[$propertyName]['order']);
 				unset($columnParams[$propertyName]['sort']);
 			}
 
-			return Model::create()->
+			return \Onphp\Model::create()->
 				set('propertyList', $propertyList)->
 				set('baseUrl', PATH_WEB_URL)->
 				set('urlParams', $this->getUrlParams() + $columnParams)->
@@ -177,7 +179,7 @@
 				set('objectName', $this->getObjectName());
 		}
 		
-		protected function getRowParams(QueryResult $queryResult, array $propertyList, $propertyName) {
+		protected function getRowParams(\Onphp\QueryResult $queryResult, array $propertyList, $propertyName) {
 			return array();
 		}
 
@@ -186,7 +188,7 @@
 		 * @return array
 		 */
 		protected function getUrlParams() {
-			Assert::isTrue((bool)preg_match('~^(.*)Controller$~', get_class($this), $matches));
+			\Onphp\Assert::isTrue((bool)preg_match('~^(.*)Controller$~', get_class($this), $matches));
 			return array(
 				'area' => $matches[1],
 				'action' => 'list',
@@ -204,10 +206,10 @@
 
 		/**
 		 * Возвращает Proto объекта по которому создается список
-		 * @return AbstractProtoClass
+		 * @return \Onphp\AbstractProtoClass
 		 */
 		protected function getProto() {
-			return ClassUtils::callStaticMethod("{$this->getObjectName()}::proto");
+			return \Onphp\ClassUtils::callStaticMethod("{$this->getObjectName()}::proto");
 		}
 
 		/**
@@ -226,9 +228,9 @@
 		}
 		
 		/**
-		 * @param Form $form 
+		 * @param \Onphp\Form $\Onphp\Form 
 		 */
-		protected function applySearchRules(Form $form) {
+		protected function applySearchRules(\Onphp\Form $form) {
 			/* implement in child if needed */
 		}
 		
@@ -262,24 +264,24 @@
 		}
 		
 		/**
-		 * @param AbstractProtoClass $proto
+		 * @param \Onphp\AbstractProtoClass $proto
 		 * @param array $propertyList
-		 * @return ListMakerFormBuilder
+		 * @return \Onphp\Utils\ListMakerFormBuilder
 		 */
-		protected function getListMakerFormBuilder(AbstractProtoClass $proto, array $propertyList) {
+		protected function getListMakerFormBuilder(\Onphp\AbstractProtoClass $proto, array $propertyList) {
 			return ListMakerFormBuilder::create($proto, $propertyList);
 		}
 		
 		/**
-		 * @param AbstractProtoClass $proto
+		 * @param \Onphp\AbstractProtoClass $proto
 		 * @param array $propertyList
-		 * @return ListMakerConstructor
+		 * @return \Onphp\Utils\ListMakerConstructor
 		 */
-		protected function getListMakerConstructor(AbstractProtoClass $proto, array $propertyList) {
+		protected function getListMakerConstructor(\Onphp\AbstractProtoClass $proto, array $propertyList) {
 			return ListMakerConstructor::create($proto, $propertyList);
 		}
 
-		protected function prepairData(HttpRequest $request, ModelAndView $mav) {
+		protected function prepairData(\Onphp\HttpRequest $request, \Onphp\ModelAndView $mav) {
 			$mav = parent::prepairData($request, $mav);
 			if ($currentMenu = $this->getCurrentMenu($request, $mav)) {
 				$mav->getModel()->set('currentMenu', $currentMenu);
@@ -287,11 +289,11 @@
 			return $mav;
 		}
 		
-		protected function getCurrentMenu(HttpRequest $request, ModelAndView $mav) {
+		protected function getCurrentMenu(\Onphp\HttpRequest $request, \Onphp\ModelAndView $mav) {
 			return '';
 		}
 		
-		private function getRowsParams(QueryResult $queryResult, array $propertyList) {
+		private function getRowsParams(\Onphp\QueryResult $queryResult, array $propertyList) {
 			$rowsParams = array();
 			foreach (array_keys($propertyList) as $propertyName) {
 				$rowsParams[$propertyName] = $this->getRowParams($queryResult, $propertyList, $propertyName);

@@ -10,10 +10,12 @@
  *                                                                         *
  ***************************************************************************/
 
+	namespace Onphp\Utils;
+
 	class Authorisator
 	{
 		/**
-		 * @var SessionWrapper
+		 * @var \Onphp\Utils\SessionWrapper
 		 */
 		protected $session = null;
 		protected $userClassName = null;
@@ -24,7 +26,7 @@
 		protected $hash = null;
 
 		/**
-		 * @return Authorisator
+		 * @return \Onphp\Utils\Authorisator
 		 */
 		public static function create()
 		{
@@ -32,7 +34,7 @@
 		}
 
 		/**
-		 * @return SessionWrapper
+		 * @return \Onphp\Utils\SessionWrapper
 		 */
 		public function getSession()
 		{
@@ -40,7 +42,7 @@
 		}
 
 		/**
-		 * @return Authorisator
+		 * @return \Onphp\Utils\Authorisator
 		 */
 		public function setSession(SessionWrapper $session)
 		{
@@ -55,7 +57,7 @@
 
 		/**
 		 * @param string $userClassName
-		 * @return Authorisator
+		 * @return \Onphp\Utils\Authorisator
 		 */
 		public function setUserClassName($userClassName)
 		{
@@ -70,7 +72,7 @@
 
 		/**
 		 * @param string $userClassName
-		 * @return Authorisator
+		 * @return \Onphp\Utils\Authorisator
 		 */
 		public function setUserIdParamName($userIdParamName)
 		{
@@ -84,7 +86,7 @@
 		 */
 		public function setUniqData($uniqData)
 		{
-			Assert::isString($uniqData);
+			\Onphp\Assert::isString($uniqData);
 			$this->hash = md5($uniqData);
 			return $this;
 		}
@@ -95,7 +97,7 @@
 		 */
 		public function setHash($hash)
 		{
-			Assert::isString($hash);
+			\Onphp\Assert::isString($hash);
 			$this->hash = $hash;
 			return $this;
 		}
@@ -109,12 +111,12 @@
 		}
 
 		/**
-		* @return Identifiable
+		* @return \Onphp\Identifiable
 		*/
 		public function getUser()
 		{
-			Assert::isNotNull($this->session, 'session must be setted');
-			Assert::isNotEmpty($this->userClassName, 'userClassName must be setted');
+			\Onphp\Assert::isNotNull($this->session, 'session must be setted');
+			\Onphp\Assert::isNotEmpty($this->userClassName, 'userClassName must be setted');
 
 			if (!$this->session->isStarted()) {
 				$this->preloadedUserId = false;
@@ -128,15 +130,15 @@
 
 			if ($this->preloadedUserId === true) {
 				if ($this->userId !== null) {
-					return ClassUtils::callStaticMethod("{$this->userClassName}::dao")->
+					return \Onphp\ClassUtils::callStaticMethod("{$this->userClassName}::dao")->
 						getById($this->userId);
 				}
 				return null;
 			}
 			$this->preloadedUserId = true;
 
-			$form = Form::create()->add(
-				Primitive::identifier($this->userIdParamName)->
+			$form = \Onphp\Form::create()->add(
+				\Onphp\Primitive::identifier($this->userIdParamName)->
 					of($this->userClassName)->
 					required()
 			);
@@ -153,14 +155,14 @@
 		}
 
 		/**
-		 * @param Identifiable $user
-		 * @return Authorisator
+		 * @param \Onphp\Identifiable $user
+		 * @return \Onphp\Utils\Authorisator
 		 */
-		public function setUser(Identifiable $user)
+		public function setUser(\Onphp\Identifiable $user)
 		{
-			Assert::isNotNull($this->session, 'session must be setted');
-			Assert::isNotEmpty($this->userClassName, 'userClassName must be setted');
-			Assert::isInstance($user, $this->userClassName);
+			\Onphp\Assert::isNotNull($this->session, 'session must be setted');
+			\Onphp\Assert::isNotEmpty($this->userClassName, 'userClassName must be setted');
+			\Onphp\Assert::isInstance($user, $this->userClassName);
 
 			if (!$this->session->isStarted()) {
 				$this->session->start();
@@ -176,11 +178,11 @@
 		}
 
 		/**
-		 * @return Authorisator
+		 * @return \Onphp\Utils\Authorisator
 		 */
 		public function dropUser()
 		{
-			Assert::isNotNull($this->session);
+			\Onphp\Assert::isNotNull($this->session);
 			if ($this->session->isStarted()) {
 				$this->session->drop($this->userIdParamName);
 			}

@@ -9,6 +9,8 @@
  *                                                                         *
  ***************************************************************************/
 
+	namespace Onphp\Utils;
+
 	class WebApplication extends InterceptingChain implements IServiceLocatorSupport
 	{	
 		const OBJ_REQUEST = 'request';
@@ -23,7 +25,7 @@
 		protected $vars = array();
 
 		/**
-		 * @return WebApplication
+		 * @return \Onphp\Utils\WebApplication
 		 */
 		public static function create()
 		{
@@ -32,7 +34,7 @@
 
 		public function __construct()
 		{
-			$request = HttpRequest::create()->
+			$request = \Onphp\HttpRequest::create()->
 				setGet($_GET)->
 				setPost($_POST)->
 				setCookie($_COOKIE)->
@@ -51,18 +53,18 @@
 		public function getVar($name)
 		{
 			if (!$this->hasVar($name)) {
-				throw new MissingElementException("not found var '$name'");
+				throw new \Onphp\MissingElementException("not found var '$name'");
 			}
 			return $this->vars[$name];
 		}
 
 		/**
-		 * @return WebApplication
+		 * @return \Onphp\Utils\WebApplication
 		 */
 		public function setVar($name, $var)
 		{
 			if ($this->hasVar($name)) {
-				throw new WrongStateException("var '$name' already setted");
+				throw new \Onphp\WrongStateException("var '$name' already setted");
 			}
 			$this->vars[$name] = $var;
 
@@ -70,12 +72,12 @@
 		}
 
 		/**
-		 * @return WebApplication
+		 * @return \Onphp\Utils\WebApplication
 		 */
 		public function dropVar($name)
 		{
 			if (!$this->hasVar($name)) {
-				throw new MissingElementException("not found var '$name'");
+				throw new \Onphp\MissingElementException("not found var '$name'");
 			}
 			unset($this->vars[$name]);
 
@@ -88,7 +90,7 @@
 		}
 
 		/**
-		 * @return HttpRequest
+		 * @return \Onphp\HttpRequest
 		 */
 		public function getRequest()
 		{
@@ -96,15 +98,15 @@
 		}
 
 		/**
-		 * @return WebApplication
+		 * @return \Onphp\Utils\WebApplication
 		 */
-		public function setRequest(HttpRequest $request)
+		public function setRequest(\Onphp\HttpRequest $request)
 		{
 			return $this->setVar(self::OBJ_REQUEST, $request);
 		}
 
 		/**
-		 * @return ModelAndView
+		 * @return \Onphp\ModelAndView
 		 */
 		public function getMav()
 		{
@@ -112,9 +114,9 @@
 		}
 
 		/**
-		 * @return WebApplication
+		 * @return \Onphp\Utils\WebApplication
 		 */
-		public function setMav(ModelAndView $mav)
+		public function setMav(\Onphp\ModelAndView $mav)
 		{
 			return $this->setVar(self::OBJ_MAV, $mav);
 		}
@@ -125,7 +127,7 @@
 		}
 
 		/**
-		 * @return WebApplication
+		 * @return \Onphp\Utils\WebApplication
 		 */
 		public function setControllerName($controllerName)
 		{
@@ -133,7 +135,7 @@
 		}
 
 		/**
-		 * @return ServiceLocator
+		 * @return \Onphp\Utils\ServiceLocator
 		 */
 		public function getServiceLocator()
 		{
@@ -141,7 +143,7 @@
 		}
 
 		/**
-		 * @return WebApplication
+		 * @return \Onphp\Utils\WebApplication
 		 */
 		public function setServiceLocator(IServiceLocator $serviceLocator)
 		{
@@ -154,7 +156,7 @@
 		}
 
 		/**
-		 * @return WebApplication
+		 * @return \Onphp\Utils\WebApplication
 		 */
 		public function setPathWeb($pathWeb)
 		{
@@ -167,7 +169,7 @@
 		}
 
 		/**
-		 * @return WebApplication
+		 * @return \Onphp\Utils\WebApplication
 		 */
 		public function setPathController($pathController)
 		{
@@ -180,7 +182,7 @@
 		}
 
 		/**
-		 * @return WebApplication
+		 * @return \Onphp\Utils\WebApplication
 		 */
 		public function setPathTemplate($pathTemplate)
 		{
@@ -193,7 +195,7 @@
 		}
 
 		/**
-		 * @return WebApplication
+		 * @return \Onphp\Utils\WebApplication
 		 */
 		public function setPathTemplateDefault($pathTemplateDefault)
 		{

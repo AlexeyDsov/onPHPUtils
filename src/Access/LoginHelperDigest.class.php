@@ -13,31 +13,33 @@
 	/**
 	 * http://www.faqs.org/rfcs/rfc2617.html
 	 */
+	namespace Onphp\Utils;
+
 	class LoginHelperDigest
 	{
 		private $className = null;
 		/**
-		 * @var Authorisator
+		 * @var \Onphp\Utils\Authorisator
 		 */
 		private $authorisator = null;
 		/**
-		 * @var SessionWrapper
+		 * @var \Onphp\Utils\SessionWrapper
 		 */
 		private $session = null;
 		
 		/**
 		 * @param string $className
-		 * @return LoginHelperDigest 
+		 * @return \Onphp\Utils\LoginHelperDigest 
 		 */
 		public function of($className) {
-			Assert::isInstance($className, 'ILoginUserDigest');
+			\Onphp\Assert::isInstance($className, '\Onphp\Utils\ILoginUserDigest');
 			$this->className = $className;
 			return $this;
 		}
 
 		/**
-		 * @param Authorisator $authorisator
-		 * @return LoginHelperDigest 
+		 * @param \Onphp\Utils\Authorisator $\Onphp\Utils\Authorisator
+		 * @return \Onphp\Utils\LoginHelperDigest 
 		 */
 		public function setAuthorisator(Authorisator $authorisator) {
 			$this->authorisator = $authorisator;
@@ -46,8 +48,8 @@
 		}
 
 		/**
-		 * @param SessionWrapper $authorisator
-		 * @return LoginHelperDigest 
+		 * @param \Onphp\Utils\SessionWrapper $authorisator
+		 * @return \Onphp\Utils\LoginHelperDigest 
 		 */
 		public function setSession(SessionWrapper $session) {
 			$this->session = $session;
@@ -55,12 +57,12 @@
 		}
 		
 		/**
-		 * @param Authorisator $authorisator 
+		 * @param \Onphp\Utils\Authorisator $\Onphp\Utils\Authorisator 
 		 * @return boolean true if already authorised, false if authorisation request was send
 		 */
 		public function authRequest() {
 			if (!$this->authorisator->getUser()) {
-				$realm = ClassUtils::callStaticMethod("{$this->className}::getRealm");
+				$realm = \Onphp\ClassUtils::callStaticMethod("{$this->className}::getRealm");
 				if (!$this->session->isStarted()) {
 					$this->session->start();
 				}
@@ -83,7 +85,7 @@
 		 */
 		public function unlogin() {
 			if ($user = $this->authorisator->getUser()) {
-				/* @var $user ILoginUserDigest */
+				/* @var $user \Onphp\Utils\ILoginUserDigest */
 				$user->dao()->merge($user->setLoginKey(null));
 				$this->authorisator->dropUser();
 			}
@@ -102,7 +104,7 @@
 		public function getHash($name, $password) {
 			$parts = array(
 				$name,
-				ClassUtils::callStaticMethod("{$this->className}::getRealm"),
+				\Onphp\ClassUtils::callStaticMethod("{$this->className}::getRealm"),
 				$password
 			);
 			return md5(implode(':', $parts));
@@ -110,10 +112,10 @@
 		
 		/**
 		 * Находит пользователя по параметрам авторизации из request'а и сессии.
-		 * @param HttpRequest $request
-		 * @return ILoginUserDigest
+		 * @param \Onphp\HttpRequest $request
+		 * @return \Onphp\Utils\ILoginUserDigest
 		 */
-		public function findUser(HttpRequest $request) {
+		public function findUser(\Onphp\HttpRequest $request) {
 			if (!$this->session->isStarted()) {
 				return null;
 			}
@@ -121,13 +123,13 @@
 				return null;
 			}
 			
-			$dao = ClassUtils::callStaticMethod("{$this->className}::dao");
-			Assert::isInstance($dao, 'ILoginUserDigestDAO');
+			$dao = \Onphp\ClassUtils::callStaticMethod("{$this->className}::dao");
+			\Onphp\Assert::isInstance($dao, '\Onphp\Utils\ILoginUserDigestDAO');
 			if (!($user = $dao->findByAuthParam($digestParams['username']))) {
 				return null;
 			}
 			
-			/* @var $user ILoginUserDigest */
+			/* @var $user \Onphp\Utils\ILoginUserDigest */
 			
 			$sessionLoginKey = $this->session->get($this->getLoginKeyParamName());
 			$userLoginKey = $user->getLoginKey();
@@ -176,7 +178,7 @@
 			return $header;
 		}
 		
-		private function parseDigestAuthResponse(HttpRequest $request) {
+		private function parseDigestAuthResponse(\Onphp\HttpRequest $request) {
 			if (!$request->hasServerVar('PHP_AUTH_DIGEST')) {
 				return null;
 			}

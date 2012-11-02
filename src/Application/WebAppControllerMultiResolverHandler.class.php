@@ -10,12 +10,14 @@
  *                                                                         *
  ***************************************************************************/
 
+	namespace Onphp\Utils;
+
 	class WebAppControllerMultiResolverHandler extends WebAppControllerResolverHandler
 	{
 		protected $subPathList = array();
 
 		/**
-		 * @return WebAppControllerMultiResolverHandler
+		 * @return \Onphp\Utils\WebAppControllerMultiResolverHandler
 		 */
 		public static function create()
 		{
@@ -25,7 +27,7 @@
 		/**
 		 * Добавляет подкаталог в котором может быть контроллер относительного базового каталога контроллеров
 		 * @param string $subPath
-		 * @return WebAppControllerMultiResolverHandler
+		 * @return \Onphp\Utils\WebAppControllerMultiResolverHandler
 		 */
 		public function addSubPath($subPath) {
 			$this->subPathList[] = $subPath;
@@ -41,7 +43,7 @@
 		protected function checkControllerName($controllerName, $path)
 		{
 			return
-				ClassUtils::isClassName($controllerName)
+				\Onphp\ClassUtils::isClassName($controllerName)
 				&& $path
 				&& $this->isReadable($controllerName, $path);
 		}

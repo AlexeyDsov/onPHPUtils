@@ -9,7 +9,9 @@
  *                                                                         *
  ***************************************************************************/
 
-	class HeadHelper implements Stringable
+	namespace Onphp\Utils;
+
+	class HeadHelper implements \Onphp\Stringable
 	{
 		const MAX_LENGTH_CONTEXT	= 200; // максимальная длина описания элемента метаинформации
 
@@ -21,7 +23,7 @@
 		protected $metaList = array();
 
 		/**
-		 * @return HeadHelper
+		 * @return \Onphp\Utils\HeadHelper
 		 */
 		public static function create()
 		{
@@ -125,7 +127,7 @@
 		}
 
 		/**
-		 * @return HeadHelper
+		 * @return \Onphp\Utils\HeadHelper
 		 */
 		public function addMetaHttpEquiv($httpEquiv, $content)
 		{
@@ -134,7 +136,7 @@
 		}
 
 		/**
-		 * @return HeadHelper
+		 * @return \Onphp\Utils\HeadHelper
 		 */
 		public function addMetaName($name, $content)
 		{
@@ -159,7 +161,7 @@
 			foreach ($this->metaList as $metaData) {
 				$metaParams = '';
 				foreach ($metaData as $metaParam => $metaValue) {
-					$metaParams .= $metaParam.'="'.Filter::htmlSpecialChars()->apply($metaValue).'" ';
+					$metaParams .= $metaParam.'="'.\Onphp\Filter::htmlSpecialChars()->apply($metaValue).'" ';
 				}
 				$string .= "$this->prefix<meta {$metaParams} />\n";
 			}
@@ -178,7 +180,7 @@
 		protected function getEntityHtmlFilter()
 		{
 	       return
-	       		PCREFilter::create()->
+	       		\Onphp\PCREFilter::create()->
 	       		setExpression(
 	       			array (
 	       				'@(&|&amp;)(nbsp|&#160);@isu',
@@ -224,12 +226,12 @@
 		}
 
 		/**
-		 * @return PCREFilter
+		 * @return \Onphp\PCREFilter
 		 */
 		protected function getSpaceFilter()
 		{
 			return
-				PCREFilter::create()->
+				\Onphp\PCREFilter::create()->
 	       		setExpression(
 	       			array (
 		               '/\s+/su', // любые пробелы
@@ -249,7 +251,7 @@
 		/**
 		 * Цепочка фильтров для чистки контента
 		 *
-		 * @return FilterChain
+		 * @return \Onphp\FilterChain
 		 */
 		protected function getFilterChain()
 		{
@@ -257,13 +259,13 @@
 
 			if ($fc === null)
 				$fc =
-					FilterChain::create()->
-					add(Filter::replaceSymbols(array('<br/>', '<br />', '<br>'), ' '))->
-					add(Filter::stripTags())->
-					add(Filter::htmlSpecialChars())->
+					\Onphp\FilterChain::create()->
+					add(\Onphp\Filter::replaceSymbols(array('<br/>', '<br />', '<br>'), ' '))->
+					add(\Onphp\Filter::stripTags())->
+					add(\Onphp\Filter::htmlSpecialChars())->
 					add($this->getEntityHtmlFilter())->
 					add($this->getSpaceFilter())->
-					add(Filter::trim());
+					add(\Onphp\Filter::trim());
 
 			return $fc;
 		}
@@ -293,7 +295,7 @@
 
 				return implode(' ', array_slice($arrayOfWords, 0, count($arrayOfWords)-1));
 			} else {
-				throw new UnsupportedMethodException();
+				throw new \Onphp\UnsupportedMethodException();
 			}
 		}
 

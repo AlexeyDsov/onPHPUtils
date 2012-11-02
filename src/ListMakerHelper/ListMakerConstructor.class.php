@@ -10,16 +10,18 @@
  *                                                                         *
  ***************************************************************************/
 
+	namespace Onphp\Utils;
+
 	class ListMakerConstructor
 	{
 		protected $binaryExpressionMapping = array(
-			ListMakerProperties::OPTION_FILTERABLE_EQ => BinaryExpression::EQUALS,
-			ListMakerProperties::OPTION_FILTERABLE_GT => BinaryExpression::GREATER_THAN,
-			ListMakerProperties::OPTION_FILTERABLE_GTEQ => BinaryExpression::GREATER_OR_EQUALS,
-			ListMakerProperties::OPTION_FILTERABLE_LT => BinaryExpression::LOWER_THAN,
-			ListMakerProperties::OPTION_FILTERABLE_LTEQ => BinaryExpression::LOWER_OR_EQUALS,
+			ListMakerProperties::OPTION_FILTERABLE_EQ => \Onphp\BinaryExpression::EQUALS,
+			ListMakerProperties::OPTION_FILTERABLE_GT => \Onphp\BinaryExpression::GREATER_THAN,
+			ListMakerProperties::OPTION_FILTERABLE_GTEQ => \Onphp\BinaryExpression::GREATER_OR_EQUALS,
+			ListMakerProperties::OPTION_FILTERABLE_LT => \Onphp\BinaryExpression::LOWER_THAN,
+			ListMakerProperties::OPTION_FILTERABLE_LTEQ => \Onphp\BinaryExpression::LOWER_OR_EQUALS,
 
-			ListMakerProperties::OPTION_FILTERABLE_ILIKE => BinaryExpression::ILIKE,
+			ListMakerProperties::OPTION_FILTERABLE_ILIKE => \Onphp\BinaryExpression::ILIKE,
 
 			ListMakerProperties::OPTION_FILTERABLE_IS_CONTAINED_WITHIN => '<<',
 			ListMakerProperties::OPTION_FILTERABLE_CONTAINS => '>>',
@@ -28,16 +30,16 @@
 		);
 
 		protected $postfixExpressionMapping = array(
-			ListMakerProperties::OPTION_FILTERABLE_IS_NULL => PostfixUnaryExpression::IS_NULL,
-			ListMakerProperties::OPTION_FILTERABLE_IS_NOT_NULL => PostfixUnaryExpression::IS_NOT_NULL,
-			ListMakerProperties::OPTION_FILTERABLE_IS_TRUE => PostfixUnaryExpression::IS_TRUE,
+			ListMakerProperties::OPTION_FILTERABLE_IS_NULL => \Onphp\PostfixUnaryExpression::IS_NULL,
+			ListMakerProperties::OPTION_FILTERABLE_IS_NOT_NULL => \Onphp\PostfixUnaryExpression::IS_NOT_NULL,
+			ListMakerProperties::OPTION_FILTERABLE_IS_TRUE => \Onphp\PostfixUnaryExpression::IS_TRUE,
 			ListMakerProperties::OPTION_FILTERABLE_IS_NOT_TRUE => 'IS NOT TRUE',
-			ListMakerProperties::OPTION_FILTERABLE_IS_FALSE => PostfixUnaryExpression::IS_FALSE,
+			ListMakerProperties::OPTION_FILTERABLE_IS_FALSE => \Onphp\PostfixUnaryExpression::IS_FALSE,
 			ListMakerProperties::OPTION_FILTERABLE_IS_NOT_FALSE => 'IS NOT FALSE',
 		);
 
 		/**
-		 * @var AbstractProtoClass
+		 * @var \Onphp\AbstractProtoClass
 		 */
 		protected $proto = null;
 		protected $propertyList = array();
@@ -45,15 +47,15 @@
 		protected $offsetName = 'offset';
 		protected $limitName = 'limit';
 
-		public function __construct(AbstractProtoClass $proto, array $propertyList) {
+		public function __construct(\Onphp\AbstractProtoClass $proto, array $propertyList) {
 			$this->proto = $proto;
 			$this->propertyList = $propertyList;
 		}
 
 		/**
-		 * @return ListMakerConstructor
+		 * @return \Onphp\Utils\ListMakerConstructor
 		 */
-		public static function create(AbstractProtoClass $proto, array $propertyList) {
+		public static function create(\Onphp\AbstractProtoClass $proto, array $propertyList) {
 			return new static($proto, $propertyList);
 		}
 
@@ -65,10 +67,10 @@
 		}
 
 		/**
-		 * @var ListMakerConstructor
+		 * @var \Onphp\Utils\ListMakerConstructor
 		 */
 		public function setOffsetName($offsetName) {
-			Assert::isString($offsetName);
+			\Onphp\Assert::isString($offsetName);
 			$this->offsetName = $offsetName;
 			return $this;
 		}
@@ -81,23 +83,23 @@
 		}
 
 		/**
-		 * @var ListMakerConstructor
+		 * @var \Onphp\Utils\ListMakerConstructor
 		 */
 		public function setLimitName($limitName) {
-			Assert::isString($limitName);
+			\Onphp\Assert::isString($limitName);
 			$this->limitName = $limitName;
 			return $this;
 		}
 
 		/**
-		 * @return QueryResult
+		 * @return \Onphp\QueryResult
 		 */
-		public function getResult(Form $form, Criteria $criteria = null) {
-			Assert::isEmpty($form->getErrors(), 'Form must not has errors');
+		public function getResult(\Onphp\Form $form, \Onphp\Criteria $criteria = null) {
+			\Onphp\Assert::isEmpty($form->getErrors(), 'Form must not has errors');
 			if (!$criteria) {
 				$criteria = $this->makeCriteria();
 			} else {
-				Assert::isTrue(
+				\Onphp\Assert::isTrue(
 					$criteria->getProjection()->isEmpty(),
 					'Criteria must not contain projections'
 				);
@@ -108,18 +110,18 @@
 			//only uniques variants
 			$idCriteria = clone $criteria;
 			$idCriteria
-				->addProjection(Projection::property('id', 'id'))
+				->addProjection(\Onphp\Projection::property('id', 'id'))
 				->setDistinct(true);
 			
 			foreach ($idCriteria->getOrder()->getList() as $order) {
-				/* @var $order OrderBy */
+				/* @var $order \Onphp\OrderBy */
 				$field = $order->getField();
 				if ($field != 'id') {
-					$idCriteria->addProjection(Projection::property($field));
+					$idCriteria->addProjection(\Onphp\Projection::property($field));
 				}
 			}
 			
-			$idList = ArrayUtils::columnFromSet('id', $idCriteria->getCustomList());
+			$idList = \Onphp\ArrayUtils::columnFromSet('id', $idCriteria->getCustomList());
 			$objectList = $criteria->getDao()->getListByIds($idList);
 			
 			$countCriteria = clone $criteria;
@@ -128,10 +130,10 @@
 				->dropOrder()
 				->setLimit(1)
 				->setOffset(0)
-				->addProjection(Projection::distinctCount('id', 'count'))
+				->addProjection(\Onphp\Projection::distinctCount('id', 'count'))
 				->getCustom('count');
 			
-			return QueryResult::create()
+			return \Onphp\QueryResult::create()
 				->setQuery($criteria->toSelectQuery())
 				->setCount($totalCount)
 				->setList($objectList)
@@ -142,9 +144,9 @@
 		}
 
 		/**
-		 * @return ListMakerConstructor
+		 * @return \Onphp\Utils\ListMakerConstructor
 		 */
-		protected function fillCriteria(Criteria $criteria, Form $form) {
+		protected function fillCriteria(\Onphp\Criteria $criteria, \Onphp\Form $form) {
 			$criteria->
 				setOffset($form->getSafeValue($this->offsetName))->
 				setLimit($form->getSafeValue($this->limitName));
@@ -159,19 +161,19 @@
 		}
 
 		/**
-		 * @return Criteria
+		 * @return \Onphp\Criteria
 		 */
 		protected function makeCriteria() {
 			$className = mb_substr(get_class($this->proto), 5);
-			$dao = ClassUtils::callStaticMethod("$className::dao");
+			$dao = \Onphp\ClassUtils::callStaticMethod("$className::dao");
 
-			return Criteria::create($dao);
+			return \Onphp\Criteria::create($dao);
 		}
 
 		/**
-		 * @return ListMakerConstructor
+		 * @return \Onphp\Utils\ListMakerConstructor
 		 */
-		protected function makeOrdersToCriteria(Criteria $criteria, array $formData) {
+		protected function makeOrdersToCriteria(\Onphp\Criteria $criteria, array $formData) {
 			$orderList = array();
 
 			$hasIdSort = false;
@@ -187,7 +189,7 @@
 					if ($propertyName == 'id') {
 						$hasIdSort = true;
 					}
-					$order = OrderBy::create($objectFunction);
+					$order = \Onphp\OrderBy::create($objectFunction);
 					if (
 						isset($formData[$propertyName]['sort'])
 						&& $formData[$propertyName]['sort'] == ListMakerProperties::ORDER_DESC
@@ -207,16 +209,16 @@
 				$criteria->addOrder($order);
 			}
 			if (!$hasIdSort) {
-				$criteria->addOrder(OrderBy::create('id'));
+				$criteria->addOrder(\Onphp\OrderBy::create('id'));
 			}
 
 			return $this;
 		}
 
 		/**
-		 * @return ListMakerConstructor
+		 * @return \Onphp\Utils\ListMakerConstructor
 		 */
-		protected function makeFiltersToCriteria(Criteria $criteria, array $formData) {
+		protected function makeFiltersToCriteria(\Onphp\Criteria $criteria, array $formData) {
 			foreach ($this->propertyList as $propertyName => $options) {
 				if (isset($formData[$propertyName]) && is_array($formData[$propertyName])) {
 					$this->makeFilterToCriteria($criteria, $propertyName, $formData[$propertyName]);
@@ -226,7 +228,7 @@
 			return $this;
 		}
 
-		protected function makeFilterToCriteria(Criteria $criteria, $propertyName, $propertyData) {
+		protected function makeFilterToCriteria(\Onphp\Criteria $criteria, $propertyName, $propertyData) {
 			$options = $this->propertyList[$propertyName];
 			$objectLink = isset($options[ListMakerProperties::OPTION_OBJECT_LINK])
 				? $options[ListMakerProperties::OPTION_OBJECT_LINK]
@@ -241,20 +243,20 @@
 
 			if ($propertyType === null) {
 				$errorMsg = "property {$propertyName} not exist for proto ".get_class($this->proto);
-				throw new WrongArgumentException($errorMsg);
+				throw new \Onphp\WrongArgumentException($errorMsg);
 			}
 
 			if (isset($options[ListMakerProperties::OPTION_FILTERABLE])) {
 				$filterList = $options[ListMakerProperties::OPTION_FILTERABLE];
-				Assert::isArray($filterList, 'OPTION_FILTERABLE must be array');
+				\Onphp\Assert::isArray($filterList, 'OPTION_FILTERABLE must be array');
 
 				foreach ($filterList as $filterName) {
 					if (isset($propertyData[$filterName])) {
 						$value = $propertyData[$filterName];
 						if (isset($options[ListMakerProperties::OPTION_VALUE_FUNCTION])) {
-							Assert::isInstance(
+							\Onphp\Assert::isInstance(
 								$function = $options[ListMakerProperties::OPTION_VALUE_FUNCTION],
-								'Closure',
+								'\Closure',
 								"OPTION_VALUE_FUNCTION for [{$propertyName}][{$filterName}] must be Closure"
 							);
 							$value = $function($value, $filterName);
@@ -269,7 +271,7 @@
 								$criteria->add($inExpression);
 							}
 						} else {
-							throw new UnimplementedFeatureException('Unknown filterName: '.$filterName);
+							throw new \Onphp\UnimplementedFeatureException('Unknown filterName: '.$filterName);
 						}
 					}
 				}
@@ -282,16 +284,16 @@
 		 * @param string $objectLink
 		 * @param string $filterName
 		 * @param string $value
-		 * @return BinaryExpression
+		 * @return \Onphp\BinaryExpression
 		 */
 		protected function makeExpressionBinary($objectLink, $filterName, $value) {
 			if (!isset($this->binaryExpressionMapping[$filterName])) {
-				throw new UnimplementedFeatureException('Unkown binary filter: '.$filterName);
+				throw new \Onphp\UnimplementedFeatureException('Unkown binary filter: '.$filterName);
 			}
 			$logic = $this->binaryExpressionMapping[$filterName];
-			return new BinaryExpression(
+			return new \Onphp\BinaryExpression(
 				$objectLink,
-				$value instanceof DialectString ? $value : DBValue::create($value),
+				$value instanceof \Onphp\DialectString ? $value : \Onphp\DBValue::create($value),
 				$logic
 			);
 		}
@@ -299,24 +301,24 @@
 		/**
 		 * @param string $objectLink
 		 * @param string $filterName
-		 * @return PostfixUnaryExpression
+		 * @return \Onphp\PostfixUnaryExpression
 		 */
 		protected function makeExpressionTernary($objectLink, $filterName) {
 			if (!isset($this->postfixExpressionMapping[$filterName])) {
-				throw new UnimplementedFeatureException('Unknown ternary filter: '.$filterName);
+				throw new \Onphp\UnimplementedFeatureException('Unknown ternary filter: '.$filterName);
 			}
 			$logic = $this->postfixExpressionMapping[$filterName];
-			return new PostfixUnaryExpression($objectLink, $logic);
+			return new \Onphp\PostfixUnaryExpression($objectLink, $logic);
 		}
 
 		/**
 		 * @param string $objectLink
 		 * @param string $filterName
 		 * @param string $value
-		 * @return LogicalObject
+		 * @return \Onphp\LogicalObject
 		 */
 		protected function makeExpressionIn($objectLink, $value) {
-			Assert::isArray($value);
+			\Onphp\Assert::isArray($value);
 			$inArray = array();
 			foreach ($value as $element) {
 				if (!empty($element)) {
@@ -325,7 +327,7 @@
 			}
 
 			if (!empty($inArray)) {
-				return Expression::in($objectLink, $inArray);
+				return \Onphp\Expression::in($objectLink, $inArray);
 			}
 			return null;
 		}

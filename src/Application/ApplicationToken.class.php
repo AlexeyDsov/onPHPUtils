@@ -1,8 +1,10 @@
 <?php
+namespace Onphp\Utils;
+
 class ApplicationToken {
 	
 	/**
-	 * @var ISessionWrapper 
+	 * @var \Onphp\Utils\ISessionWrapper 
 	 */
 	protected $session = null;
 
@@ -11,14 +13,14 @@ class ApplicationToken {
 	protected $imported = false;
 
 	/**
-	 * @return ApplicationToken
+	 * @return \Onphp\Utils\ApplicationToken
 	 */
 	public static function create() {
 		return new self;
 	}
 	
 	/**
-	 * @return ApplicationToken
+	 * @return \Onphp\Utils\ApplicationToken
 	 */
 	public function setSession(ISessionWrapper $session) {
 		$this->session = $session;
@@ -26,17 +28,17 @@ class ApplicationToken {
 	}
 	
 	/**
-	 * @return ISessionWrapper
+	 * @return \Onphp\Utils\ISessionWrapper
 	 */
 	public function getSession() {
 		return $this->session;
 	}
 
 	/**
-	 * @return ApplicationToken
+	 * @return \Onphp\Utils\ApplicationToken
 	 */
 	public function setTokenParam($tokenParam) {
-		Assert::isString($tokenParam);
+		\Onphp\Assert::isString($tokenParam);
 		$this->tokenParam = $tokenParam;
 		return $this;
 	}
@@ -61,14 +63,14 @@ class ApplicationToken {
 	}
 
 	/**
-	 * @return ApplicationToken
+	 * @return \Onphp\Utils\ApplicationToken
 	 */
-	public function importToken(HttpRequest $request) {
-		Assert::isTrue($this->session->isStarted(), 'Session must be started to work with token');
+	public function importToken(\Onphp\HttpRequest $request) {
+		\Onphp\Assert::isTrue($this->session->isStarted(), 'Session must be started to work with token');
 
-		$form = Form::create()
+		$form = \Onphp\Form::create()
 			->add(
-				Primitive::string($this->tokenParam)
+				\Onphp\Primitive::string($this->tokenParam)
 					->setAllowedPattern('~^[\da-f]{32}$~iu')
 					->required()
 			)
@@ -87,7 +89,7 @@ class ApplicationToken {
 	}
 
 	/**
-	 * @return ApplicationToken
+	 * @return \Onphp\Utils\ApplicationToken
 	 */
 	public function initToken() {
 		$this->currentKey = md5(time().microtime());
@@ -133,7 +135,7 @@ class ApplicationToken {
 	}
 
 	/**
-	 * @return ApplicationToken
+	 * @return \Onphp\Utils\ApplicationToken
 	 */
 	public function merge(array $data) {
 		$this->assertStarted();
@@ -144,7 +146,7 @@ class ApplicationToken {
 	}
 
 	/**
-	 * @return ApplicationToken
+	 * @return \Onphp\Utils\ApplicationToken
 	 */
 	public function updateSession() {
 		if ($this->session->isStarted()) {
@@ -171,7 +173,7 @@ class ApplicationToken {
 	}
 
 	/**
-	 * @return ApplicationToken
+	 * @return \Onphp\Utils\ApplicationToken
 	 */
 	protected function storeTokenStorage(array $paramList) {
 		$tokenList = $this->getTokenList();
@@ -183,7 +185,7 @@ class ApplicationToken {
 	}
 
 	/**
-	 * @return ApplicationToken
+	 * @return \Onphp\Utils\ApplicationToken
 	 */
 	protected function dropTokenStorage() {
 		$tokenList = $this->getTokenList();
@@ -196,7 +198,7 @@ class ApplicationToken {
 	}
 
 	protected function assertStarted() {
-		Assert::isTrue($this->hasKey(), 'Token must be started');
+		\Onphp\Assert::isTrue($this->hasKey(), 'Token must be started');
 	}
 }
 ?>

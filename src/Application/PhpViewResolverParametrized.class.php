@@ -10,7 +10,9 @@
  *                                                                         *
  ***************************************************************************/
 
-	class PhpViewResolverParametrized implements ViewResolver {
+	namespace Onphp\Utils;
+
+	class PhpViewResolverParametrized implements \Onphp\ViewResolver {
 		
 		protected $params = array();
 
@@ -18,7 +20,7 @@
 		private $postfix	= null;
 
 		/**
-		 * @return PhpViewResolverParametrized
+		 * @return \Onphp\Utils\PhpViewResolverParametrized
 		**/
 		public static function create($prefix = null, $postfix = null) {
 			return new self($prefix, $postfix);
@@ -34,7 +36,7 @@
 		}
 
 		/**
-		 * @return PhpViewResolverParametrized
+		 * @return \Onphp\Utils\PhpViewResolverParametrized
 		**/
 		public function setPrefix($prefix) {
 			$this->prefix = $prefix;
@@ -47,7 +49,7 @@
 		}
 
 		/**
-		 * @return PhpViewResolverParametrized
+		 * @return \Onphp\Utils\PhpViewResolverParametrized
 		**/
 		public function setPostfix($postfix) {
 			$this->postfix = $postfix;
@@ -57,11 +59,11 @@
 
 		/**
 		 * @param string $name
-		 * @return PhpViewResolverParametrized
+		 * @return \Onphp\Utils\PhpViewResolverParametrized
 		 */
 		public function get($name) {
 			if (!$this->has($name)) {
-				throw new MissingElementException("not setted value with name '$name'");
+				throw new \Onphp\MissingElementException("not setted value with name '$name'");
 			}
 			return $this->params[$name];
 		}
@@ -69,11 +71,11 @@
 		/**
 		 * @param string $name
 		 * @param any $value
-		 * @return PhpViewResolverParametrized
+		 * @return \Onphp\Utils\PhpViewResolverParametrized
 		 */
 		public function set($name, $value) {
 			if ($this->has($name)) {
-				throw new WrongStateException("value with name '$name' already setted ");
+				throw new \Onphp\WrongStateException("value with name '$name' already setted ");
 			}
 			$this->params[$name] = $value;
 			return $this;
@@ -81,11 +83,11 @@
 
 		/**
 		 * @param string $name
-		 * @return PhpViewResolverParametrized
+		 * @return \Onphp\Utils\PhpViewResolverParametrized
 		 */
 		public function drop($name) {
 			if (!$this->has($name)) {
-				throw new MissingElementException("not setted value with name '$name'");
+				throw new \Onphp\MissingElementException("not setted value with name '$name'");
 			}
 			unset($this->params[$name]);
 			return $this;
@@ -96,12 +98,12 @@
 		 * @return boolean
 		 */
 		public function has($name) {
-			Assert::isScalar($name);
+			\Onphp\Assert::isScalar($name);
 			return array_key_exists($name, $this->params);
 		}
 
 		/**
-		 * @return SimplePhpViewParametrized
+		 * @return \Onphp\Utils\SimplePhpViewParametrized
 		**/
 		public function resolveViewName($viewName) {
 			$view = new SimplePhpViewParametrized(

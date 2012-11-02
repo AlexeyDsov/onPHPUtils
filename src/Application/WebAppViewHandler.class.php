@@ -9,13 +9,15 @@
  *                                                                         *
  ***************************************************************************/
 
+	namespace Onphp\Utils;
+
 	class WebAppViewHandler implements InterceptingChainHandler
 	{
 		/**
 		 * Templater name
 		 * @var string
 		 */
-		const VIEW_CLASS_NAME_DEFAULT = 'SimplePhpView';
+		const VIEW_CLASS_NAME_DEFAULT = '\Onphp\SimplePhpView';
 		
 		/**
 		 * HTTP заголовки ответа
@@ -24,7 +26,7 @@
 		private $headers = array();
 		
 		/**
-		 * @return WebAppViewHandler
+		 * @return \Onphp\Utils\WebAppViewHandler
 		 */
 		public static function create()
 		{
@@ -33,15 +35,15 @@
 
 		/**
 		 * Выполняем ренедринг шаблона по ModelAndView из $chain'а
-		 * @param InterceptingChain $chain
-		 * @return WebAppViewHandler
+		 * @param \Onphp\Utils\InterceptingChain $chain
+		 * @return \Onphp\Utils\WebAppViewHandler
 		 */
 		public function run(InterceptingChain $chain)
 		{
 			$view	= $chain->getMav()->getView();
 			$model 	= $chain->getMav()->getModel();
 
-			if (!$view instanceof View) {
+			if (!$view instanceof \Onphp\View) {
 				$viewName = $view;
 				$viewResolver = $this->getViewResolver($chain, $model);
 				$view = $viewResolver->resolveViewName($viewName);
@@ -66,7 +68,7 @@
 		 *
 		 * @param string $name имя заголовка
 		 * @param string $value значение заголовка
-		 * @return WebAppViewHandler
+		 * @return \Onphp\Utils\WebAppViewHandler
 		 */
 		public function addHeader($name, $value) {
 			$this->headers[$name] = $value;
@@ -75,26 +77,26 @@
 
 		/**
 		 * Получаем простой ViewResolver
-		 * @param InterceptingChain $chain
-		 * @param Model $model
-		 * @return ViewResolver
+		 * @param \Onphp\Utils\InterceptingChain $chain
+		 * @param \Onphp\Model $\Onphp\Model
+		 * @return \Onphp\ViewResolver
 		 */
-		protected function getViewResolver(InterceptingChain $chain, Model $model) {
-			return PhpViewResolver::create($chain->getPathTemplateDefault(), EXT_TPL);
+		protected function getViewResolver(InterceptingChain $chain, \Onphp\Model $model) {
+			return \Onphp\PhpViewResolver::create($chain->getPathTemplateDefault(), EXT_TPL);
 		}
 
 		/**
 		 * Обновляем и дополняем модель перед передачей во view
-		 * @param Model $model
-		 * @return WebAppViewHandler
+		 * @param \Onphp\Model $\Onphp\Model
+		 * @return \Onphp\Utils\WebAppViewHandler
 		 */
-		protected function updateNonRedirectModel(InterceptingChain $chain, Model $model) {
+		protected function updateNonRedirectModel(InterceptingChain $chain, \Onphp\Model $model) {
 			return $this;
 		}
 
 		/**
 		 * Getting class' name for template
-		 * @return WebAppViewHandler
+		 * @return \Onphp\Utils\WebAppViewHandler
 		 */
 		protected function getViewClassName() {
 			return self::VIEW_CLASS_NAME_DEFAULT;

@@ -13,12 +13,14 @@
 	/**
 	 * Реализует методы класса пользователя, необходимые для получения разрешенного ему списка действий
 	 */
+	namespace Onphp\Utils;
+
 	interface ILoginUserDigestDAO {
 		
 		/**
 		 * Возвращает пользователя по уникальному параметру (имя или например email)
 		 * В случае отсутсвия пользователя возаращает null
-		 * @return ILoginUserDigestDAO | null
+		 * @return \Onphp\Utils\ILoginUserDigestDAO | null
 		 */
 		public function findByAuthParam($name);
 	}

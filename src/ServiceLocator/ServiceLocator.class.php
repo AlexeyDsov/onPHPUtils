@@ -10,12 +10,14 @@
  *                                                                         *
  ***************************************************************************/
 
+	namespace Onphp\Utils;
+
 	class ServiceLocator implements IServiceLocator
 	{
 		private $store = array();
 
 		/**
-		 * @return ServiceLocator
+		 * @return \Onphp\Utils\ServiceLocator
 		 */
 		public static function create()
 		{
@@ -28,7 +30,7 @@
 		 */
 		public function spawn($className/*,  constructor params ..., ..., ...  */)
 		{
-			$reflectionClass = new ReflectionClass($className);
+			$reflectionClass = new \ReflectionClass($className);
 			$constructorArgs = func_get_args();
 			array_shift($constructorArgs);
 			
@@ -43,11 +45,11 @@
 		/**
 		 * @param string $name
 		 * @param any $service
-		 * @return ServiceLocator
+		 * @return \Onphp\Utils\ServiceLocator
 		 */
 		public function set($name, $service)
 		{
-			Assert::isFalse($this->has($name), 'object with such name already setted');
+			\Onphp\Assert::isFalse($this->has($name), 'object with such name already setted');
 			$this->store[$name] = $service;
 			return $this;
 		}
@@ -58,17 +60,17 @@
 		 */
 		public function get($name)
 		{
-			Assert::isTrue($this->has($name), 'object with such name was not setted');
+			\Onphp\Assert::isTrue($this->has($name), 'object with such name was not setted');
 			return $this->store[$name];
 		}
 
 		/**
 		 * @param string $name
-		 * @return ServiceLocator
+		 * @return \Onphp\Utils\ServiceLocator
 		 */
 		public function drop($name)
 		{
-			Assert::isTrue($this->has($name), 'object with such name was not setted');
+			\Onphp\Assert::isTrue($this->has($name), 'object with such name was not setted');
 			return $this->store[$name];
 		}
 
@@ -102,7 +104,7 @@
 		}
 		
 		/**
-		 * @return ServiceLocator
+		 * @return \Onphp\Utils\ServiceLocator
 		 */
 		protected function getSelf()
 		{

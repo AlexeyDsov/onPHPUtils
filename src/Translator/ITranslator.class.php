@@ -10,6 +10,8 @@
  *                                                                         *
  ***************************************************************************/
 
+	namespace Onphp\Utils;
+
 	interface ITranslator
 	{
 		public function trans($phraseName);

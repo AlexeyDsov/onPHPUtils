@@ -10,19 +10,21 @@
  *                                                                         *
  ***************************************************************************/
 
+	namespace Onphp\Utils;
+
 	class DatabaseGenerator
 	{
 		/**
-		 * @var DBSchema
+		 * @var \Onphp\DBSchema
 		 */
 		private $schema = null;
 		/**
-		 * @var DB
+		 * @var \Onphp\DB
 		 */
 		private $db = null;
 
 		/**
-		 * @return DatabaseGenerator
+		 * @return \Onphp\Utils\DatabaseGenerator
 		 */
 		public static function create()
 		{
@@ -32,13 +34,13 @@
 		/**
 		 *
 		 * @param string $schemaPath
-		 * @return DatabaseGenerator 
+		 * @return \Onphp\Utils\DatabaseGenerator 
 		 */
 		public function setSchemaPath($schemaPath)
 		{
 			include $schemaPath;
-			Assert::isTrue(isset($schema), 'wrong schemaPath');
-			Assert::isInstance($schema, 'DBSchema', 'wrong schemaPath');
+			\Onphp\Assert::isTrue(isset($schema), 'wrong schemaPath');
+			\Onphp\Assert::isInstance($schema, '\Onphp\DBSchema', 'wrong schemaPath');
 
 			$this->schema = $schema;
 
@@ -47,21 +49,21 @@
 
 		/**
 		 * @param string $dbName
-		 * @return DatabaseGenerator 
+		 * @return \Onphp\Utils\DatabaseGenerator 
 		 */
 		public function setDBName($dbName)
 		{
-			$this->db = DBPool::me()->getLink($dbName);
+			$this->db = \Onphp\DBPool::me()->getLink($dbName);
 			return $this;
 		}
 
 		/**
-		 * @return DatabaseGenerator 
+		 * @return \Onphp\Utils\DatabaseGenerator 
 		 */
 		public function run()
 		{
-			Assert::isInstance($this->db, 'DB', 'call setDBName first');
-			Assert::isInstance($this->schema, 'DBSchema', 'call setSchemaPath first');
+			\Onphp\Assert::isInstance($this->db, '\Onphp\DB', 'call setDBName first');
+			\Onphp\Assert::isInstance($this->schema, '\Onphp\DBSchema', 'call setSchemaPath first');
 
 			$this->dropAllTables();
 			$this->createAllTables();
@@ -74,19 +76,19 @@
 		}
 
 		/**
-		 * @return DatabaseGenerator 
+		 * @return \Onphp\Utils\DatabaseGenerator 
 		 */
 		private function dropAllTables()
 		{
 			foreach ($this->schema->getTables() as $name => $table) {
-				/* @var $table DBTable */
+				/* @var $table \Onphp\DBTable */
 				try {
 					$this->db->queryRaw(
-						OSQL::dropTable($name, true)->toDialectString(
+						\Onphp\OSQL::dropTable($name, true)->toDialectString(
 							$this->db->getDialect()
 						)
 					);
-				} catch (DatabaseException $e) {
+				} catch (\Onphp\DatabaseException $e) {
 					if (
 						mb_strpos($e->getMessage(), 'does not exist') === false
 						&& mb_strpos($e->getMessage(), 'missing database') === false
@@ -107,7 +109,7 @@
 							}
 						}
 					}
-				} catch (DatabaseException $e) {
+				} catch (\Onphp\DatabaseException $e) {
 					if (mb_strpos($e->getMessage(), 'does not exist') === false) {
 						throw $e;
 					}
@@ -118,13 +120,13 @@
 		}
 
 		/**
-		 * @return DatabaseGenerator 
+		 * @return \Onphp\Utils\DatabaseGenerator 
 		 */
 		private function createAllTables()
 		{
 			$this->db->begin();
 			foreach ($this->schema->getTables() as $tableName => $table) {
-				/* @var $table DBTable */
+				/* @var $table \Onphp\DBTable */
 				$this->db->queryRaw($table->toDialectString($this->db->getDialect()));
 			}
 			$this->db->commit();

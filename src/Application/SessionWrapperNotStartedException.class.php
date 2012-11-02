@@ -13,7 +13,9 @@
 	/**
 	 * @see Session
 	**/
-	final class SessionWrapperNotStartedException extends BaseException
+	namespace Onphp\Utils;
+
+	final class SessionWrapperNotStartedException extends \Onphp\BaseException
 	{
 		public function __construct()
 		{

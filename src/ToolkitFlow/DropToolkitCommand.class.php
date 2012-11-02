@@ -13,26 +13,28 @@
 	/**
 	 * Удаляет объект, но прежде логгирует это удаление
 	 */
-	class DropToolkitCommand extends DropCommand {
+	namespace Onphp\Utils;
+
+	class DropToolkitCommand extends \Onphp\DropCommand {
 		
 		/**
-		 * @var Closure
+		 * @var \Closure
 		 */
 		protected $logCallback = null;
 		
 		/**
-		 * @param Closure $logCallback
-		 * @return TakeEditToolkitCommand 
+		 * @param \Closure $logCallback
+		 * @return \Onphp\Utils\TakeEditToolkitCommand 
 		 */
-		public function setLogCallback(Closure $logCallback) {
+		public function setLogCallback(\Closure $logCallback) {
 			$this->logCallback = $logCallback;
 			return $this;
 		}
 		
 		/**
-		 * @return ModelAndView
+		 * @return \Onphp\ModelAndView
 		**/
-		public function run(Prototyped $subject, Form $form, HttpRequest $request) {
+		public function run(\Onphp\Prototyped $subject, \Onphp\Form $form, \Onphp\HttpRequest $request) {
 			if ($object = $form->getValue('id')) {
 				$this->logObject($object);
 			}
@@ -41,10 +43,10 @@
 
 		/**
 		 * Выполнение сохранения изменений объекта в базу и логиирование изменений
-		 * @param IdentifiableObject $object
-		 * @return IdentifiableObject
+		 * @param \Onphp\IdentifiableObject $object
+		 * @return \Onphp\IdentifiableObject
 		 */
-		final protected function logObject(IdentifiableObject $object) {
+		final protected function logObject(\Onphp\IdentifiableObject $object) {
 			$logData = array(
 				'command' => get_class($this),
 				'dropData' => $this->getLogObjectData($object),
@@ -55,21 +57,21 @@
 
 		/**
 		 * Возвращает ассоциативный массив соотвествующий текущим параметрам объекта
-		 * @param IdentifiableObject $subject
+		 * @param \Onphp\IdentifiableObject $subject
 		 * @return array
 		 */
-		protected function getLogObjectData(IdentifiableObject $subject) {
+		protected function getLogObjectData(\Onphp\IdentifiableObject $subject) {
 			$newSubjectForm = $subject->proto()->makeForm();
-			FormUtils::object2form($subject, $newSubjectForm);
+			\Onphp\FormUtils::object2form($subject, $newSubjectForm);
 			return $newSubjectForm->export();
 		}
 
 		/**
 		 * @param array $data
-		 * @param IdentifiableObject $subject
-		 * @return TakeEditToolkitCommand
+		 * @param \Onphp\IdentifiableObject $subject
+		 * @return \Onphp\Utils\TakeEditToolkitCommand
 		 */
-		protected function logData($data, IdentifiableObject $subject) {
+		protected function logData($data, \Onphp\IdentifiableObject $subject) {
 			if ($this->logCallback) {
 				$this->logCallback->__invoke($data, $subject);
 			}

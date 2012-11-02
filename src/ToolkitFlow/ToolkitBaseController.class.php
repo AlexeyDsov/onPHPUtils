@@ -18,6 +18,8 @@
 	 * Сделано по дурацки, в будуйщем надо SimpleListController и SimpleObjectFlowController
 	 *  подключать к контроллерам проекта иначе, а не через прямое наследование от них
 	 */
+	namespace Onphp\Utils;
+
 	abstract class ToolkitBaseController extends BaseController implements IServiceLocatorSupport {
 		use TServiceLocatorSupport;
 		

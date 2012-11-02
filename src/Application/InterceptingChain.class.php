@@ -9,6 +9,8 @@
  *                                                                         *
  ***************************************************************************/
 
+	namespace Onphp\Utils;
+
 	class InterceptingChain
 	{
 		protected $chain = array();
@@ -16,7 +18,7 @@
 		protected $pos	= -1;
 
 		/**
-		 * @return InterceptingChain
+		 * @return \Onphp\Utils\InterceptingChain
 		 */
 		public static function create()
 		{
@@ -24,7 +26,7 @@
 		}
 
 		/**
-		 * @return InterceptingChain
+		 * @return \Onphp\Utils\InterceptingChain
 		 */
 		public function add(InterceptingChainHandler $handler)
 		{
@@ -44,7 +46,7 @@
 
 			if (isset($this->chain[$this->pos])) {
 				$handler = $this->chain[$this->pos];
-				/* @var $handler InterceptingChainHandler */
+				/* @var $handler \Onphp\Utils\InterceptingChainHandler */
 				$handler->run($this);
 				$this->checkHandlerResult($handler);
 			}
@@ -53,7 +55,7 @@
 		}
 
 		/**
-		 * @return InterceptingChain
+		 * @return \Onphp\Utils\InterceptingChain
 		 */
 		public function run()
 		{

@@ -10,6 +10,8 @@
  *                                                                         *
  ***************************************************************************/
 
+	namespace Onphp\Utils;
+
 	interface IServiceLocatorSupport {
 		public function setServiceLocator(IServiceLocator $serviceLocator);
 

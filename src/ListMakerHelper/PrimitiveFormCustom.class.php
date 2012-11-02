@@ -13,46 +13,48 @@
 	/**
 	 * @ingroup Primitives
 	**/
-	class PrimitiveFormCustom extends BasePrimitive
+	namespace Onphp\Utils;
+
+	class PrimitiveFormCustom extends \Onphp\BasePrimitive
 	{
 		/**
-		 * @param Form $form
-		 * @return PrimitiveFormCustom
+		 * @param \Onphp\Form $\Onphp\Form
+		 * @return \Onphp\Utils\PrimitiveFormCustom
 		 */
-		public function setForm(Form $form)
+		public function setForm(\Onphp\Form $form)
 		{
 			$this->value = $form;
 			return $this;
 		}
 		
 		/**
-		 * @throws WrongArgumentException
-		 * @return PrimitiveForm
+		 * @throws \Onphp\WrongArgumentException
+		 * @return \Onphp\PrimitiveForm
 		**/
-		public function dropForm(Form $form) {
+		public function dropForm(\Onphp\Form $form) {
 			$this->value = null;
 			return $this;
 		}
 
 		/**
-		 * @throws WrongArgumentException
-		 * @return PrimitiveForm
+		 * @throws \Onphp\WrongArgumentException
+		 * @return \Onphp\PrimitiveForm
 		**/
 		public function setValue($value)
 		{
-			Assert::isInstance($value, 'Form');
+			\Onphp\Assert::isInstance($value, '\Onphp\Form');
 
 			return parent::setValue($value);
 		}
 
 		/**
-		 * @throws WrongArgumentException
-		 * @return PrimitiveForm
+		 * @throws \Onphp\WrongArgumentException
+		 * @return \Onphp\PrimitiveForm
 		**/
 		public function importValue($value)
 		{
 			if ($value !== null) {
-				Assert::isTrue($value instanceof Form);
+				\Onphp\Assert::isTrue($value instanceof \Onphp\Form);
 			}
 
 			$this->value = $value;
@@ -97,7 +99,7 @@
 		private function actualImport($scope, $importFiltering)
 		{
 			if (!$this->value)
-				throw new WrongStateException(
+				throw new \Onphp\WrongStateException(
 					"use setForm before for primitive '{$this->name}'"
 				);
 

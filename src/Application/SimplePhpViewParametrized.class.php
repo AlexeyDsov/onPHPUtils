@@ -10,10 +10,12 @@
  *                                                                         *
  ***************************************************************************/
 
+	namespace Onphp\Utils;
+
 	class SimplePhpViewParametrized extends CustomPhpView
 	{
 		/**
-		 * @var Model
+		 * @var \Onphp\Model
 		 */
 		protected $model = null;
 		protected $params = array();
@@ -29,7 +31,7 @@
 		 */
 		public function get($name) {
 			if (!$this->has($name)) {
-				throw new MissingElementException("not setted value with name '$name'");
+				throw new \Onphp\MissingElementException("not setted value with name '$name'");
 			}
 			return $this->params[$name];
 		}
@@ -37,11 +39,11 @@
 		/**
 		 * @param string $name
 		 * @param any $value
-		 * @return SimplePhpViewParametrized
+		 * @return \Onphp\Utils\SimplePhpViewParametrized
 		 */
 		public function set($name, $value) {
 			if ($this->has($name)) {
-				throw new WrongStateException("value with name '$name' already setted ");
+				throw new \Onphp\WrongStateException("value with name '$name' already setted ");
 			}
 			$this->params[$name] = $value;
 			return $this;
@@ -49,11 +51,11 @@
 
 		/**
 		 * @param string $name
-		 * @return SimplePhpViewParametrized
+		 * @return \Onphp\Utils\SimplePhpViewParametrized
 		 */
 		public function drop($name) {
 			if (!$this->has($name)) {
-				throw new MissingElementException("not setted value with name '$name'");
+				throw new \Onphp\MissingElementException("not setted value with name '$name'");
 			}
 			unset($this->params[$name]);
 			return $this;
@@ -64,7 +66,7 @@
 		 * @return boolean
 		 */
 		public function has($name) {
-			Assert::isScalar($name);
+			\Onphp\Assert::isScalar($name);
 			return array_key_exists($name, $this->params);
 		}
 
@@ -75,7 +77,7 @@
 		 */
 		protected function template($templateName, array $params = array()) {
 			if (!empty($params)) {
-				$model = Model::create()->merge($this->model);
+				$model = \Onphp\Model::create()->merge($this->model);
 				foreach ($params as $paramName => $paramValue) {
 					$model->set($paramName, $paramValue);
 				}
@@ -95,7 +97,7 @@
 			if ($model && is_array($model)) {
 				$model = $this->array2Model($model);
 			} elseif ($model) {
-				Assert::isInstance($model, 'Model', '$model must be instance of Model or array or null');
+				\Onphp\Assert::isInstance($model, '\Onphp\Model', '$model must be instance of Model or array or null');
 			}
 			$this->partViewer->view($templateName, $model);
 		}
@@ -114,10 +116,10 @@
 		
 		/**
 		 * @param array $array
-		 * @return Model
+		 * @return \Onphp\Model
 		 */
 		private function array2Model(array $array) {
-			$model = Model::create();
+			$model = \Onphp\Model::create();
 			foreach ($array as $key => $value) {
 				$model->set($key, $value);
 			}
