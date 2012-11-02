@@ -1,7 +1,9 @@
 <?php
+namespace Onphp\Utils;
+
 $proto = $infoObjectPrototype->proto();
-/* @var $proto AbstractProtoClass */
-/* @var $form Form */
+/* @var $proto \Onphp\AbstractProtoClass */
+/* @var $form \Onphp\Form */
 /* @var $formId string */
 $errorList = $form->getErrors();
 $primitiveList = $orderFunction($form->getPrimitiveList());
@@ -9,8 +11,8 @@ $primitiveList = $orderFunction($form->getPrimitiveList());
 <table class="evenTable w95">
 	<?php
 	foreach ($primitiveList as $propertyName => $primitive) {
-		/* @var $primitive BasePrimitive */
-		$fieldModel = Model::create()
+		/* @var $primitive \Onphp\BasePrimitive */
+		$fieldModel = \Onphp\Model::create()
 			->set('objectName', get_class($infoObjectPrototype))
 			->set('form', $form)
 			->set('formId', $formId)

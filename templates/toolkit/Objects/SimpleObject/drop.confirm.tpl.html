@@ -1,4 +1,6 @@
-<? $partViewer->view('header'); ?>
+<? namespace Onphp\Utils;
+
+$partViewer->view('header'); ?>
 <?=$this->trans('Drop object?')?>
 <? $dialogName = $this->get('linker')->getDialogName($infoObject); ?>	
 <? if ($this->get('isAjax') && $infoObject) { ?>

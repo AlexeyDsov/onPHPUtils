@@ -1,4 +1,6 @@
-<? $partViewer->view('header');
+<? namespace Onphp\Utils;
+
+$partViewer->view('header');
 
 $partViewer->view('helpers/ListMaker/form', $listHeaderModel);
 if ($showAddButton) {?>
@@ -11,10 +13,10 @@ if (isset($preListTemplate) && $preListTemplate) {
 	$this->view($preListTemplate);
 }
 
-/* @var $queryResult QueryResult */
+/* @var $queryResult \Onphp\QueryResult */
 if (isset($queryResult)) {
-	Assert::isTrue(isset($pagerModel), 'pager model not setted');
-	Assert::isTrue(isset($columnModel), 'pager model not setted');
+	\Onphp\Assert::isTrue(isset($pagerModel), 'pager model not setted');
+	\Onphp\Assert::isTrue(isset($columnModel), 'pager model not setted');
 	if ($queryResult->getList()) {
 		$partViewer->view('helpers/Pager/offset', $pagerModel); ?>
 		<table class="evenTable w95">
@@ -22,7 +24,7 @@ if (isset($queryResult)) {
 			
 			$num = $form->getSafeValue('offset') + 1;
 			foreach ($queryResult->getList() as $infoObject) {
-				/* @var $object IdentifiableObject */
+				/* @var $object \Onphp\IdentifiableObject */
 				$this->template('Objects/SimpleObject/list.row', array('infoObject' => $infoObject, 'num' => $num++));
 			} ?>
 		</table>

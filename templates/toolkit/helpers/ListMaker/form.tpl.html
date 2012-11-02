@@ -1,9 +1,11 @@
 <?
-/* @var $proto AbstractProtoClass */
+/* @var $proto \Onphp\AbstractProtoClass */
 /* @var $propertyList array */
 /* @var $urlParams array */
-/* @var $form Form */
+/* @var $form \Onphp\Form */
 /* @var $objectName string */
+namespace Onphp\Utils;
+
 if (!isset($postfix)) {
 	$postfix = time().md5(microtime());
 }

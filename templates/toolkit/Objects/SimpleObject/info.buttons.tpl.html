@@ -1,4 +1,6 @@
-<? if ($this->get('isAjax')) {
+<? namespace Onphp\Utils;
+
+if ($this->get('isAjax')) {
 	$dialogName = $this->get('linker')->getDialogName($infoObject);
 	$title = $this->trans(get_class($infoObject)).': ';
 	$title .= $this->escape($this->get('nameConverter')->get($infoObject)); ?>

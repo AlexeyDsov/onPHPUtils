@@ -1,11 +1,13 @@
 <?php
-/* @var $form Form */
+/* @var $form \Onphp\Form */
 /* @var $formId string */
 /* @var $propertyList array */
 
 /* @var $propertyName string */
-/* @var $primitive BasePrimitive */
+/* @var $primitive \Onphp\BasePrimitive */
 /* @var $hasError boolean */
+namespace Onphp\Utils;
+
 $primitiveType = get_class($primitive);
 $primitiveValue = $primitive->getValue(); ?>
 <tr class="<?=$hasError ? 'errorField' : ''?>">
@@ -20,9 +22,9 @@ $primitiveValue = $primitive->getValue(); ?>
 			in_array(
 				$primitiveType,
 				array(
-					'PrimitiveIdentifier',
-					'PrimitiveIntegerIdentifier',
-					'PrimitiveScalarIdentifier'
+					'\Onphp\PrimitiveIdentifier',
+					'\Onphp\PrimitiveIntegerIdentifier',
+					'\Onphp\PrimitiveScalarIdentifier'
 				)
 			)
 		) { ?>
@@ -30,7 +32,7 @@ $primitiveValue = $primitive->getValue(); ?>
 				type="text"
 				name="<?=$propertyName?>"
 				value="<?=$primitiveValue ? $this->escape($primitiveValue->getId()) : ''?>" />
-		<? } elseif ($primitiveType == 'PrimitiveEnumeration' || $primitiveType == 'PrimitiveEnum') {
+		<? } elseif ($primitiveType == '\Onphp\PrimitiveEnumeration' || $primitiveType == '\Onphp\PrimitiveEnum') {
 			$enumList = $primitive->getList(); ?>
 			<select name="<?=$propertyName?>" class="w95">
 				<? if (!$primitive->isRequired() || !$primitiveValue) { ?>
@@ -45,9 +47,9 @@ $primitiveValue = $primitive->getValue(); ?>
 			</select>
 		<? } elseif ($primitiveType == 'identifierList') {
 			print "&nbsp;";
-		} elseif ($primitiveType == 'PrimitiveBoolean') { ?>
+		} elseif ($primitiveType == '\Onphp\PrimitiveBoolean') { ?>
 			<input type="checkbox" name="<?=$propertyName?>" value="1" <?=$primitiveValue ? 'checked' : ''?> />
-		<? } elseif ($primitiveType == 'PrimitiveTernary') { ?>
+		<? } elseif ($primitiveType == '\Onphp\PrimitiveTernary') { ?>
 			<label>
 				<input type="radio" class="_ternary" value="" <?=$primitiveValue === null ? 'checked' : ''?> />
 				NULL
@@ -60,27 +62,27 @@ $primitiveValue = $primitive->getValue(); ?>
 				<input type="radio" class="_ternary" name="<?=$propertyName?>" value="1" <?=$primitiveValue === true ? 'checked' : ''?> />
 				TRUE
 			</label>
-		<? } elseif (in_array($primitiveType, array('PrimitiveHttpUrl'))) { ?>
+		<? } elseif (in_array($primitiveType, array('\Onphp\PrimitiveHttpUrl'))) { ?>
 			<input type="text" name="<?=$propertyName?>" value="<?=$primitiveValue ? $primitiveValue->toString() : ''?>" />
-		<? } elseif (in_array($primitiveType, array('PrimitiveDate'))) { ?>
+		<? } elseif (in_array($primitiveType, array('\Onphp\PrimitiveDate'))) { ?>
 			<input type="text" class="_hasDatepicker" name="<?=$propertyName?>" value="<?=$primitiveValue ? $primitiveValue->toString() : ''?>" />
-		<? } elseif (in_array($primitiveType, array('PrimitiveTimestamp'))) { ?>
+		<? } elseif (in_array($primitiveType, array('\Onphp\PrimitiveTimestamp'))) { ?>
 			<input type="text" class="_hasDatepickerTime" name="<?=$propertyName?>" value="<?=$primitiveValue ? $primitiveValue->toString() : ''?>" />
-		<? } elseif (in_array($primitiveType, array('PrimitiveTime'))) { ?>
+		<? } elseif (in_array($primitiveType, array('\Onphp\PrimitiveTime'))) { ?>
 			<input type="text" size="8" maxlength="8" name="<?=$propertyName?>" value="<?=$primitiveValue ? $primitiveValue->toString() : ''?>" />
-		<? } elseif (in_array($primitiveType, array('PrimitiveTimestampTZ', 'PrimitiveTimestampTZM'))) {
-			if ($primitive instanceof ComplexPrimitive)
+		<? } elseif (in_array($primitiveType, array('\Onphp\PrimitiveTimestampTZ', 'PrimitiveTimestampTZM'))) {
+			if ($primitive instanceof \Onphp\ComplexPrimitive)
 				$primitive->setSingle();
 			?>
 			<input type="text" class="_hasDatepickerTime" name="<?=$propertyName?>" value="<?=$primitive->exportValue()?>" />
-		<? } elseif (in_array($primitiveType, array('PrimitiveString', 'PrimitiveFloat', 'PrimitiveInteger'))) { ?>
+		<? } elseif (in_array($primitiveType, array('\Onphp\PrimitiveString', '\Onphp\PrimitiveFloat', '\Onphp\PrimitiveInteger'))) { ?>
 			<input type="text" name="<?=$propertyName?>" value="<?=$this->escape($primitiveValue)?>" />
-		<? } elseif (in_array($primitiveType, array('PrimitiveIdentifierList', 'PrimitiveEnumerationList', 'PrimitiveEnumList'))) { ?>
+		<? } elseif (in_array($primitiveType, array('\Onphp\PrimitiveIdentifierList', '\Onphp\PrimitiveEnumerationList', '\Onphp\PrimitiveEnumList'))) { ?>
 			<?=$this->trans('Unsupported type')?>: <?=$primitiveType?>
-		<? } elseif ($primitiveType == 'PrimitiveInet') { ?>
+		<? } elseif ($primitiveType == '\Onphp\PrimitiveInet') { ?>
 			<input type="text" name="<?=$propertyName?>" value="<?=$this->escape($primitive->exportValue())?>" />
 		<? } else {
-			throw new WrongStateException('Undefined primitive type: '.$primitiveType);
+			throw new \Onphp\WrongStateException('Undefined primitive type: '.$primitiveType);
 		} ?>
 	</td>
 </tr>

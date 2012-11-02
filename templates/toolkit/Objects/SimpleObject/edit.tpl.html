@@ -1,7 +1,9 @@
 <? /* @var $infoUrl string */
+namespace Onphp\Utils;
+
 $partViewer->view('header');
 
-/* @var $form Form */
+/* @var $form \Onphp\Form */
 $formId = 'editForm'.time().rand(10000, 99999); ?>
 <form id="<?=$formId?>" method="post" action="<?=$takeUrl?>" class="js-pjax">
 	<? $this->template('Objects/SimpleObject/edit.table', array('formId' => $formId)); ?>

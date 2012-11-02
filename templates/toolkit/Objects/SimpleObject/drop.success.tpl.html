@@ -1,4 +1,6 @@
-<? $partViewer->view('header'); ?>
+<? namespace Onphp\Utils;
+
+$partViewer->view('header'); ?>
 <?=$this->trans('Object dropped')?>
 <? $dialogName = get_class($infoObject) . $id; ?>	
 <? if ($this->get('isAjax') && $infoObject) { ?>

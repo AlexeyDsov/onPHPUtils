@@ -1,13 +1,15 @@
 <?php
+namespace Onphp\Utils;
+
 $proto = $infoObject->proto();
-/* @var $proto AbstractProtoClass */
+/* @var $proto \Onphp\AbstractProtoClass */
 $propertyList = $orderFunction($proto->getPropertyList());
 ?>
 <table class="evenTable w95">
 	<?php
 	foreach ($propertyList as $propertyName => $property) {
-		/* @var $property LightMetaProperty */
-		$fieldModel = Model::create()
+		/* @var $property \Onphp\LightMetaProperty */
+		$fieldModel = \Onphp\Model::create()
 			->set('objectName', get_class($infoObject))
 			->set('infoObject', $infoObject)
 			->set('propertyName', $propertyName)

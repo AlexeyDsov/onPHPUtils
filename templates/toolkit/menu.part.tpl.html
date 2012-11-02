@@ -1,4 +1,6 @@
-<? if (!empty($menuList)) {
+<? namespace Onphp\Utils;
+
+if (!empty($menuList)) {
 	$menuList;
 	$currentMenuParts = explode('.', $currentMenu);
 	$currentPart = array_shift($currentMenuParts);

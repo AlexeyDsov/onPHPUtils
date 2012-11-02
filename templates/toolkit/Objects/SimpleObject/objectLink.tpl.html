@@ -1,4 +1,6 @@
-<? if ($object) {
+<? namespace Onphp\Utils;
+
+if ($object) {
 	$objectName = $this->get('nameConverter')->get($object);
 	if ($this->get('linker')->isObjectSupported($object, 'info')) {
 		$dialogName = $this->get('linker')->getDialogName($object);

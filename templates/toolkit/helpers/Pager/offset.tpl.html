@@ -5,12 +5,14 @@
 /* @var $baseUrl string */
 /* @var $offsetName string */
 /* @var $pageDiff integer */
-Assert::isNotNull($totalCount);
-Assert::isNotNull($offset);
-Assert::isNotNull($limit);
-Assert::isNotNull($baseUrl);
+namespace Onphp\Utils;
+
+\Onphp\Assert::isNotNull($totalCount);
+\Onphp\Assert::isNotNull($offset);
+\Onphp\Assert::isNotNull($limit);
+\Onphp\Assert::isNotNull($baseUrl);
 if (isset($urlParams)) {
-	Assert::isArray($urlParams);
+	\Onphp\Assert::isArray($urlParams);
 } else {
 	$urlParams = array();
 }

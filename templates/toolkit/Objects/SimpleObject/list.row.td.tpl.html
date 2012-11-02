@@ -1,11 +1,13 @@
 <?
-/* @var $infoObject IdentifiableObject */
+/* @var $infoObject \Onphp\IdentifiableObject */
 /* @var $propertyName string */
 /* @var $propertyData string */
 /* @var $objectLink string */
+namespace Onphp\Utils;
+
 $proto = $infoObject->proto();
 $property = $proto->getPropertyByName($objectLink);
-/* @var $property LightMetaProperty */
+/* @var $property \Onphp\LightMetaProperty */
 $getter = $property->getGetter();
 $object = $infoObject->{$getter}();
 $propertyType = $property->getType();
@@ -34,11 +36,11 @@ $propertyType = $property->getType();
 		$object = $infoObject->{$getter}();
 		if ($object === null) {
 			print $this->trans('Not setted');
-		} elseif ($object instanceof Date) {
+		} elseif ($object instanceof \Onphp\Date) {
 			print $object->toString();
-		} elseif ($object instanceof TimestampTZ) {
-			print $object->format(TimestampTZ::ATOM);
-		} elseif ($object instanceof Stringable) {
+		} elseif ($object instanceof \Onphp\TimestampTZ) {
+			print $object->format(\Onphp\TimestampTZ::ATOM);
+		} elseif ($object instanceof \Onphp\Stringable) {
 			print $this->escape($object->toString());
 		} elseif (is_scalar($object)) {
 			print $this->escape($object);

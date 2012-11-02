@@ -1,7 +1,8 @@
-<div class="_filterBlock" style="float: left;">
+<?php namespace Onphp\Utils;
+?><div class="_filterBlock" style="float: left;">
 	<?
-	/* @var $proto AbstractProtoClass */
-	/* @var $form Form */
+	/* @var $proto \Onphp\AbstractProtoClass */
+	/* @var $form \Onphp\Form */
 	/* @var $hideFilters bool */
 	/* @var $propertyName string */
 	/* @var $propertyData mixed */
@@ -78,6 +79,6 @@
 				<? break;
 			}
 			default:
-				throw new WrongStateException('Unkown filterName :'.$filterName);
+				throw new \Onphp\WrongStateException('Unkown filterName :'.$filterName);
 	} ?>
 </div>
