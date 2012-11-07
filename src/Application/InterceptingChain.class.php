@@ -22,7 +22,7 @@
 		 */
 		public static function create()
 		{
-			return new self;
+			return new static;
 		}
 
 		/**
@@ -65,7 +65,7 @@
 
 			return $this;
 		}
-		
+
 		protected function checkHandlerResult(InterceptingChainHandler $handler)
 		{
 			return $this;

@@ -14,7 +14,6 @@
 
 	class MockServiceLocator extends ServiceLocator
 	{
-		protected $store = array();
 		protected $objectList = array();
 
 		/**

@@ -33,11 +33,11 @@
 			$reflectionClass = new \ReflectionClass($className);
 			$constructorArgs = func_get_args();
 			array_shift($constructorArgs);
-			
+
 			$object = !empty($constructorArgs)
 				? $reflectionClass->newInstanceArgs($constructorArgs)
 				: $reflectionClass->newInstance();
-			
+
 			return $this->implementSelf($object);
 		}
 
@@ -49,7 +49,10 @@
 		 */
 		public function set($name, $service)
 		{
-			\Onphp\Assert::isFalse($this->has($name), 'object with such name already setted');
+			\Onphp\Assert::isFalse(
+				$this->has($name),
+				'object with such name ("'.$name.'") already setted'
+			);
 			$this->store[$name] = $service;
 			return $this;
 		}
@@ -60,7 +63,10 @@
 		 */
 		public function get($name)
 		{
-			\Onphp\Assert::isTrue($this->has($name), 'object with such name was not setted');
+			\Onphp\Assert::isTrue(
+				$this->has($name),
+				'object with such name ("'.$name.'") was not setted'
+			);
 			return $this->store[$name];
 		}
 
@@ -102,7 +108,7 @@
 			}
 			return $object;
 		}
-		
+
 		/**
 		 * @return \Onphp\Utils\ServiceLocator
 		 */
