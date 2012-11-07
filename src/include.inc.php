@@ -10,58 +10,37 @@
  *                                                                         *
  ***************************************************************************/
 
-define('PATH_ONPHP_UTILS_SRC', dirname(__FILE__).DIRECTORY_SEPARATOR);
+namespace Onphp\Utils;
+
+use Onphp\AutoloaderClassPathCache;
+use Onphp\NamespaceResolverOnPHP;
 
 $autoload = function() {
-	$oldAutoload = function () {
-		ini_set(
-			'include_path',
-			get_include_path()
-			. join(
-				PATH_SEPARATOR,
-				array(
-					PATH_ONPHP_UTILS_SRC.'Access',
-					PATH_ONPHP_UTILS_SRC.'Application',
-					PATH_ONPHP_UTILS_SRC.'EntityProto',
-					PATH_ONPHP_UTILS_SRC.'ListMakerHelper',
-					PATH_ONPHP_UTILS_SRC.'ServiceLocator',
-					PATH_ONPHP_UTILS_SRC.'ToolkitFlow',
-					PATH_ONPHP_UTILS_SRC.'Translator',
-					PATH_ONPHP_UTILS_SRC.'Utils',
-				)
-			)
-			. PATH_SEPARATOR
-		);
-	};
-
 	$newAutoload = function () {
+		$onphpUtilsSrc = dirname(__FILE__).DIRECTORY_SEPARATOR;
+		
 		AutoloaderClassPathCache::create()
 			->setNamespaceResolver(NamespaceResolverOnPHP::create())
-			->addPaths([
-				PATH_ONPHP_UTILS_SRC.'Access',
-				PATH_ONPHP_UTILS_SRC.'Application',
-				PATH_ONPHP_UTILS_SRC.'EntityProto',
-				PATH_ONPHP_UTILS_SRC.'ListMakerHelper',
-				PATH_ONPHP_UTILS_SRC.'ServiceLocator',
-				PATH_ONPHP_UTILS_SRC.'ToolkitFlow',
-				PATH_ONPHP_UTILS_SRC.'Translator',
-				PATH_ONPHP_UTILS_SRC.'Utils',
-			])
+			->addPaths(
+				[
+					$onphpUtilsSrc.'Access',
+					$onphpUtilsSrc.'Application',
+					$onphpUtilsSrc.'EntityProto',
+					$onphpUtilsSrc.'ListMakerHelper',
+					$onphpUtilsSrc.'ServiceLocator',
+					$onphpUtilsSrc.'ToolkitFlow',
+					$onphpUtilsSrc.'Translator',
+					$onphpUtilsSrc.'Utils',
+				],
+				'Onphp\Utils'
+			)
 			->register();
 	};
+	
+	$newAutoload();
 
-	$needNew = null;
-	try {
-		$needNew = class_exists('NamespaceResolverOnPHP');
-	} catch (ClassNotFoundException $e) {
-		$needNew = false;
-	}
+	$sl = new ServiceLocator();
 
-	if ($needNew) {
-		$newAutoload();
-	} else {
-		$oldAutoload();
-	}
 };
 $autoload();
 
