@@ -12,7 +12,7 @@
 
 	/**
 	 * Wrapper around given childs of LogicalObject with custom logic-glue's which
-	 * 
+	 *
 	 * @ingroup Logic
 	**/
 	namespace Onphp\Utils;
@@ -24,7 +24,7 @@
 		 * @param \Closure $callback
 		 * @return \Onphp\Utils\CallbackLogicalObjectSuccess
 		 */
-		static public function create(\Closure $callback)
+		static public function create($callback)
 		{
 			return new self($callback);
 		}
