@@ -12,34 +12,16 @@
 
 namespace Onphp\Utils;
 
-use Onphp\AutoloaderClassPathCache;
-use Onphp\NamespaceResolverOnPHP;
-
-$autoload = function() {
-	$newAutoload = function () {
-		$onphpUtilsSrc = dirname(__FILE__).DIRECTORY_SEPARATOR;
-
-		AutoloaderClassPathCache::create()
-			->setNamespaceResolver(NamespaceResolverOnPHP::create())
-			->addPaths(
-				[
-					$onphpUtilsSrc.'Access',
-					$onphpUtilsSrc.'Application',
-					$onphpUtilsSrc.'EntityProto',
-					$onphpUtilsSrc.'ListMakerHelper',
-					$onphpUtilsSrc.'Permission',
-					$onphpUtilsSrc.'ServiceLocator',
-					$onphpUtilsSrc.'ToolkitFlow',
-					$onphpUtilsSrc.'Translator',
-					$onphpUtilsSrc.'Utils',
-				],
-				'Onphp\Utils'
-			)
-			->register();
-	};
-
-	$newAutoload();
-};
-$autoload();
-
-?>
+class PermissionClassCheckerUser implements PermissionClassChecker
+{
+	/**
+	 * @param \Onphp\Utils\IPermissionUser $user
+	 * @param string $method
+	 * @param string $className
+	 * @return boolean if return null then need check with next checker
+	 */
+	public function hasPermissionClass(IPermissionUser $user, $method, $className)
+	{
+		return $user->hasAction($className.'.'.$method);
+	}
+}

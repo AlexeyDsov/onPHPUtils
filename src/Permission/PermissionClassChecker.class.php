@@ -1,6 +1,6 @@
 <?php
 /***************************************************************************
- *   Copyright (C) 2011 by Alexey Denisov                                  *
+ *   Copyright (C) 2012 by Alexey Denisov                                  *
  *   alexeydsov@gmail.com                                                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -10,21 +10,15 @@
  *                                                                         *
  ***************************************************************************/
 
+namespace Onphp\Utils;
+
+interface PermissionClassChecker
+{
 	/**
-	 * Реализует методы класса пользователя, необходимые для получения разрешенного ему списка действий
+	 * @param \Onphp\Utils\IPermissionUser $user
+	 * @param string $method
+	 * @param string $className
+	 * @return boolean if return null then need check with next checker
 	 */
-	namespace Onphp\Utils;
-
-	interface IPermissionUser extends \Onphp\Identifiable {
-
-		/**
-		 * Возвращает список действий, доступных пользователю
-		 * @return array
-		 */
-		public function getActionList();
-		
-		/**
-		 * @return boolean 
-		 */
-		public function hasAction($actionName);
-	}
+	public function hasPermissionClass(IPermissionUser $user, $method, $className);
+}
