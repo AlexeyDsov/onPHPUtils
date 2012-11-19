@@ -18,7 +18,7 @@ class PermissionClassCheckerUser implements PermissionClassChecker
 	 * @param \Onphp\Utils\IPermissionUser $user
 	 * @param string $method
 	 * @param string $className
-	 * @return boolean if return null then need check with next checker
+	 * @return mixed null - if not checked, false if forbidden, true if allowed or Permission class if advanced result
 	 */
 	public function hasPermissionClass(IPermissionUser $user, $method, $className)
 	{

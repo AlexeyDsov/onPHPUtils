@@ -12,6 +12,10 @@
 
 	namespace Onphp\Utils;
 
+	use \Onphp\Assert;
+	use \Onphp\ClassUtils;
+	use \Onphp\WrongStateException;
+
 	class PermissionManager {
 
 		private $checkers = [];
@@ -29,14 +33,14 @@
 		 * @param string $name
 		 * @param mixed $permissionChecker
 		 * @return \Onphp\Utils\PermissionManager
-		 * @throws \Onphp\WrongStateException
+		 * @throws WrongStateException
 		 */
 		public function add($name, $permissionChecker)
 		{
 			if (isset($this->checkers[$name])) {
-				throw new \Onphp\WrongStateException('PermissionChecker with name "'.$name.'" already setted');
+				throw new WrongStateException('PermissionChecker with name "'.$name.'" already setted');
 			}
-			\Onphp\Assert::isTrue(
+			Assert::isTrue(
 				$permissionChecker instanceof PermissionChecker
 				|| $permissionChecker instanceof PermissionClassChecker
 			);
@@ -58,27 +62,13 @@
 		}
 
 		/**
-		 * Возвращает признак
 		 * @param \Onphp\Utils\IPermissionUser $user
 		 * @param string $method
 		 * @param mixed $object can be classname or IdentifiableObject
 		 * @return bool
 		 */
 		public function hasPermission(IPermissionUser $user, $method, $object) {
-			if (is_object($object)) {
-				foreach ($this->checkers as $checker) {
-					if ($checker instanceof PermissionChecker) {
-						$result = $checker->hasPermission($user, $method, $object);
-						if ($result === null) {
-							continue;
-						}
-						return $result;
-					}
-				}
-			}
-
-			$className = \Onphp\ClassUtils::normalClassName($object);
-			return $this->hasPermissionToClass($user, $method, $className);
+			return $this->getPermission($user, $method, $object)->isAllowed();
 		}
 
 		/**
@@ -89,6 +79,41 @@
 		 */
 		public function hasPermissionToClass(IPermissionUser $user, $method, $className)
 		{
+			return $this->getPermissionToClass($user, $method, $className)->isAllowed();
+		}
+
+		/**
+		 * @param IPermissionUser $user
+		 * @param string $method
+		 * @param mixed $object
+		 * @return Permission
+		 */
+		public function getPermission(IPermissionUser $user, $method, $object)
+		{
+			if (is_object($object)) {
+				foreach ($this->checkers as $checker) {
+					if ($checker instanceof PermissionChecker) {
+						$result = $checker->hasPermission($user, $method, $object);
+						if ($result === null) {
+							continue;
+						}
+						return $this->formatPermission($result);
+					}
+				}
+			}
+
+			$className = ClassUtils::normalClassName($object);
+			return $this->getPermissionToClass($user, $method, $className);
+		}
+
+		/**
+		 * @param IPermissionUser $user
+		 * @param string $method
+		 * @param string $className
+		 * @return Permission
+		 */
+		public function getPermissionToClass(IPermissionUser $user, $method, $className)
+		{
 			$className = $this->convertObjectName($className);
 			foreach ($this->checkers as $checker) {
 				if ($checker instanceof PermissionClassChecker) {
@@ -96,10 +121,10 @@
 					if ($result === null) {
 						continue;
 					}
-					return $result;
+					return $this->formatPermission($result);
 				}
 			}
-			return false;
+			return new PermissionSimple(false);
 		}
 
 		/**
@@ -108,5 +133,20 @@
 		protected function convertObjectName($objectName)
 		{
 			return $objectName;
+		}
+
+		/**
+		 * @param mixed $result
+		 * @return PermissionSimple
+		 */
+		protected function formatPermission($result)
+		{
+			if ($result === true || $result === false) {
+				$result = new PermissionSimple($result);
+			} elseif (!is_object($result)) {
+				Assert::isUnreachable('Getted result not true, not false, not object');
+			}
+			Assert::isInstance($result, '\Onphp\Utils\Permission');
+			return $result;
 		}
 	}

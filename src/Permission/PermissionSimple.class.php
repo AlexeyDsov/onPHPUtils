@@ -1,6 +1,6 @@
 <?php
 /***************************************************************************
- *   Copyright (C) 2012 by Alexey Denisov                                  *
+ *   Copyright (C) 2011 by Alexey Denisov                                  *
  *   alexeydsov@gmail.com                                                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -10,15 +10,22 @@
  *                                                                         *
  ***************************************************************************/
 
-namespace Onphp\Utils;
+	namespace Onphp\Utils;
 
-interface PermissionClassChecker
-{
-	/**
-	 * @param \Onphp\Utils\IPermissionUser $user
-	 * @param string $method
-	 * @param string $className
-	 * @return mixed null - if not checked, false if forbidden, true if allowed or Permission class if advanced result
-	 */
-	public function hasPermissionClass(IPermissionUser $user, $method, $className);
-}
+	class PermissionSimple implements Permission {
+
+		private $isAllowed = null;
+
+		public function __construct($isAllowed)
+		{
+			$this->isAllowed = ($isAllowed == true);
+		}
+
+		/**
+		 * @return boolean
+		 */
+		public function isAllowed()
+		{
+			return $this->isAllowed;
+		}
+	}

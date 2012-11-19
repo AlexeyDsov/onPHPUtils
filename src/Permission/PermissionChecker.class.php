@@ -18,7 +18,7 @@ interface PermissionChecker
 	 * @param \Onphp\Utils\IPermissionUser $user
 	 * @param string $method
 	 * @param object $object
-	 * @return boolean if return null then need check with next checker
+	 * @return mixed null - if not checked, false if forbidden, true if allowed or Permission class if advanced result
 	 */
 	public function hasPermission(IPermissionUser $user, $method, $object);
 }
