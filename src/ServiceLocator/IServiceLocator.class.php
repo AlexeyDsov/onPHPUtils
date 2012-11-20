@@ -49,5 +49,10 @@
 		 * @return array
 		 */
 		public function getList();
+
+		/**
+		 * @return IServiceLocator
+		 */
+		public function getCopy();
 	}
 ?>

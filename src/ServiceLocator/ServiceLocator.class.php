@@ -98,6 +98,18 @@
 		}
 
 		/**
+		 * @return \Onphp\Utils\ServiceLocator
+		 */
+		public function getCopy()
+		{
+			$subLocator = new $this();
+			foreach ($this->store as $key => $value) {
+				$subLocator->set($key, $value);
+			}
+			return $subLocator;
+		}
+
+		/**
 		 * @param object $object
 		 * @return object
 		 */
@@ -114,11 +126,7 @@
 		 */
 		protected function getSelf()
 		{
-			$subLocator = new $this();
-			foreach ($this->store as $key => $value) {
-				$subLocator->set($key, $value);
-			}
-			return $subLocator;
+			return $this->getCopy();
 		}
 	}
 ?>
