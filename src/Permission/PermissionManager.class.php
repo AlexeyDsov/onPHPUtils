@@ -95,7 +95,7 @@
 					if ($checker instanceof PermissionChecker) {
 						$result = $checker->hasPermission($user, $method, $object);
 						
-						Assert::isInstance($result, "Permission");
+						Assert::isInstance($result, "\Onphp\Utils\Permission");
 						
 						if (!$result) {
 							continue;
@@ -122,7 +122,7 @@
 				if ($checker instanceof PermissionClassChecker) {
 					$result = $checker->hasPermissionClass($user, $method, $className);
 					
-					Assert::isInstance($result, "Permission");
+					Assert::isInstance($result, "\Onphp\Utils\Permission");
 					
 					if (!$result) {
 						continue;
