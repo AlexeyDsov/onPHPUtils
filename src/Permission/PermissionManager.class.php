@@ -94,10 +94,13 @@
 				foreach ($this->checkers as $checker) {
 					if ($checker instanceof PermissionChecker) {
 						$result = $checker->hasPermission($user, $method, $object);
-						if ($result === null) {
+						
+						Assert::isInstance($result, "Permission");
+						
+						if (!$result) {
 							continue;
 						}
-						return $this->formatPermission($result);
+						return $result;
 					}
 				}
 			}
@@ -118,10 +121,13 @@
 			foreach ($this->checkers as $checker) {
 				if ($checker instanceof PermissionClassChecker) {
 					$result = $checker->hasPermissionClass($user, $method, $className);
-					if ($result === null) {
+					
+					Assert::isInstance($result, "Permission");
+					
+					if (!$result) {
 						continue;
 					}
-					return $this->formatPermission($result);
+					return $result;
 				}
 			}
 			return new PermissionSimple(false);
@@ -133,20 +139,5 @@
 		protected function convertObjectName($objectName)
 		{
 			return $objectName;
-		}
-
-		/**
-		 * @param mixed $result
-		 * @return PermissionSimple
-		 */
-		protected function formatPermission($result)
-		{
-			if ($result === true || $result === false) {
-				$result = new PermissionSimple($result);
-			} elseif (!is_object($result)) {
-				Assert::isUnreachable('Getted result not true, not false, not object');
-			}
-			Assert::isInstance($result, '\Onphp\Utils\Permission');
-			return $result;
 		}
 	}
