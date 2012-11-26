@@ -16,7 +16,8 @@
 	 */
 	namespace Onphp\Utils;
 
-	abstract class SimpleListController extends ToolkitBaseController {
+	abstract class SimpleListController extends BaseController implements IServiceLocatorSupport {
+		use TServiceLocatorSupport;
 
 		protected $methodMap = array(
 			'show' => 'showProcess',
@@ -32,7 +33,7 @@
 			if (!$this->serviceLocator->get('linker')->isObjectSupported($className, 'info')) {
 				throw new PermissionException('No permission for info '.$className);
 			}
-			
+
 			$showAddButton = $this->serviceLocator->get('linker')->isObjectSupported($this->getObjectName(), 'add');
 			$this->model->set('showAddButton', $showAddButton);
 			if ($showAddButton) {
@@ -62,7 +63,7 @@
 			$form = $this->getListMakerFormBuilder($proto, $propertyList)->
 				setDefaultLimit($this->getPageLimit())->
 				buildForm();
-			
+
 			$this->model->
 				set('form', $form)->
 				set('propertyList', $propertyList)->
@@ -178,7 +179,7 @@
 				set('formData', $form->export())->
 				set('objectName', $this->getObjectName());
 		}
-		
+
 		protected function getRowParams(\Onphp\QueryResult $queryResult, array $propertyList, $propertyName) {
 			return array();
 		}
@@ -219,50 +220,50 @@
 		protected function getViewPath() {
 			return 'Objects/'.($this->isStandartView() ? 'SimpleObject' : $this->getObjectName());
 		}
-		
+
 		/**
 		 * @return null|Criteria
 		 */
 		protected function getPreparedCriteria() {
 			return null;
 		}
-		
+
 		/**
-		 * @param \Onphp\Form $\Onphp\Form 
+		 * @param \Onphp\Form $\Onphp\Form
 		 */
 		protected function applySearchRules(\Onphp\Form $form) {
 			/* implement in child if needed */
 		}
-		
+
 		/**
-		 * @return boolean 
+		 * @return boolean
 		 */
 		protected function isStandartView() {
 			return true;
 		}
-		
+
 		/**
-		 * @return boolean 
+		 * @return boolean
 		 */
 		protected function showInfo() {
 			return true;
 		}
-		
+
 		/**
-		 * @return int 
+		 * @return int
 		 */
 		protected function getPageLimit() {
 			return 20;
 		}
-		
+
 		protected function getPreListTemplate() {
 			return null;
 		}
-		
+
 		protected function getPostListTemplate() {
 			return null;
 		}
-		
+
 		/**
 		 * @param \Onphp\AbstractProtoClass $proto
 		 * @param array $propertyList
@@ -271,7 +272,7 @@
 		protected function getListMakerFormBuilder(\Onphp\AbstractProtoClass $proto, array $propertyList) {
 			return ListMakerFormBuilder::create($proto, $propertyList);
 		}
-		
+
 		/**
 		 * @param \Onphp\AbstractProtoClass $proto
 		 * @param array $propertyList
@@ -288,11 +289,11 @@
 			}
 			return $mav;
 		}
-		
+
 		protected function getCurrentMenu(\Onphp\HttpRequest $request, \Onphp\ModelAndView $mav) {
 			return '';
 		}
-		
+
 		private function getRowsParams(\Onphp\QueryResult $queryResult, array $propertyList) {
 			$rowsParams = array();
 			foreach (array_keys($propertyList) as $propertyName) {

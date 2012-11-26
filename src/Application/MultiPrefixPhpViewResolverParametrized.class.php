@@ -71,8 +71,8 @@
 		/**
 		 * @return \Onphp\View
 		**/
-		protected function makeView($prefix, $viewName) {
-			$view = parent::makeView($prefix, $viewName);
+		protected function makeView($path) {
+			$view = parent::makeView($path);
 			if ($view instanceof SimplePhpViewParametrized) {
 				foreach ($this->params as $key => $value) {
 					$view->set($key, $value);

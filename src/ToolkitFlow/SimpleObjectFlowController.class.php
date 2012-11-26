@@ -15,7 +15,8 @@
 	 */
 	namespace Onphp\Utils;
 
-	abstract class SimpleObjectFlowController extends ToolkitBaseController {
+	abstract class SimpleObjectFlowController extends BaseController implements IServiceLocatorSupport {
+		use TServiceLocatorSupport;
 
 		/**
 		 * Список методов, реализуемых контроллером
@@ -55,7 +56,7 @@
 			if ($form->getErrors()) {
 				return $this->getMav('index', 'NotFound');
 			}
-			
+
 			if (!$this->getLinker()->isObjectSupported($form->getValue('id'), $this->getInfoAction())) {
 				throw new PermissionException('No permission for info '.$this->getObjectName());
 			}
@@ -84,7 +85,7 @@
 			$command = $this->getCommand();
 			/* @var $command \Onphp\EditorCommand */
 			$mav = $command->run($subject, $form, $request);
-			
+
 			$accessObject = $form->getValue('id') ?: $this->getObjectName();
 			if (!$this->getLinker()->isObjectSupported($accessObject, $this->getEditAction($accessObject))) {
 				throw new PermissionException('No permission for edit '.$this->getObjectName());
@@ -108,7 +109,7 @@
 			if ($request->hasGetVar('id')) {
 				$form->importOne('id', $request->getGet());
 			}
-			
+
 			$editObject = $form->getValue('id') ?: $this->getObjectName();
 			if (!$this->getLinker()->isObjectSupported($editObject, $this->getEditAction($editObject))) {
 				throw new PermissionException('No permission for edit '.$this->getObjectName());
@@ -159,13 +160,13 @@
 			if (!($subject = $form->getValue('id'))) {
 				return $this->getMav('drop.success');
 			}
-			
+
 			if (!$this->getLinker()->isObjectSupported($subject, $this->getDropAction())) {
 				throw new PermissionException('No permission for drop '.$className);
 			}
 
 			$confirmed = $request->hasGetVar('confirm');
-			
+
 			if (!$confirmed) {
 				$this->model->
 					set('infoObject', $subject)->
@@ -173,7 +174,7 @@
 					set('infoUrl', $this->getUrlInfo($subject));
 				return $this->getMav('drop.confirm');
 			}
-			
+
 			$command = $this->getDropCommand();
 			/* @var $command \Onphp\DropCommand */
 			$mav = $command->run($subject, $form, $request);
@@ -276,21 +277,21 @@
 		protected function getDropCommandName() {
 			return '\Onphp\Utils\DropToolkitCommand';
 		}
-		
-		
+
+
 		/**
 		 * Создает и возвращает комманду для редактирования объекта
 		 * @return \Onphp\EditorCommand
 		 */
 		protected function getCommand() {
 			$command = $this->serviceLocator->spawn($this->getCommandName());
-			
+
 			if ($command instanceof TakeEditToolkitCommand) {
 				if ($callbackLog = $this->getCallbackLog()) {
 					$command->setLogCallback($callbackLog);
 				}
 			}
-			
+
 			return $command;
 		}
 
@@ -345,7 +346,7 @@
 					'url' => $this->getUrlDrop($infoObject),
 				);
 			}
-			
+
 			if ($logClass = $this->getLogClassName()) {
 				if ($linker->isObjectSupported($this->getLogClassName(), $this->getInfoAction())) {
 					$buttonList['Logs'] = array(
@@ -357,11 +358,11 @@
 
 			return $buttonList;
 		}
-		
+
 		protected function getLogClassName() {
 			return null;
 		}
-		
+
 		protected function getUrlParams() {
 			return array();
 		}
@@ -392,15 +393,15 @@
 		protected function getUrlTake(\Onphp\IdentifiableObject $infoObject) {
 			return $this->getLinker()->getUrl($infoObject, array('action' => 'take') + $this->getUrlParams(), $this->getEditAction($infoObject));
 		}
-		
+
 		protected function getUrlDrop(\Onphp\IdentifiableObject $infoObject, $confirm = false) {
 			$urlParams = array('action' => 'drop') + $this->getUrlParams();
 			if ($confirm)
 				$urlParams['confirm'] = '1';
-				
+
 			return $this->getLinker()->getUrl($infoObject, $urlParams, $this->getDropAction());
 		}
-		
+
 		/**
 		 * @return \Onphp\Utils\ToolkitLinkUtils
 		 */
@@ -418,23 +419,23 @@
 				'nameList' => $nameList,
 			);
 		}
-		
+
 		protected function toCloseDialog(\Onphp\IdentifiableObject $subject) {
 			return false;
 		}
-		
+
 		protected function getCallbackLog() {
 			return null;
 		}
-		
+
 		protected function getInfoAction() {
 			return 'info';
 		}
-		
+
 		protected function getEditAction($object) {
 			return is_object($object) ? 'edit' : 'add';
 		}
-		
+
 		protected function getDropAction() {
 			return 'drop';
 		}
@@ -446,25 +447,25 @@
 			}
 			return $mav;
 		}
-		
+
 		protected function getCurrentMenu(\Onphp\HttpRequest $request, \Onphp\ModelAndView $mav) {
 			return '';
 		}
-		
+
 		/**
 		 * @return string (null | 100 | 100%)
 		 */
 		protected function getWindowWidth() {
 			return null;
 		}
-		
+
 		/**
 		 * @return string (null | 100 | 100%)
 		 */
 		protected function getWindowHeight() {
 			return null;
 		}
-		
+
 		private function getWindowOnce() {
 			$options = array();
 			if ($size = $this->getWindowWidth()) {
