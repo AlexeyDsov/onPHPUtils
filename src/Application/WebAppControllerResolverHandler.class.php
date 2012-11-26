@@ -13,7 +13,7 @@
 
 	class WebAppControllerResolverHandler implements InterceptingChainHandler
 	{
-		const CONTROLLER_POSTFIX = '\Onphp\Controller';
+		const CONTROLLER_POSTFIX = 'Controller';
 
 		protected $defaultController = '\Onphp\Utils\MainController';
 

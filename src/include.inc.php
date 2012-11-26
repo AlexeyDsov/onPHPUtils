@@ -29,6 +29,7 @@ $autoload = function() {
 					$onphpUtilsSrc.'ListMakerHelper',
 					$onphpUtilsSrc.'Permission',
 					$onphpUtilsSrc.'ServiceLocator',
+					$onphpUtilsSrc.'Session',
 					$onphpUtilsSrc.'ToolkitFlow',
 					$onphpUtilsSrc.'Translator',
 					$onphpUtilsSrc.'Utils',
