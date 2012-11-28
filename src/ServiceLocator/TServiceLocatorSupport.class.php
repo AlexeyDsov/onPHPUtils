@@ -10,26 +10,25 @@
  *                                                                         *
  ***************************************************************************/
 
-	namespace Onphp\Utils;
+namespace Onphp\Utils;
 
-	trait TServiceLocatorSupport {
-		
-		/**
-		 * @var \Onphp\Utils\ServiceLocator
-		 */
-		protected $serviceLocator = null;
-		
-		/**
-		 * @param \Onphp\Utils\IServiceLocator $serviceLocator
-		 * @return \Onphp\Utils\TServiceLocatorSupport
-		 */
-		public function setServiceLocator(IServiceLocator $serviceLocator) {
-			$this->serviceLocator = $serviceLocator;
-			return $this;
-		}
+trait TServiceLocatorSupport {
 
-		public function getServiceLocator() {
-			return $this->serviceLocator;
-		}
+	/**
+	 * @var \Onphp\Utils\ServiceLocator
+	 */
+	private $serviceLocator = null;
+
+	/**
+	 * @param \Onphp\Utils\IServiceLocator $serviceLocator
+	 * @return \Onphp\Utils\TServiceLocatorSupport
+	 */
+	public function setServiceLocator(IServiceLocator $serviceLocator) {
+		$this->serviceLocator = $serviceLocator;
+		return $this;
 	}
-?>
+
+	public function getServiceLocator() {
+		return $this->serviceLocator;
+	}
+}

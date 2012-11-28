@@ -15,7 +15,7 @@ $formId = 'editForm'.time().rand(10000, 99999); ?>
 	$dialogName = $this->get('linker')->getDialogName($infoObject);
 	$title = $this->trans(get_class($infoObjectPrototype)).' '
 		.$this->escape($this->get('nameConverter')->get($infoObject));
-	
+
 	?>
 	<script type="text/javascript">
 		<?
@@ -23,7 +23,7 @@ $formId = 'editForm'.time().rand(10000, 99999); ?>
 			'title' => $this->trans('Editing')." {$title}",
 			'once' => $windowOnce,
 		];
-		
+
 		if ($errors = $form->getErrors()) {
 			$options['error'] = FormErrorTextAggregator::create()->getMessage($form);
 		}
@@ -31,7 +31,7 @@ $formId = 'editForm'.time().rand(10000, 99999); ?>
 		$(function(){
 			var options = <?=json_encode($options, JSON_FORCE_OBJECT)?>;
 			$('#<?=$dialogName?>').dialog('option', options);
-			
+
 			var closeDialog = <?=$closeDialog ? 'true' : 'false'?>;
 			var hasId = <?=$form->getValue('id') ? 'true' : 'false'?>;
 			var buttons = {};

@@ -15,51 +15,52 @@
 
 	abstract class BaseController implements \Onphp\Controller
 	{
-		/**
-		 * @var \Onphp\Model
-		 */
-		protected $model = null;
 		protected $methodMap = array();
 		protected $defaultAction = null;
 		protected $actionName = 'action';
 
-		/**
-		 * @var \Onphp\Utils\HeadHelper
-		**/
-		protected $meta	= null;
-
-		public function __construct() {
-			$this->model = \Onphp\Model::create();
-			$this->setupMeta();
+		public function __construct()
+		{
 		}
 
 		public function getModel() {
-			return $this->model;
+			return \Onphp\Model::create();
 		}
 
-		protected function getMav($tpl = 'index', $path = null) {
+		protected function getMav($tpl = 'index', $path = null, \Onphp\Model $model = null)
+		{
 			return \Onphp\ModelAndView::create()->
-				setModel($this->model)->
+				setModel($model ?: $this->getModel())->
 				setView($this->getViewTemplate($tpl, $path));
 		}
 
-		protected function getViewPath() {
+		protected function getViewPath()
+		{
 			$className = get_class($this);
 			return substr($className, 0, stripos($className, 'controller'));
 		}
 
-		protected function getViewTemplate($tpl, $path = null) {
+		protected function getViewTemplate($tpl, $path = null)
+		{
 			$path = ($path === null ? $this->getViewPath() : $path);
 			return "{$path}/{$tpl}";
 		}
 
-		protected function getMavRedirectByUrl($url) {
+		protected function getMavRedirectByUrl($url)
+		{
 			return \Onphp\ModelAndView::create()->setView(
 				\Onphp\CleanRedirectView::create($url)
 			);
 		}
 
-		protected function resolveAction(\Onphp\HttpRequest $request, \Onphp\Form $form = null) {
+		/**
+		 * @param \Onphp\HttpRequest $request
+		 * @param \Onphp\Form $form
+		 * @return \Onphp\ModelAndView
+		 * @throws \Onphp\WrongStateException
+		 */
+		protected function resolveAction(\Onphp\HttpRequest $request, \Onphp\Form $form = null)
+		{
 			if (empty($this->methodMap)) {
 				throw new \Onphp\WrongStateException('You must specify $methodMap array');
 			}
@@ -79,9 +80,7 @@
 				importMore($request->getAttached());
 
 			if ($form->getErrors()) {
-				return \Onphp\ModelAndView::create()->
-					setModel($this->model)->
-					setView(\Onphp\View::ERROR_VIEW);
+				$this->getMavResolveActionError();
 			}
 
 			if (!$action = $form->getSafeValue($this->actionName)) {
@@ -101,34 +100,28 @@
 			return $mav;
 		}
 
-		protected function getControllerVar(\Onphp\HttpRequest $request) {
-			$form = \Onphp\Form::create()->
-				add(
-					\Onphp\Primitive::string($this->ajaxVar)->
-						setDefault('')
-				)->
-				importOne($this->ajaxVar, $request->getGet())->
-				importOneMore($this->ajaxVar, $request->getAttached());
-			$controller = $form->getSafeValue($this->ajaxVar);
-			return $controller;
+		protected function getMavResolveActionError()
+		{
+			return \Onphp\ModelAndView::create()->
+				setView(\Onphp\View::ERROR_VIEW);
 		}
 
 		/**
-		 * Дает возможность в наследниках модифицировать model в ModelAndView перед возвращением ее пользователю
+		 * Дает возможность в наследниках модифицировать model в ModelAndView перед возвращением ее из контроллера
 		 * @param \Onphp\HttpRequest $request
 		 * @param \Onphp\ModelAndView $mav
-		 * @return \Onphp\ModelAndView 
+		 * @return \Onphp\ModelAndView
 		 */
-		protected function prepairData(\Onphp\HttpRequest $request, \Onphp\ModelAndView $mav) {
+		protected function prepairData(\Onphp\HttpRequest $request, \Onphp\ModelAndView $mav)
+		{
+			$mav->getModel()->set('meta', $this->getHeadHelper());
 			return $mav;
 		}
 
-		protected function setupMeta() {
-			$this->meta = HeadHelper::create();
-			$this->meta->setTitle('');
-			$this->model->set('meta', $this->meta);
-
-			return $this;
+		protected function getHeadHelper()
+		{
+			return HeadHelper::create()
+				->setTitle('');
 		}
 	}
 ?>

@@ -8,7 +8,7 @@
 /* @var $hasError boolean */
 namespace Onphp\Utils;
 
-$primitiveType = get_class($primitive);
+$primitiveType = \Onphp\ClassUtils::normalClassName($primitive);
 $primitiveValue = $primitive->getValue(); ?>
 <tr class="<?=$hasError ? 'errorField' : ''?>">
 	<td>

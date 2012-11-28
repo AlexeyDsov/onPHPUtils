@@ -13,7 +13,7 @@
 	namespace Onphp\Utils;
 
 	class WebAppAjaxHandler implements InterceptingChainHandler {
-		
+
 		private static $ajaxRequestVar = 'HTTP_X_REQUESTED_WITH';
 		private static $ajaxRequestValueList = array('XMLHttpRequest');
 		private static $pjaxRequestVar = 'HTTP_X_PJAX';
@@ -33,8 +33,8 @@
 			$isPjaxRequest = $this->isPjaxRequest($chain->getRequest());
 			$isAjaxRequest = !$isPjaxRequest && $this->isAjaxRequest($chain->getRequest());
 
-			$chain->setVar('isPjax', $isPjaxRequest);
-			$chain->setVar('isAjax', $isAjaxRequest);
+//			$chain->setVar('isPjax', $isPjaxRequest);
+//			$chain->setVar('isAjax', $isAjaxRequest);
 			$chain->getServiceLocator()->
 				set('isPjax', $isPjaxRequest)->
 				set('isAjax', $isAjaxRequest);

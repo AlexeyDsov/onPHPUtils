@@ -30,6 +30,9 @@
 		 */
 		public function spawn($className/*,  constructor params ..., ..., ...  */)
 		{
+			if (!class_exists($className)) {
+				throw new \Onphp\ClassNotFoundException("Class '{$className}' not found");
+			}
 			$reflectionClass = new \ReflectionClass($className);
 			$constructorArgs = func_get_args();
 			array_shift($constructorArgs);

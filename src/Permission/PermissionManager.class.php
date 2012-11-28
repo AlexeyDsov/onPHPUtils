@@ -94,9 +94,9 @@
 				foreach ($this->checkers as $checker) {
 					if ($checker instanceof PermissionChecker) {
 						$result = $checker->hasPermission($user, $method, $object);
-						
+
 						Assert::isInstance($result, "\Onphp\Utils\Permission");
-						
+
 						if (!$result) {
 							continue;
 						}
@@ -121,9 +121,9 @@
 			foreach ($this->checkers as $checker) {
 				if ($checker instanceof PermissionClassChecker) {
 					$result = $checker->hasPermissionClass($user, $method, $className);
-					
+
 					Assert::isInstance($result, "\Onphp\Utils\Permission");
-					
+
 					if (!$result) {
 						continue;
 					}
@@ -131,6 +131,12 @@
 				}
 			}
 			return new PermissionSimple(false);
+		}
+
+		public function getObjectName($objectName)
+		{
+			$className = ClassUtils::normalClassName($objectName);
+			return $this->convertObjectName($className);
 		}
 
 		/**

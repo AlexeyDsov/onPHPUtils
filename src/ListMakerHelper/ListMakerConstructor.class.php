@@ -38,6 +38,7 @@
 			ListMakerProperties::OPTION_FILTERABLE_IS_NOT_FALSE => 'IS NOT FALSE',
 		);
 
+		protected $className = null;
 		/**
 		 * @var \Onphp\AbstractProtoClass
 		 */
@@ -47,16 +48,18 @@
 		protected $offsetName = 'offset';
 		protected $limitName = 'limit';
 
-		public function __construct(\Onphp\AbstractProtoClass $proto, array $propertyList) {
-			$this->proto = $proto;
+		public function __construct($className, array $propertyList) {
+			$this->className = $className;
+			\Onphp\Assert::isInstance($className, '\Onphp\Prototyped');
+			$this->proto = \Onphp\ClassUtils::callStaticMethod($className.'::proto');
 			$this->propertyList = $propertyList;
 		}
 
 		/**
 		 * @return \Onphp\Utils\ListMakerConstructor
 		 */
-		public static function create(\Onphp\AbstractProtoClass $proto, array $propertyList) {
-			return new static($proto, $propertyList);
+		public static function create($className, array $propertyList) {
+			return new static($className, $propertyList);
 		}
 
 		/**
@@ -112,7 +115,7 @@
 			$idCriteria
 				->addProjection(\Onphp\Projection::property('id', 'id'))
 				->setDistinct(true);
-			
+
 			foreach ($idCriteria->getOrder()->getList() as $order) {
 				/* @var $order \Onphp\OrderBy */
 				$field = $order->getField();
@@ -120,10 +123,10 @@
 					$idCriteria->addProjection(\Onphp\Projection::property($field));
 				}
 			}
-			
+
 			$idList = \Onphp\ArrayUtils::columnFromSet('id', $idCriteria->getCustomList());
 			$objectList = $criteria->getDao()->getListByIds($idList);
-			
+
 			$countCriteria = clone $criteria;
 			$totalCount = $countCriteria
 				->dropProjection()
@@ -132,13 +135,13 @@
 				->setOffset(0)
 				->addProjection(\Onphp\Projection::distinctCount('id', 'count'))
 				->getCustom('count');
-			
+
 			return \Onphp\QueryResult::create()
 				->setQuery($criteria->toSelectQuery())
 				->setCount($totalCount)
 				->setList($objectList)
 				;
-			
+
 //			old normal variant with not uniques objects:
 //			return $criteria->getResult();
 		}
@@ -164,8 +167,7 @@
 		 * @return \Onphp\Criteria
 		 */
 		protected function makeCriteria() {
-			$className = mb_substr(get_class($this->proto), 5);
-			$dao = \Onphp\ClassUtils::callStaticMethod("$className::dao");
+			$dao = \Onphp\ClassUtils::callStaticMethod("{$this->className}::dao");
 
 			return \Onphp\Criteria::create($dao);
 		}

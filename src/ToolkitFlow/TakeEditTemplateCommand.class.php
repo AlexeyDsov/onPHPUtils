@@ -37,7 +37,7 @@
 				$form->dropAllErrors();
 
 				return \Onphp\ModelAndView::create()->setModel($this->getModel($subject, $form));
-			} elseif ($action == 'take') {
+			} elseif ($action == 'save') {
 				//действие take - заполняем форму из реквеста,
 				//если ошибок нет - переносим данные в объект и сохраняем его
 				$this->prepairFormTakeImport($subject, $form, $request);
@@ -64,9 +64,8 @@
 						setView(\Onphp\EditorController::COMMAND_FAILED);
 				}
 			} else {
-				throw new \Onphp\WrongStateException("Неожиданный {$this->actionMethod}  = ".$action);
+				throw new \Onphp\WrongStateException("Unexpected {$this->actionMethod}  = ".$action);
 			}
-			throw new \Onphp\WrongStateException('Выполнение функции должно окончится одним из return, выше в коде');
 		}
 
 		/**
@@ -179,7 +178,7 @@
 		 * @return string
 		 */
 		protected function resolveActionForm(\Onphp\HttpRequest $request) {
-			$actionList = array('edit', 'take');
+			$actionList = array('edit', 'save');
 
 			$form = \Onphp\Form::create()->
 				add(

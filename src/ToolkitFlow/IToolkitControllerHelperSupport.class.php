@@ -10,14 +10,13 @@
  *                                                                         *
  ***************************************************************************/
 
-	namespace Onphp\Utils;
+namespace Onphp\Utils;
 
-	interface IServiceLocatorSupport {
-		public function setServiceLocator(IServiceLocator $serviceLocator);
-
-		/**
-		 * @return ServiceLocator
-		 */
-		public function getServiceLocator();
-	}
-?>
+/**
+ * Реализует отображение списков объектов.
+ * В наследнике класса необходимо указать proto объекта и propertyList - настройки для получения списка
+ */
+interface IToolkitControllerHelperSupport extends \Onphp\Controller
+{
+	public function setHelper(ToolkitControllerHelper $helper);
+}
